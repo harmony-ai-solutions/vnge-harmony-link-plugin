@@ -24,6 +24,34 @@ import UnityEngine
 from pprint import pprint
 
 
+
+# Simple Web / API Requests:
+# https://discourse.pyrevitlabs.io/t/using-requests-module-with-ironpython/541/7
+# https://learn.microsoft.com/de-de/dotnet/api/system.net.webclient?view=net-5.0
+#
+# from System.Net import WebClient
+# client = WebClient()
+# client.Headers.Add("Accept", "application/json")
+# client.Headers.Add("Content-Type", "application/json")
+#
+# response = client.UploadString("simple", "POST", "data")
+#
+# resp = client.ResponseHeaders
+#
+# pprint(response)
+# pprint(resp)
+#
+# exit(0)
+
+# On GraphQL:
+# (Not too helpful) https://community.tibco.com/s/question/0D54z00007mxYpvCAE/connecting-to-graphql-with-ironpython-using-mutation-and-post-request
+# https://github.com/the-orb/orb.net
+
+# On WebSockets:
+# https://github.com/gtalarico/ironpython-stubs/blob/master/release/stubs/System/Net/WebSockets.py
+# https://learn.microsoft.com/de-de/dotnet/api/system.net.websockets?view=net-5.0
+
+
 def recursiveDocumentation(object):
     data = {}
     if hasattr(object, "__dict__"):
