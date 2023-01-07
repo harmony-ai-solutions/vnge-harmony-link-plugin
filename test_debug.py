@@ -4,8 +4,6 @@ import sys
 sys.path.append(r"E:\Koikatsu Party After Party\BepInEx\plugins\Console")
 sys.path.append(r"E:\Koikatsu Party After Party\CharaStudio_Data\Managed")
 
-#print sys.path
-
 import clr
 clr.AddReference('StdLib')
 clr.AddReference('UnityEngine')

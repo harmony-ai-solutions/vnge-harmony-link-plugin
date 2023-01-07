@@ -26,6 +26,10 @@ RPC_ACTION_CHECK_PENDING_REQUESTS = 'CHECK_PENDING_REQUESTS'
 
 
 # Define Classes
+class KoikajiBackendJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
 
 # KoikajiBackendRPCRequest - Base class for request actions
 class KoikajiBackendRPCRequest:
@@ -37,11 +41,11 @@ class KoikajiBackendRPCRequest:
 
 # KoikajiCommsRPCResponse - Base class for response handling
 class KoikajiBackendRPCResponse:
-    def __init__(self, result, ticket_id, action, params):
+    def __init__(self, result, action, params, ticket_id=0):
         self.result = result
-        self.ticket_id = ticket_id  # Ticket ID identifies the pending action for event handling
         self.action = action
         self.params = params
+        self.ticket_id = ticket_id  # Ticket ID identifies the pending action for event handling
 
 
 # KoikajiCheckResultsThread - Thread for checking on async requests being processed
@@ -68,16 +72,20 @@ class KoikajiCheckResultsThread(Thread):
 
     def check_async_requests(self):
         print 'Checking for pending requests in Koikaji Backend module...'
-        # Create action to check backend
         check = KoikajiBackendRPCRequest(RPC_ACTION_CHECK_PENDING_REQUESTS, RPC_MODE_SYNC, '')
         check_response = _do_rpc_call(client=self.webClient, endpoint=self.endpoint, request=check)
-        _, processed, pending = self.handler.handle_rpc_response(response=check_response)
+        check_response, processed, pending = self.handler.handle_rpc_response(response=check_response)
+
+        if check_response.result == RPC_RESULT_ERROR or check_response.result == RPC_RESULT_INVALID:
+            print '... Pending request check failed. Result: {0}, Message: {1}'.format(check_response.result, check_response.params)
+        else:
+            print '... Pending request check done. Processed: {0}, Still pending: {1}'.format(processed, pending)
 
     def is_running(self):
         return self.running
 
     def stop_execution(self):
-        print 'Stopping KoikajiCheckResultsThread'
+        print 'Stopping KoikajiCheckResultsThread...'
         self.running = False
 
 
@@ -100,7 +108,6 @@ class KoikajiBackendHandler:
         # Stop thread in case it's still running
         print 'Stopping KoikajiBackendHandler'
         if self.checkAsyncResultsJob.is_running():
-            print 'Starting KoikajiBackendHandler'
             self.checkAsyncResultsJob.stop_execution()
             self.checkAsyncResultsJob.join()
 
@@ -122,8 +129,8 @@ class KoikajiBackendHandler:
         # Check is valid response
         if not isinstance(response, KoikajiBackendRPCResponse):
             if not isinstance(response, str):
-                response = json.dumps(response)
-            return KoikajiBackendRPCResponse(RPC_RESULT_INVALID, '', response), processed, pending
+                response = json.dumps(response, cls=KoikajiBackendJSONEncoder)
+            return KoikajiBackendRPCResponse(result=RPC_RESULT_INVALID, action='', params=response), processed, pending
 
         # check is failed request
         if response.result == RPC_RESULT_INVALID or response.result == RPC_RESULT_ERROR:
@@ -165,14 +172,17 @@ def _do_rpc_call(
         params = request.params if hasattr(request, 'params') else request
         if not isinstance(params, str):
             params = json.dumps(params)
-        return KoikajiBackendRPCResponse(RPC_RESULT_INVALID, action, params)
+        return KoikajiBackendRPCResponse(result=RPC_RESULT_INVALID, action=action, params=params)
 
     # Build and Execute the request
-    request_string = json.dumps(request)
-    response_string = client.UploadString(endpoint, request_string)
+    request_string = json.dumps(request, cls=KoikajiBackendJSONEncoder)
+    try:
+        response_string = client.UploadString(endpoint, request_string)
+    except SystemError as e:
+        return KoikajiBackendRPCResponse(result=RPC_RESULT_INVALID, action=request.action, params=e.message)
     # Check response & return
     if len(response_string) == 0:
-        return KoikajiBackendRPCResponse(RPC_RESULT_INVALID, request.action, 'Response was empty!')
+        return KoikajiBackendRPCResponse(result=RPC_RESULT_INVALID, action=request.action, params='Response was empty!')
     response_json = json.loads(response_string)
     response = KoikajiBackendRPCResponse(**response_json)
     return response

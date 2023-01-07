@@ -7,20 +7,30 @@
 # For more Info on the project goals, see README.md
 #
 
+import ConfigParser
+import os
+import time
+
+from koikaji_modules import backend
+
+# Define all used modules here
+_backendModule = None
+
 
 # start - VNGE game start hook
 def start(game):
     # -------- some options we want to init for the engine ---------
-    game.sceneDir = "koikaji/"  # dir for Koikaji scenes
+    game.sceneDir = "koikaji_modules/"  # dir for Koikaji scenes
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
     # game.isfAutoLipSync = True  # enable lip sync in framework
 
     # Actual Koikaji Initialization
-    # TODO: Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
+    # Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
+    config = _load_config()
 
-    _init_modules()
+    _init_modules(config)
 
     # TODO: Login to Kajiwoto & Fetch User + Kaji Details -> Needs to be a private Kaji at the beginning
 
@@ -70,10 +80,19 @@ def start(game):
     ], shutdown)
 
 
-# _init_modules initializes all the interfaces and handlers needed by koikaji
-def _init_modules():
-    # Init comms module for interfacing with external helper binaries
+# _init_modules initializes all the interfaces and handlers needed by koikaji_modules
+def _init_modules(config):
+    global _backendModule
 
+    # Init comms module for interfacing with external helper binaries
+    _backendModule = backend.KoikajiBackendHandler(endpoint=config.get('Backend', 'endpoint'))
+    _backendModule.start()
+
+    # FIXME: Debug code
+    time.sleep(10)
+    _backendModule.stop()
+
+    time.sleep(60)
 
     # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
 
@@ -88,6 +107,15 @@ def _init_modules():
     # TODO: Init Module for Kaji Voice Streaming + Audio-2-LipSync
 
     return None
+
+
+def _load_config():
+    # read from .ini file
+    config = ConfigParser.SafeConfigParser()
+    config_path = os.path.splitext(__file__)[0] + '.ini'
+    config.read(config_path)
+    return config
+
 
 def _load_scene(game, param):
     game.fake_lipsync_stop()  # required by framework - stop lipsynd if we has it
