@@ -1,7 +1,14 @@
-# simple Game example for all who need:
-# - scene loading
-# - advanced - includes examples for move between saved cameras; also includes animation move between cams
-# - strict storyline, no choices (only Next button)
+# Koikaji Prototype main script
+# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+#
+# This project aims at integrating Kajis from Kajiwoto into Koikatsu, by interfacing between actions in the game
+# and the actual conversation between an user and their Kaji.
+#
+# For more Info on the project goals, see README.md
+#
+
+
+# start - VNGE game start hook
 def start(game):
     # -------- some options we want to init for the engine ---------
     game.sceneDir = "koikaji/"  # dir for Koikaji scenes
@@ -13,17 +20,7 @@ def start(game):
     # Actual Koikaji Initialization
     # TODO: Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
 
-    # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
-
-    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lew stuff
-
-    # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
-
-    # TODO: Init Module for Kaji Expression Handling -> Just very simple for now
-
-    # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex
-
-    # TODO: Init Module for Kaji Voice Streaming + Audio-2-LipSync
+    _init_modules()
 
     # TODO: Login to Kajiwoto & Fetch User + Kaji Details -> Needs to be a private Kaji at the beginning
 
@@ -72,6 +69,25 @@ def start(game):
         ["me", "Wow... and this is so elegant and strict Morito-chan?", _load_scene, "scene2.png"]
     ], shutdown)
 
+
+# _init_modules initializes all the interfaces and handlers needed by koikaji
+def _init_modules():
+    # Init comms module for interfacing with external helper binaries
+
+
+    # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
+
+    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lew stuff
+
+    # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
+
+    # TODO: Init Module for Kaji Expression Handling -> Just very simple for now
+
+    # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex
+
+    # TODO: Init Module for Kaji Voice Streaming + Audio-2-LipSync
+
+    return None
 
 def _load_scene(game, param):
     game.fake_lipsync_stop()  # required by framework - stop lipsynd if we has it
