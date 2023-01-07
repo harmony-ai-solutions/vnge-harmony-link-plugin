@@ -1,3 +1,5 @@
+#vngame;charastudio;Koikaji
+
 # Koikaji Prototype main script
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
 #
@@ -20,7 +22,7 @@ _backendModule = None
 # start - VNGE game start hook
 def start(game):
     # -------- some options we want to init for the engine ---------
-    game.sceneDir = "koikaji_modules/"  # dir for Koikaji scenes
+    game.sceneDir = "koikaji/"  # dir for Koikaji scenes
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
@@ -38,16 +40,21 @@ def start(game):
 
     # TODO: Initialize Player controls.
 
+    # FIXME: Debug code
+    game.load_scene("main.png")
+
+    game.set_buttons(["End Koikaji Demo >>"], [shutdown])
+
     # ---------------------------
     # We can define additional characters (other than "s", system)
     # first param is an character ID, second - header text color (RRGGBB), third - name 
     # ---------------------------
-    game.register_char("player", "aa5555", kajiwoto.username)
-    game.register_char("kaji", "55aa55", kajiwoto.kajiname)
+    # game.register_char("player", "aa5555", kajiwoto.username)
+    # game.register_char("kaji", "55aa55", kajiwoto.kajiname)
 
     # init face expressions
-    import vnlibfaceexpressions
-    vnlibfaceexpressions.init_faceexpressions(game)
+    # import vnlibfaceexpressions
+    # vnlibfaceexpressions.init_faceexpressions(game)
 
     # ---------------------------
     # If we want to set a number of strict-story-line texts with "Next >" buttons (with no special choices), we can use construct "texts_next"
@@ -59,25 +66,25 @@ def start(game):
     # last param (2)
     # - function to move at end
     # ---------------------------
-    game.texts_next([
-        ["me", "Hi! It's me.\nSo, as you can see, I do nothing in the college.", _load_scene, "scene1lipsync.png"],
-        # loading scene
-        ["me//angry_whatyousay", "Hey, what's going on?...."],
-        ["teacher", "Is everybody here?\nI want to introduce our new transfer student...", _to_cam, 2],
-        # move cam to teacher
-        ["teacher//angry_whatyousay", "...Kawashima Morito"],
-        ["teacher//normal", "Please, Morito, tell something to everyone.", _to_cam_animated, 3],
-        # animated move cam to morito
-        ["main", "Hi! My name is Morito, I'm a new transfer student from Tokyo."],
-        ["main", "!...(what to say)..."],  # ! begins the silent construction
-        ["main", "...m-m...I like cats..."],
-        ["main", "...m-m...Glad to see everyone!"],
-        ["me", "So, we have new cute transfer student. It may be interested... May be spy on she on break?", _to_cam,
-         5],
-        ["me", "..wait until break, and then..."],
-        ["me", "..investigate the female toilet >"],
-        ["me", "Wow... and this is so elegant and strict Morito-chan?", _load_scene, "scene2.png"]
-    ], shutdown)
+    # game.texts_next([
+    #     ["me", "Hi! It's me.\nSo, as you can see, I do nothing in the college.", _load_scene, "scene1lipsync.png"],
+    #     # loading scene
+    #     ["me//angry_whatyousay", "Hey, what's going on?...."],
+    #     ["teacher", "Is everybody here?\nI want to introduce our new transfer student...", _to_cam, 2],
+    #     # move cam to teacher
+    #     ["teacher//angry_whatyousay", "...Kawashima Morito"],
+    #     ["teacher//normal", "Please, Morito, tell something to everyone.", _to_cam_animated, 3],
+    #     # animated move cam to morito
+    #     ["main", "Hi! My name is Morito, I'm a new transfer student from Tokyo."],
+    #     ["main", "!...(what to say)..."],  # ! begins the silent construction
+    #     ["main", "...m-m...I like cats..."],
+    #     ["main", "...m-m...Glad to see everyone!"],
+    #     ["me", "So, we have new cute transfer student. It may be interested... May be spy on she on break?", _to_cam,
+    #      5],
+    #     ["me", "..wait until break, and then..."],
+    #     ["me", "..investigate the female toilet >"],
+    #     ["me", "Wow... and this is so elegant and strict Morito-chan?", _load_scene, "scene2.png"]
+    # ], shutdown)
 
 
 # _init_modules initializes all the interfaces and handlers needed by koikaji_modules
@@ -89,10 +96,10 @@ def _init_modules(config):
     _backendModule.start()
 
     # FIXME: Debug code
-    time.sleep(10)
-    _backendModule.stop()
-
-    time.sleep(60)
+    # time.sleep(20)
+    # _backendModule.stop()
+    #
+    # time.sleep(60)
 
     # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
 
@@ -107,6 +114,12 @@ def _init_modules(config):
     # TODO: Init Module for Kaji Voice Streaming + Audio-2-LipSync
 
     return None
+
+
+def _shutdown_modules():
+    global _backendModule
+
+    _backendModule.stop()
 
 
 def _load_config():
@@ -139,5 +152,8 @@ def _to_cam_animated(game, camera_id, time=3, move_style="fast-slow3"):
 
 
 def shutdown(game):
-    game.set_text("s", "Demo finished here... hope you like it and will made something by yourself! :)")
-    game.set_buttons_end_game()
+    # Shutdown Modules
+    _shutdown_modules()
+
+    game.set_text("s", "Koikaji Module successfully stopped.")
+    game.set_buttons(["Return to main screen >>"], game.return_to_start_screen_clear())
