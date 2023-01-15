@@ -4,6 +4,14 @@
 # This module uses the .NET WebClient module to interface with Koikaji's Support Backend Module via RPC
 # RPC Requests are simple JSON
 
+# Next steps:
+# 1. Instead of only Polling, use HttpListener
+#    (https://learn.microsoft.com/de-de/dotnet/api/system.net.httplistener?view=netcore-2.1)
+#    to handle events from external modules
+# 2. Also consider using WebSocket directly, for faster and more streamlined handling of comms
+#    (https://learn.microsoft.com/de-de/dotnet/api/system.net.websockets.clientwebsocket?view=netcore-2.1)
+#
+
 from System.Net import WebClient
 from threading import Thread
 import time
@@ -41,7 +49,7 @@ class KoikajiBackendRPCRequest:
 
 # KoikajiCommsRPCResponse - Base class for response handling
 class KoikajiBackendRPCResponse:
-    def __init__(self, result, action, params, ticket_id=0):
+    def __init__(self, result, action, params, ticket_id=''):
         self.result = result
         self.action = action
         self.params = params
@@ -50,7 +58,7 @@ class KoikajiBackendRPCResponse:
 
 # KoikajiCheckResultsThread - Thread for checking on async requests being processed
 class KoikajiCheckResultsThread(Thread):
-    def __init__(self, endpoint, handler, interval_seconds=1):
+    def __init__(self, endpoint, handler, interval_seconds=60):
         # execute the base constructor
         Thread.__init__(self)
         # Control flow
@@ -89,12 +97,13 @@ class KoikajiCheckResultsThread(Thread):
         self.running = False
 
 
-# KoiajiBackendHandler
+# KoikajiBackendHandler
 class KoikajiBackendHandler:
     def __init__(self, endpoint):
         # Setup Backend Handler - Uses a simple HTTP client internally
         self.endpoint = endpoint
         self.webClient = _init_web_client()
+        self.eventHandlers = []
         # Init job thread for checking on async requests
         self.checkAsyncResultsJob = KoikajiCheckResultsThread(endpoint=endpoint, handler=self)
 
@@ -105,14 +114,27 @@ class KoikajiBackendHandler:
             self.checkAsyncResultsJob.start()
 
     def stop(self):
+        # Deactivate all connected Event Handlers
+        if len(self.eventHandlers) > 0:
+            for event_handler in self.eventHandlers:
+                event_handler.deactivate()
+
         # Stop thread in case it's still running
         print 'Stopping KoikajiBackendHandler'
         if self.checkAsyncResultsJob.is_running():
             self.checkAsyncResultsJob.stop_execution()
             self.checkAsyncResultsJob.join()
 
+    def register_event_handler(self, event_handler):
+        if event_handler not in self.eventHandlers:
+            self.eventHandlers.append(event_handler)
+
+    def unregister_event_handler(self, event_handler):
+        if event_handler in self.eventHandlers:
+            self.eventHandlers.remove(event_handler)
+
     # perform_rpc_action executes a backend action on the Support Backend Module
-    # Upon
+    # Upon receiving the result, perform the handling task
     def perform_rpc_action(self, action):
         response = _do_rpc_call(client=self.webClient, endpoint=self.endpoint, request=action)
         return self.handle_rpc_response(response=response)
@@ -140,23 +162,47 @@ class KoikajiBackendHandler:
         # Event handling if required
         if response.action == RPC_ACTION_CHECK_PENDING_REQUESTS:
             # Iterate over returned list of pending requests
-            for action_json in response.result:
+            for action_json in response.params:
                 if getattr(action_json, 'result') == RPC_RESULT_PENDING:
                     pending += 1
                 else:
                     action_response = KoikajiBackendRPCResponse(**action_json)
                     self.handle_rpc_response(action_response)
                     processed += 1
+        else:
+            # Broadcast to event handlers
+            for event_handler in self.eventHandlers:
+                event_handler.handle_event(response)
 
         # Return response to initial caller
         return response, processed, pending
 
 
+# KoikajiBackendEventHandler - used for registering further modules for handling events
+class KoikajiBackendEventHandler:
+    def __init__(self, backend_handler):
+        self.backendHandler = backend_handler
+        self.active = False
+
+    def activate(self):
+        self.backendHandler.register_event_handler(self)
+        self.active = True
+
+    def deactivate(self):
+        self.backendHandler.unregister_event_handler(self)
+        self.active = False
+
+    def handle_event(
+            self,
+            rpc_response  # KoikajiBackendRPCResponse
+    ):
+        # To be implemented in subclasses
+        return
+
+
 # _init_web_client - Always JSON, so we can set headers here once directly
 def _init_web_client():
     web_client = WebClient()
-    web_client.Headers.Add("Accept", "application/json")
-    web_client.Headers.Add("Content-Type", "application/json")
     return web_client
 
 
@@ -177,6 +223,8 @@ def _do_rpc_call(
     # Build and Execute the request
     request_string = json.dumps(request, cls=KoikajiBackendJSONEncoder)
     try:
+        client.Headers.Add("Accept", "application/json")
+        client.Headers.Add("Content-Type", "application/json")
         response_string = client.UploadString(endpoint, request_string)
     except SystemError as e:
         return KoikajiBackendRPCResponse(result=RPC_RESULT_INVALID, action=request.action, params=e.message)

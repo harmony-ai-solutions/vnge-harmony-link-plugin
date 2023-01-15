@@ -13,14 +13,17 @@ import ConfigParser
 import os
 import time
 
-from koikaji_modules import backend
+from koikaji_modules import backend, kajiwoto
 
 # Define all used modules here
 _backendModule = None
+_kajiwotoModule = None
 
 
 # start - VNGE game start hook
 def start(game):
+    global _backendModule, _kajiwotoModule
+
     # -------- some options we want to init for the engine ---------
     game.sceneDir = "koikaji/"  # dir for Koikaji scenes
 
@@ -32,9 +35,16 @@ def start(game):
     # Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
     config = _load_config()
 
+    # Initialize Koikaji modules
     _init_modules(config)
 
-    # TODO: Login to Kajiwoto & Fetch User + Kaji Details -> Needs to be a private Kaji at the beginning
+    # Login to Kajiwoto
+    login_success = _kajiwotoModule.login()
+    if not login_success:
+        return
+
+    # Fetch Kaji Details -> Needs to be a single, private Kaji at the beginning
+    kaji = _kajiwotoModule.get_kaji_data()
 
     # TODO: Connect to Chat of the Kaji. Fetch Info on state, mood and last conversation
 
@@ -89,17 +99,15 @@ def start(game):
 
 # _init_modules initializes all the interfaces and handlers needed by koikaji_modules
 def _init_modules(config):
-    global _backendModule
+    global _backendModule, _kajiwotoModule
 
     # Init comms module for interfacing with external helper binaries
     _backendModule = backend.KoikajiBackendHandler(endpoint=config.get('Backend', 'endpoint'))
     _backendModule.start()
 
-    # FIXME: Debug code
-    # time.sleep(20)
-    # _backendModule.stop()
-    #
-    # time.sleep(60)
+    # Init Kajiwoto Module
+    _kajiwotoModule = kajiwoto.KajiwotoHandler(backend_handler=_backendModule, kajiwoto_config=dict(config.items('Kajiwoto')))
+    _kajiwotoModule.activate()
 
     # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
 
@@ -117,7 +125,7 @@ def _init_modules(config):
 
 
 def _shutdown_modules():
-    global _backendModule
+    global _backendModule, _kajiwotoModule
 
     _backendModule.stop()
 
