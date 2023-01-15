@@ -6,6 +6,7 @@ from backend import *
 
 # Actions
 RPC_ACTION_KAJIWOTO_LOGIN = 'KAJIWOTO_LOGIN'
+RPC_ACTION_KAJIWOTO_SELECT_ROOM = 'KAJIWOTO_SELECT_ROOM'
 
 
 # KajiwotoHandler - module main class
@@ -40,9 +41,21 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
             print 'Koikaji Backend Kajiwoto login failed. Error: {0}'.format(response.params)
             return False
 
-    def get_kaji_data(self):
-        # TODO
-        return None
+    def select_room(self):
+        action = KoikajiBackendRPCRequest(
+            action=RPC_ACTION_KAJIWOTO_SELECT_ROOM,
+            mode=RPC_MODE_SYNC,
+            params={
+                "kaji_room_id": self.config["kaji_room_id"]
+            }
+        )
+        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        if response.result == RPC_RESULT_SUCCESS:
+            print 'Koikaji Backend Kaji room selected for Kaji: {0}.'.format(response.params["kaji_name"])
+            return True
+        else:
+            print 'Koikaji Backend Kaji room selection failed. Error: {0}'.format(response.params)
+            return False
 
 
 

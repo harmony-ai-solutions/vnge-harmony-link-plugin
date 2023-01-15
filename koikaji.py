@@ -43,8 +43,10 @@ def start(game):
     if not login_success:
         return
 
-    # Fetch Kaji Details -> Needs to be a single, private Kaji at the beginning
-    kaji = _kajiwotoModule.get_kaji_data()
+    # Select Kaji Room from settings by ID -> Needs to be a single, private Kaji for now
+    room_selected = _kajiwotoModule.select_room()
+    if not room_selected:
+        return
 
     # TODO: Connect to Chat of the Kaji. Fetch Info on state, mood and last conversation
 
