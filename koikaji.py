@@ -48,7 +48,8 @@ def start(game):
     if not room_selected:
         return
 
-    # TODO: Connect to Chat of the Kaji. Fetch Info on state, mood and last conversation
+    # Connect to Chat of the Kaji. Backend will send info on state, mood and last conversation
+    room_joined = _kajiwotoModule.join_room()
 
     # TODO: Initialize Player controls.
 
