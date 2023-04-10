@@ -17,8 +17,6 @@ from threading import Thread
 import time
 import json
 
-from kajiwoto import Kaji
-
 # Define Constants
 
 # Backend processing modes
@@ -39,6 +37,17 @@ RPC_ACTION_CHECK_PENDING_REQUESTS = 'CHECK_PENDING_REQUESTS'
 class KoikajiBackendJSONEncoder(json.JSONEncoder):
     def default(self, o):
         return o.__dict__
+
+
+# Kaji - Internal representation for a Kaji
+class Kaji:
+    def __init__(self, room_id="", name="", mood="", behaviour="", persona="", status_message=""):
+        self.room_id = room_id
+        self.name = name
+        self.mood = mood
+        self.behaviour = behaviour
+        self.persona = persona
+        self.status_message = status_message
 
 
 # KoikajiBackendRPCRequest - Base class for request actions

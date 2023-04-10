@@ -92,14 +92,3 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
         else:
             print 'Koikaji Backend: joining Kaji room failed. Error: {0}'.format(response.params)
             return False
-
-
-# Kaji - Internal representation for a Kaji
-class Kaji:
-    def __init__(self, room_id="", name="", mood="", behaviour="", persona="", status_message=""):
-        self.room_id = room_id
-        self.name = name
-        self.mood = mood
-        self.behaviour = behaviour
-        self.persona = persona
-        self.status_message = status_message
