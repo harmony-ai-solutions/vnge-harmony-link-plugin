@@ -22,14 +22,15 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
         KoikajiBackendEventHandler.__init__(self, backend_handler=backend_handler)
         # Set config
         self.config = kajiwoto_config
-        # Kaji Details - Put in map later to allow more than 1 Kaji
-        self.kaji = None
 
     def handle_event(
             self,
             rpc_response  # KoikajiBackendRPCResponse
     ):
-        # To be implemented in subclasses
+        # Kaji Status update
+        if rpc_response.action == RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS and rpc_response.result == RPC_RESULT_SUCCESS:
+            self.update_kaji("", kaji_data=rpc_response.params)
+
         return
 
     def login(self):
@@ -77,19 +78,13 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
         )
         response, _, _ = self.backendHandler.perform_rpc_action(action)
         if response.result == RPC_RESULT_SUCCESS:
-            self.kaji.room_id = response.params["kaji_id"]
-            self.kaji.name = response.params["kaji_name"]
-            self.kaji.mood = response.params["kaji_mood"]
-            self.kaji.behaviour = response.params["kaji_behaviour"]
-            self.kaji.persona = response.params["kaji_persona"]
-            self.kaji.status_message = response.params["kaji_status_message"]
             print 'Koikaji Backend: joined room for Kaji: {0}.'.format(self.kaji.name)
 
             # Send Kaji Status Event
             status_update = KoikajiBackendRPCResponse(
                 action=RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS,
                 result=RPC_RESULT_SUCCESS,
-                params=self.kaji,
+                params=response.params,
             )
             self.backendHandler.handle_rpc_response(status_update)
 

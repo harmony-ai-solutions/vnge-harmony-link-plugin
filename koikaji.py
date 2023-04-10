@@ -13,11 +13,22 @@ import ConfigParser
 import os
 import time
 
-from koikaji_modules import backend, kajiwoto
+from koikaji_modules import backend, kajiwoto, countenance, text_to_speech
 
 # Define all used modules here
 _backendModule = None
 _kajiwotoModule = None
+_countenanceModule = None
+_ttsModule = None
+
+
+# Chara - Internal representation for a chara actor
+class Chara:
+    def __init__(self, actor, kaji_id=""):
+        self.actor = actor
+        self.kaji_id = kaji_id
+        # Internal Handlers
+        self.face_expression = None
 
 
 # start - VNGE game start hook
@@ -34,6 +45,7 @@ def start(game):
     # Actual Koikaji Initialization
     # Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
     config = _load_config()
+    scene_config = dict(config.items('Scene'))
 
     # Initialize Koikaji modules
     _init_modules(config)
@@ -41,21 +53,37 @@ def start(game):
     # Login to Kajiwoto
     login_success = _kajiwotoModule.login()
     if not login_success:
+        print 'Koikaji: Failed to login to Kajiwoto.'
         return
 
     # Select Kaji Room from settings by ID -> Needs to be a single, private Kaji for now
     room_selected = _kajiwotoModule.select_room()
     if not room_selected:
+        print 'Koikaji: Failed to select Kaji room.'
         return
 
     # Connect to Chat of the Kaji. Backend will send info on state, mood and last conversation
     room_joined = _kajiwotoModule.join_room()
+    if not room_joined:
+        print 'Koikaji: Failed to join Kaji room.'
+        return
+
+    # Load Game Scene
+    game.load_scene(scene_config["scene"])
+    # Attach Kaji to Chara Actor
+    kaji_actor = game.scenef_get_actor(scene_config["kaji_chara"])
+    if kaji_actor is None:
+        print 'Koikaji: Actor for Chara "{0}" could not be loaded.'.format(scene_config["kaji_chara"])
+        return
+
+    kaji_chara = Chara(actor=kaji_actor, kaji_id=_kajiwotoModule.kaji.room_id)
+    kaji_chara.actor.set_mouth_open(0)
+
+    _modules_update_chara(_kajiwotoModule.kaji.room_id, kaji_chara)
 
     # TODO: Initialize Player controls.
 
-    # FIXME: Debug code
-    game.load_scene("main.png")
-
+    # End Game
     game.set_buttons(["End Koikaji Demo >>"], [shutdown])
 
     # ---------------------------
@@ -102,7 +130,7 @@ def start(game):
 
 # _init_modules initializes all the interfaces and handlers needed by koikaji_modules
 def _init_modules(config):
-    global _backendModule, _kajiwotoModule
+    global _backendModule, _kajiwotoModule, _countenanceModule, _ttsModule
 
     # Init comms module for interfacing with external helper binaries
     _backendModule = backend.KoikajiBackendHandler(endpoint=config.get('Backend', 'endpoint'))
@@ -118,17 +146,29 @@ def _init_modules(config):
 
     # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
 
-    # TODO: Init Module for Kaji Expression Handling -> Just very simple for now
+    # Init Module for Kaji Expression Handling -> Just very simple for now
+    _countenanceModule = countenance.CountenanceHandler(backend_handler=_backendModule, countenance_config=dict(config.items('Countenance')))
+    _countenanceModule.activate()
 
-    # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex
+    # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex (currently handled async)
 
-    # TODO: Init Module for Kaji Voice Streaming + Audio-2-LipSync
+    # Init Module for Kaji Voice Streaming + Audio-2-LipSync
+    _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_backendModule, tts_config=dict(config.items('TTS')))
+    _ttsModule.activate()
 
     return None
 
 
+def _modules_update_chara(chara_id, chara):
+    global _kajiwotoModule, _countenanceModule, _ttsModule
+
+    _kajiwotoModule.update_chara(chara_id, chara)
+    _countenanceModule.update_chara(chara_id, chara)
+    _ttsModule.update_chara(chara_id, chara)
+
+
 def _shutdown_modules():
-    global _backendModule, _kajiwotoModule
+    global _backendModule
 
     _backendModule.stop()
 
