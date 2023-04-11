@@ -69,7 +69,7 @@ class KoikajiBackendRPCResponse:
 
 # KoikajiCheckResultsThread - Thread for checking on async requests being processed
 class KoikajiCheckResultsThread(Thread):
-    def __init__(self, endpoint, handler, interval_seconds=60):
+    def __init__(self, endpoint, handler, interval_seconds=3):
         # execute the base constructor
         Thread.__init__(self)
         # Control flow
@@ -173,11 +173,11 @@ class KoikajiBackendHandler:
         # Event handling if required
         if response.action == RPC_ACTION_CHECK_PENDING_REQUESTS:
             # Iterate over returned list of pending requests
-            for action_json in response.params:
-                if getattr(action_json, 'result') == RPC_RESULT_PENDING:
+            for pending_response in response.params:
+                if pending_response["result"] == RPC_RESULT_PENDING:
                     pending += 1
                 else:
-                    action_response = KoikajiBackendRPCResponse(**action_json)
+                    action_response = KoikajiBackendRPCResponse(**pending_response)
                     self.handle_rpc_response(action_response)
                     processed += 1
         else:
@@ -218,7 +218,8 @@ class KoikajiBackendEventHandler:
         if self.kaji is None:
             self.kaji = Kaji()
 
-        self.kaji.room_id = kaji_data["kaji_id"]
+        self.kaji.id = kaji_data["kaji_id"]
+        self.kaji.room_id = kaji_data["kaji_room_id"]
         self.kaji.name = kaji_data["kaji_name"]
         self.kaji.mood = kaji_data["kaji_mood"]
         self.kaji.behaviour = kaji_data["kaji_behaviour"]

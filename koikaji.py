@@ -15,6 +15,9 @@ import time
 
 from koikaji_modules import backend, kajiwoto, countenance, text_to_speech
 
+# Config
+_config = None
+
 # Define all used modules here
 _backendModule = None
 _kajiwotoModule = None
@@ -33,7 +36,7 @@ class Chara:
 
 # start - VNGE game start hook
 def start(game):
-    global _backendModule, _kajiwotoModule
+    global _config, _backendModule, _kajiwotoModule
 
     # -------- some options we want to init for the engine ---------
     game.sceneDir = "koikaji/"  # dir for Koikaji scenes
@@ -44,36 +47,52 @@ def start(game):
 
     # Actual Koikaji Initialization
     # Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
-    config = _load_config()
-    scene_config = dict(config.items('Scene'))
+    _config = _load_config()
+    scene_config = dict(_config.items('Scene'))
 
     # Initialize Koikaji modules
-    _init_modules(config)
+    _init_modules(_config)
 
     # Login to Kajiwoto
     login_success = _kajiwotoModule.login()
     if not login_success:
-        print 'Koikaji: Failed to login to Kajiwoto.'
+        _error_abort(game, 'Koikaji: Failed to login to Kajiwoto.')
         return
 
     # Select Kaji Room from settings by ID -> Needs to be a single, private Kaji for now
     room_selected = _kajiwotoModule.select_room()
     if not room_selected:
-        print 'Koikaji: Failed to select Kaji room.'
+        _error_abort(game, 'Koikaji: Failed to select Kaji room.')
         return
 
     # Connect to Chat of the Kaji. Backend will send info on state, mood and last conversation
     room_joined = _kajiwotoModule.join_room()
     if not room_joined:
-        print 'Koikaji: Failed to join Kaji room.'
+        _error_abort(game, 'Koikaji: Failed to join Kaji room.')
         return
 
-    # Load Game Scene
-    game.load_scene(scene_config["scene"])
+    # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
+    game.load_scene_immediately(scene_config["scene"])
+    game.set_timer(0.5, _load_scene_start)
+
+
+def _load_scene_start(game):
+    game.set_timer(1.0, _load_scene_start2)
+
+
+def _load_scene_start2(game):
+    real_start(game)
+
+
+def real_start(game):
+    global _config
+
+    game.scenef_register_actorsprops()
+
     # Attach Kaji to Chara Actor
-    kaji_actor = game.scenef_get_actor(scene_config["kaji_chara"])
+    kaji_actor = game.scenef_get_actor("kaji")
     if kaji_actor is None:
-        print 'Koikaji: Actor for Chara "{0}" could not be loaded.'.format(scene_config["kaji_chara"])
+        _error_abort(game, 'Koikaji: Actor for Chara "kaji" could not be loaded.')
         return
 
     kaji_chara = Chara(actor=kaji_actor, kaji_id=_kajiwotoModule.kaji.room_id)
@@ -85,47 +104,6 @@ def start(game):
 
     # End Game
     game.set_buttons(["End Koikaji Demo >>"], [shutdown])
-
-    # ---------------------------
-    # We can define additional characters (other than "s", system)
-    # first param is an character ID, second - header text color (RRGGBB), third - name 
-    # ---------------------------
-    # game.register_char("player", "aa5555", kajiwoto.username)
-    # game.register_char("kaji", "55aa55", kajiwoto.kajiname)
-
-    # init face expressions
-    # import vnlibfaceexpressions
-    # vnlibfaceexpressions.init_faceexpressions(game)
-
-    # ---------------------------
-    # If we want to set a number of strict-story-line texts with "Next >" buttons (with no special choices), we can use construct "texts_next"
-    # in array (1 param)
-    # - 1 param - char ID
-    # - 2 param - text
-    # - 3 param (if exist) - function to call during text show
-    # - 4 param (if exist) - function param
-    # last param (2)
-    # - function to move at end
-    # ---------------------------
-    # game.texts_next([
-    #     ["me", "Hi! It's me.\nSo, as you can see, I do nothing in the college.", _load_scene, "scene1lipsync.png"],
-    #     # loading scene
-    #     ["me//angry_whatyousay", "Hey, what's going on?...."],
-    #     ["teacher", "Is everybody here?\nI want to introduce our new transfer student...", _to_cam, 2],
-    #     # move cam to teacher
-    #     ["teacher//angry_whatyousay", "...Kawashima Morito"],
-    #     ["teacher//normal", "Please, Morito, tell something to everyone.", _to_cam_animated, 3],
-    #     # animated move cam to morito
-    #     ["main", "Hi! My name is Morito, I'm a new transfer student from Tokyo."],
-    #     ["main", "!...(what to say)..."],  # ! begins the silent construction
-    #     ["main", "...m-m...I like cats..."],
-    #     ["main", "...m-m...Glad to see everyone!"],
-    #     ["me", "So, we have new cute transfer student. It may be interested... May be spy on she on break?", _to_cam,
-    #      5],
-    #     ["me", "..wait until break, and then..."],
-    #     ["me", "..investigate the female toilet >"],
-    #     ["me", "Wow... and this is so elegant and strict Morito-chan?", _load_scene, "scene2.png"]
-    # ], shutdown)
 
 
 # _init_modules initializes all the interfaces and handlers needed by koikaji_modules
@@ -171,6 +149,11 @@ def _shutdown_modules():
     global _backendModule
 
     _backendModule.stop()
+
+
+def _error_abort(game, error):
+    print error
+    shutdown(game)
 
 
 def _load_config():

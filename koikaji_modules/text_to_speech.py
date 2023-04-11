@@ -15,6 +15,43 @@ from backend import *
 from kajiwoto import RPC_ACTION_KAJIWOTO_EVENT_KAJI_SPEECH, RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS
 
 
+class TTSProcessorThread(Thread):
+    def __init__(self, tts_handler, lipsync_interval=0.1):
+        # execute the base constructor
+        Thread.__init__(self)
+        # Control flow
+        self.running = False
+        # Params
+        self.tts_handler = tts_handler
+        self.lipsync_interval = lipsync_interval if lipsync_interval >= 0.1 else 0.1
+
+    def run(self):
+        self.running = True
+        while self.running:
+            if not self.wait_voice_played():
+                time.sleep(self.lipsync_interval)
+                continue
+            self.running = False
+
+    def wait_voice_played(self):
+        if self.tts_handler.playing_utterance.isPlaying:
+            # Add LipSync to chara
+            self.tts_handler.fake_lipsync_update()
+            # return false means job not done, it will run again in next update
+            return False
+        else:
+            # here the sound file is played, you can mark some flag or delete the file
+            print '[{0}]: done playing file: {1}!'.format(self.tts_handler.__class__.__name__, self.tts_handler.playing_utterance.filename)
+            self.tts_handler.playing_utterance.Cleanup()
+            # TODO: Send Message to Koikaji Backend to delete the source file from disk
+            self.tts_handler.fake_lipsync_stop()
+            # Recursive call to PlayVoice in case we have pending audios for this kaji
+            kaji_id = self.tts_handler.playing_utterance.kaji_id
+            self.tts_handler.playing_utterance = None
+            self.tts_handler.play_voice(kaji_id=kaji_id)
+            return True
+
+
 # TextToSpeechHandler - main module class
 class TextToSpeechHandler(KoikajiBackendEventHandler):
     def __init__(self, backend_handler, tts_config):
@@ -81,24 +118,7 @@ class TextToSpeechHandler(KoikajiBackendEventHandler):
             self.playing_utterance.Play()
             print '[{0}]: Playing audio file: {1}'.format(self.__class__.__name__, self.playing_utterance.filename)
             # add monitor job to check play status
-            game.append_update_job(self.wait_voice_played)
-
-    def wait_voice_played(self):
-        if self.playing_utterance.isPlaying:
-            # Add LipSync to chara
-            self.fake_lipsync_update()
-            # return false means job not done, it will run again in next update
-            return False
-        else:
-            # here the sound file is played, you can mark some flag or delete the file
-            print '[{0}]: done playing file: {1}!'.format(self.__class__.__name__, self.playing_utterance.filename)
-            self.playing_utterance.Cleanup()
-            # TODO: Send Message to Koikaji Backend to delete the source file from disk
-            self.fake_lipsync_stop()
-            # Recursive call to PlayVoice in case we have pending audios
-            self.playing_utterance = None
-            self.play_voice(kaji_id=self.playing_utterance.kaji_id)
-            return True
+            TTSProcessorThread(tts_handler=self).start()
 
     def fake_lipsync_stop(self):
         if self.chara is not None:
@@ -108,6 +128,6 @@ class TextToSpeechHandler(KoikajiBackendEventHandler):
         if self.chara is not None:
             mo = rng.random()
             if mo > 0.7:
-                self.readingChar.set_mouth_open(1.0)
+                self.chara.actor.set_mouth_open(1.0)
             else:
-                self.readingChar.set_mouth_open(mo)
+                self.chara.actor.set_mouth_open(mo)
