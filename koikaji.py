@@ -13,7 +13,7 @@ import ConfigParser
 import os
 import time
 
-from koikaji_modules import backend, kajiwoto, countenance, text_to_speech
+from koikaji_modules import backend, kajiwoto, countenance, text_to_speech, speech_to_text
 
 # Config
 _config = None
@@ -23,6 +23,7 @@ _backendModule = None
 _kajiwotoModule = None
 _countenanceModule = None
 _ttsModule = None
+_sttModule = None
 
 
 # Chara - Internal representation for a chara actor
@@ -100,15 +101,15 @@ def real_start(game):
 
     _modules_update_chara(_kajiwotoModule.kaji.room_id, kaji_chara)
 
-    # TODO: Initialize Player controls.
-
-    # End Game
-    game.set_buttons(["End Koikaji Demo >>"], [shutdown])
+    # Initialize Player controls.
+    game.set_buttons(["Record Microphone", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])
+    # TODO: Player face expression
+    # TODO: Player movement & direct interaction
 
 
 # _init_modules initializes all the interfaces and handlers needed by koikaji_modules
 def _init_modules(config):
-    global _backendModule, _kajiwotoModule, _countenanceModule, _ttsModule
+    global _backendModule, _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
 
     # Init comms module for interfacing with external helper binaries
     _backendModule = backend.KoikajiBackendHandler(endpoint=config.get('Backend', 'endpoint'))
@@ -118,9 +119,10 @@ def _init_modules(config):
     _kajiwotoModule = kajiwoto.KajiwotoHandler(backend_handler=_backendModule, kajiwoto_config=dict(config.items('Kajiwoto')))
     _kajiwotoModule.activate()
 
-    # TODO: Init Module for Audio Recording / Streaming + Player Speech-To-Text
+    # Init Module for Audio Recording / Streaming + Player Speech-To-Text
+    _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_backendModule, stt_config=dict(config.items('STT')))
 
-    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lew stuff
+    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
 
     # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
 
@@ -138,11 +140,12 @@ def _init_modules(config):
 
 
 def _modules_update_chara(chara_id, chara):
-    global _kajiwotoModule, _countenanceModule, _ttsModule
+    global _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
 
     _kajiwotoModule.update_chara(chara_id, chara)
     _countenanceModule.update_chara(chara_id, chara)
     _ttsModule.update_chara(chara_id, chara)
+    _sttModule.update_chara(chara_id, chara)
 
 
 def _shutdown_modules():
@@ -191,3 +194,23 @@ def shutdown(game):
 
     game.set_text("s", "Koikaji Module successfully stopped.")
     game.set_buttons(["Return to main screen >>"], game.return_to_start_screen_clear())
+
+
+def toggle_record_microphone(game):
+    global _sttModule
+
+    if _sttModule.is_recording_microphone:
+        recording_aborted = _sttModule.stop_listen("")
+        if not recording_aborted:
+            print 'Koikaji: Failed to record from microphone.'
+            return
+        # Update Buttons
+        game.set_buttons(["Record Microphone", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])
+
+    else:
+        recording_started = _sttModule.start_listen("")
+        if not recording_started:
+            print 'Koikaji: Failed to record from microphone.'
+            return
+        # Update Buttons
+        game.set_buttons(["Stop Recording", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])

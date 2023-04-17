@@ -117,7 +117,7 @@ class TextToSpeechHandler(KoikajiBackendEventHandler):
             self.playing_utterance = self.pending_utterances.pop(0)
             self.playing_utterance.Play()
             print '[{0}]: Playing audio file: {1}'.format(self.__class__.__name__, self.playing_utterance.filename)
-            # add monitor job to check play status
+            # add monitor job to check play status and perform lipsync updates
             TTSProcessorThread(tts_handler=self).start()
 
     def fake_lipsync_stop(self):
