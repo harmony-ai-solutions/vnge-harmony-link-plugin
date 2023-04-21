@@ -32,7 +32,7 @@ class Chara:
         self.actor = actor
         self.kaji_id = kaji_id
         # Internal Handlers
-        self.face_expression = None
+        self.current_base_expression = None
 
 
 # start - VNGE game start hook

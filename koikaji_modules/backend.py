@@ -41,8 +41,9 @@ class KoikajiBackendJSONEncoder(json.JSONEncoder):
 
 # Kaji - Internal representation for a Kaji
 class Kaji:
-    def __init__(self, room_id="", name="", mood="", behaviour="", persona="", status_message=""):
+    def __init__(self, room_id="", gender="", name="", mood="", behaviour="", persona="", status_message=""):
         self.room_id = room_id
+        self.gender = gender
         self.name = name
         self.mood = mood
         self.behaviour = behaviour
@@ -69,7 +70,7 @@ class KoikajiBackendRPCResponse:
 
 # KoikajiCheckResultsThread - Thread for checking on async requests being processed
 class KoikajiCheckResultsThread(Thread):
-    def __init__(self, endpoint, handler, interval_seconds=3):
+    def __init__(self, endpoint, handler, interval_seconds=0.5):
         # execute the base constructor
         Thread.__init__(self)
         # Control flow
@@ -220,6 +221,7 @@ class KoikajiBackendEventHandler:
 
         self.kaji.id = kaji_data["kaji_id"]
         self.kaji.room_id = kaji_data["kaji_room_id"]
+        self.kaji.gender = kaji_data["kaji_gender"]
         self.kaji.name = kaji_data["kaji_name"]
         self.kaji.mood = kaji_data["kaji_mood"]
         self.kaji.behaviour = kaji_data["kaji_behaviour"]
@@ -228,6 +230,7 @@ class KoikajiBackendEventHandler:
 
         if isinstance(self.kaji, Kaji):
             print '[{0}]: Room ID: {1}'.format(self.__class__.__name__, self.kaji.room_id)
+            print '[{0}]: Gender: {1}.'.format(self.__class__.__name__, self.kaji.gender)
             print '[{0}]: Name: {1}.'.format(self.__class__.__name__, self.kaji.name)
             print '[{0}]: Mood: {1}.'.format(self.__class__.__name__, self.kaji.mood)
             print '[{0}]: Behaviour: {1}.'.format(self.__class__.__name__, self.kaji.behaviour)
