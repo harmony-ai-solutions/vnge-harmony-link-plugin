@@ -2,18 +2,20 @@
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
 
 # Import Backend base Module
-from backend import *
+from connector import *
 
 # Actions
+from harmony_modules.common import HarmonyClientModuleBase
+
 RPC_ACTION_KAJISPEECH_START_LISTEN = 'KAJISPEECH_START_LISTEN'
 RPC_ACTION_KAJISPEECH_STOP_LISTEN = 'KAJISPEECH_STOP_LISTEN'
 
 
 # CountenanceHandler - module main class
-class SpeechToTextHandler(KoikajiBackendEventHandler):
+class SpeechToTextHandler(HarmonyClientModuleBase):
     def __init__(self, backend_handler, stt_config):
         # execute the base constructor
-        KoikajiBackendEventHandler.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
         # Set config
         self.config = stt_config
         # Recording Handling
@@ -28,7 +30,7 @@ class SpeechToTextHandler(KoikajiBackendEventHandler):
             mode=RPC_MODE_SYNC,
             params={}
         )
-        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        response, _, _ = self.backendHandler.send_event(action)
         if response.result == RPC_RESULT_SUCCESS:
             print 'Koikaji Backend: listening...'
             self.is_recording_microphone = True
@@ -46,7 +48,7 @@ class SpeechToTextHandler(KoikajiBackendEventHandler):
             mode=RPC_MODE_SYNC,
             params={}
         )
-        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        response, _, _ = self.backendHandler.send_event(action)
         if response.result == RPC_RESULT_SUCCESS:
             print 'Koikaji Backend: listening stopped. Processing speech...'
             self.is_recording_microphone = False

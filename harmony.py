@@ -13,13 +13,13 @@ import ConfigParser
 import os
 import time
 
-from koikaji_modules import backend, kajiwoto, countenance, text_to_speech, speech_to_text
+from harmony_modules import connector #, kajiwoto, countenance, text_to_speech, speech_to_text
 
 # Config
 _config = None
 
 # Define all used modules here
-_backendModule = None
+_connector = None
 _kajiwotoModule = None
 _countenanceModule = None
 _ttsModule = None
@@ -37,10 +37,10 @@ class Chara:
 
 # start - VNGE game start hook
 def start(game):
-    global _config, _backendModule, _kajiwotoModule
+    global _config, _connector, _kajiwotoModule
 
     # -------- some options we want to init for the engine ---------
-    game.sceneDir = "koikaji/"  # dir for Koikaji scenes
+    game.sceneDir = "harmony/"  # dir for Koikaji scenes
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
@@ -107,34 +107,34 @@ def real_start(game):
     # TODO: Player movement & direct interaction
 
 
-# _init_modules initializes all the interfaces and handlers needed by koikaji_modules
+# _init_modules initializes all the interfaces and handlers needed by harmony_modules
 def _init_modules(config):
-    global _backendModule, _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
+    global _connector, _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
 
     # Init comms module for interfacing with external helper binaries
-    _backendModule = backend.KoikajiBackendHandler(endpoint=config.get('Backend', 'endpoint'))
-    _backendModule.start()
+    _connector = connector.ConnectorEventHandler(endpoint=config.get('Connector', 'endpoint'), buffer_size=int(config.get('Connector', 'buffer_size')))
+    _connector.start()
 
-    # Init Kajiwoto Module
-    _kajiwotoModule = kajiwoto.KajiwotoHandler(backend_handler=_backendModule, kajiwoto_config=dict(config.items('Kajiwoto')))
-    _kajiwotoModule.activate()
-
-    # Init Module for Audio Recording / Streaming + Player Speech-To-Text
-    _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_backendModule, stt_config=dict(config.items('STT')))
-
-    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
-
-    # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
-
-    # Init Module for Kaji Expression Handling -> Just very simple for now
-    _countenanceModule = countenance.CountenanceHandler(backend_handler=_backendModule, countenance_config=dict(config.items('Countenance')))
-    _countenanceModule.activate()
-
-    # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex (currently handled async)
-
-    # Init Module for Kaji Voice Streaming + Audio-2-LipSync
-    _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_backendModule, tts_config=dict(config.items('TTS')))
-    _ttsModule.activate()
+    # # Init Kajiwoto Module
+    # _kajiwotoModule = kajiwoto.KajiwotoHandler(backend_handler=_connector, kajiwoto_config=dict(config.items('Kajiwoto')))
+    # _kajiwotoModule.activate()
+    #
+    # # Init Module for Audio Recording / Streaming + Player Speech-To-Text
+    # _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_connector, stt_config=dict(config.items('STT')))
+    #
+    # # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
+    #
+    # # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
+    #
+    # # Init Module for Kaji Expression Handling -> Just very simple for now
+    # _countenanceModule = countenance.CountenanceHandler(backend_handler=_connector, countenance_config=dict(config.items('Countenance')))
+    # _countenanceModule.activate()
+    #
+    # # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex (currently handled async)
+    #
+    # # Init Module for Kaji Voice Streaming + Audio-2-LipSync
+    # _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_connector, tts_config=dict(config.items('TTS')))
+    # _ttsModule.activate()
 
     return None
 
@@ -149,9 +149,9 @@ def _modules_update_chara(chara_id, chara):
 
 
 def _shutdown_modules():
-    global _backendModule
+    global _connector
 
-    _backendModule.stop()
+    _connector.stop()
 
 
 def _error_abort(game, error):

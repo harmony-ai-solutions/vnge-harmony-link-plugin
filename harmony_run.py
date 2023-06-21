@@ -30,7 +30,7 @@ clr.AddReference('Assembly-CSharp-firstpass')
 clr.AddReference('InputSimulator')
 clr.AddReference('NLayer')
 
-import koikaji
+import harmony
 
 
 class FakeGData:
@@ -100,4 +100,4 @@ class FakeGameObj:
 
 
 # Run game start method
-koikaji.start(FakeGameObj())
+harmony.start(FakeGameObj())

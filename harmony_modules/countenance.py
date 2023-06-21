@@ -2,28 +2,29 @@
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
 
 # VNGE
-from vngameengine import vnge_game as game
-from vnlibfaceexpressions import conf_neo_male, conf_neo_female
-from vnactor import char_act_funcs
+# from vngameengine import vnge_game as game
+# from vnlibfaceexpressions import conf_neo_male, conf_neo_female
+# from vnactor import char_act_funcs
 
 # Import Backend base Module
-from backend import *
+from connector import *
+from harmony_modules.common import HarmonyClientModuleBase
 from kajiwoto import RPC_ACTION_KAJIWOTO_EVENT_KAJI_SPEECH, RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS
 
 # Custom expressions - Fork from vnlibfaceexpressions
-expressions_default = conf_neo_male.copy()
-expressions_male = expressions_default.copy()
-expressions_female = expressions_default.copy()
-expressions_female.update(conf_neo_female)
+# expressions_default = conf_neo_male.copy()
+# expressions_male = expressions_default.copy()
+# expressions_female = expressions_default.copy()
+# expressions_female.update(conf_neo_female)
 # Custom expressions
 # TODO
 
 
 # CountenanceHandler - module main class
-class CountenanceHandler(KoikajiBackendEventHandler):
+class CountenanceHandler(HarmonyClientModuleBase):
     def __init__(self, backend_handler, countenance_config):
         # execute the base constructor
-        KoikajiBackendEventHandler.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
         # Set config
         self.config = countenance_config
 
@@ -87,25 +88,25 @@ class CountenanceHandler(KoikajiBackendEventHandler):
         self.apply_expression(chara_id, gender, expression_name, update_base_expression)
 
     def apply_expression(self, chara_id, gender, expression_name, update_base_expression=False):
-        expression = expressions_default[expression_name]
-        if gender == "F" and expression_name in expressions_female:
-            expression = expressions_female[expression_name]
-        elif gender == "M" and expression_name in expressions_male:
-            expression = expressions_male[expression_name]
-
-        for function in expression:
-            if function in char_act_funcs:
-                char_act_funcs[function][0](self.chara.actor, expression[function])
-
+        # expression = expressions_default[expression_name]
+        # if gender == "F" and expression_name in expressions_female:
+        #     expression = expressions_female[expression_name]
+        # elif gender == "M" and expression_name in expressions_male:
+        #     expression = expressions_male[expression_name]
+        #
+        # # for function in expression:
+        # #     if function in char_act_funcs:
+        # #         char_act_funcs[function][0](self.chara.actor, expression[function])
+        #
         if update_base_expression:
             self.chara.current_base_expression = expression_name
-        elif expression != self.chara.current_base_expression:
-            # Revert timer
-            revert_thread = Thread(target=self.apply_expression_delayed(
-                chara_id,
-                gender,
-                self.chara.current_base_expression,
-                update_base_expression=True,
-                delay=2
-            ))
-            revert_thread.start()
+        # elif expression != self.chara.current_base_expression:
+        #     # Revert timer
+        #     revert_thread = Thread(target=self.apply_expression_delayed(
+        #         chara_id,
+        #         gender,
+        #         self.chara.current_base_expression,
+        #         update_base_expression=True,
+        #         delay=2
+        #     ))
+        #     revert_thread.start()

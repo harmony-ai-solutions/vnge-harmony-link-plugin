@@ -2,9 +2,10 @@
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
 
 # Import Backend base Module
-from backend import *
 
 # Actions
+from harmony_modules.common import HarmonyClientModuleBase, AIStatus
+
 RPC_ACTION_KAJIWOTO_LOGIN = 'KAJIWOTO_LOGIN'
 RPC_ACTION_KAJIWOTO_SELECT_ROOM = 'KAJIWOTO_SELECT_ROOM'
 RPC_ACTION_KAJIWOTO_JOIN_ROOM = 'KAJIWOTO_JOIN_ROOM'
@@ -16,10 +17,10 @@ RPC_ACTION_KAJIWOTO_EVENT_KAJI_ACTION = 'KAJIWOTO_EVENT_KAJI_ACTION'
 
 
 # KajiwotoHandler - module main class
-class KajiwotoHandler(KoikajiBackendEventHandler):
+class KajiwotoHandler(HarmonyClientModuleBase):
     def __init__(self, backend_handler, kajiwoto_config):
         # execute the base constructor
-        KoikajiBackendEventHandler.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
         # Set config
         self.config = kajiwoto_config
 
@@ -42,7 +43,7 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
                 "password": self.config["password"]
             }
         )
-        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        response, _, _ = self.backendHandler.send_event(action)
         if response.result == RPC_RESULT_SUCCESS:
             print 'Koikaji Backend: Kajiwoto login successful.'
             return True
@@ -58,9 +59,9 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
                 "kaji_room_id": self.config["kaji_room_id"]
             }
         )
-        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        response, _, _ = self.backendHandler.send_event(action)
         if response.result == RPC_RESULT_SUCCESS:
-            self.kaji = Kaji(name=response.params["kaji_name"])
+            self.kaji = AIStatus(name=response.params["kaji_name"])
             print 'Koikaji Backend: Kaji room selected for Kaji: {0}.'.format(self.kaji.name)
             return True
         else:
@@ -76,7 +77,7 @@ class KajiwotoHandler(KoikajiBackendEventHandler):
                 "kaji_name": self.kaji.name
             }
         )
-        response, _, _ = self.backendHandler.perform_rpc_action(action)
+        response, _, _ = self.backendHandler.send_event(action)
         if response.result == RPC_RESULT_SUCCESS:
             print 'Koikaji Backend: joined room for Kaji: {0}.'.format(self.kaji.name)
 
