@@ -5,10 +5,6 @@
 # However, it cannot test the actual game loop
 #
 
-import sys
-sys.path.append(r"E:\Koikatsu Party After Party\BepInEx\plugins\Console")
-sys.path.append(r"E:\Koikatsu Party After Party\CharaStudio_Data\Managed")
-
 import clr
 # Pre-Load
 # clr.AddReference('Microsoft.Scripting.Metadata')

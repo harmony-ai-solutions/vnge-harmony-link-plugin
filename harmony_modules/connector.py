@@ -3,29 +3,18 @@
 #
 # This module uses the .NET hooks to interface with Harmony Link's Event Backend
 # Requires .NET Framework 4.5 or higher to work.
-
 from System.Net import WebSockets
 from System.Net.WebSockets import WebSocketMessageType
-from System import AggregateException
+from System import AggregateException, InvalidOperationException
 from System import Uri, Array, ArraySegment, Byte
 from System.Text.Encoding import UTF8
 from System.Threading import CancellationTokenSource, CancellationToken
-from System.Threading.Tasks import Task
 
 from common import HarmonyLinkEvent
-from threading import Thread
+from threading import Thread, current_thread
 import json
 
 # Define Constants
-
-# Result types
-EVENT_STATE_DONE = 'SUCCESS'  # Event was handled and returned successfully.
-EVENT_STATE_ERROR = 'ERROR'  # Event processing failed for some reason.
-EVENT_STATE_NEW = 'NEW'  # Event is new and has not been processed yet
-EVENT_STATE_PENDING = 'PENDING'  # Event is in pending state (currently being processed)
-
-# Actions
-RPC_ACTION_CHECK_PENDING_REQUESTS = 'CHECK_PENDING_REQUESTS'
 
 
 # Define Classes
@@ -84,7 +73,7 @@ class ConnectorEventThread(Thread):
             print 'Warning: WebSocket event was empty!'
         message_json = json.loads(message_string)
         message = HarmonyLinkEvent(**message_json)
-        self.handler.handle_event(response=message)
+        self.handler.handle_event(event=message)
 
     def is_running(self):
         return self.running
@@ -122,7 +111,8 @@ class ConnectorEventHandler:
         print 'Stopping ConnectorEventHandler'
         if self.eventJob.is_running():
             self.eventJob.stop_execution()
-            self.eventJob.join()
+            if self.eventJob is not current_thread():
+                self.eventJob.join()
 
     def register_event_handler(self, event_handler):
         if event_handler not in self.eventHandlers:
@@ -135,7 +125,7 @@ class ConnectorEventHandler:
     # perform_rpc_action executes a backend action on the Support Backend Module
     # Upon receiving the result, perform the handling task
     def send_event(self, event):
-        _send_web_socket_event(client=self.web_socket_client, event=event)
+        return _send_web_socket_event(client=self.web_socket_client, event=event)
 
     # handle_event is used to forward events received via received websocket messages
     def handle_event(
@@ -160,7 +150,7 @@ def _init_web_socket_client():
     return web_socket
 
 
-# _do_rpc_call performs an RPC call to the Support Backend Module using provided client and endpoint
+# _send_web_socket_event sends a WebSocket Event to Harmony Link using the provided client
 def _send_web_socket_event(
         client,  # System.Net.WebSockets.ClientWebSocket
         event,  # HarmonyLinkEvent
@@ -178,5 +168,10 @@ def _send_web_socket_event(
     send_buffer = Array[Byte](encoded_message)
     send_buffer_segment = ArraySegment[Byte](send_buffer)
     # Send it
-    send_task = client.SendAsync(send_buffer_segment, WebSocketMessageType.Text, True, CancellationToken.None)
-    send_task.Wait()
+    try:
+        send_task = client.SendAsync(send_buffer_segment, WebSocketMessageType.Text, True, CancellationToken.None)
+        send_task.Wait()
+        return True
+    except InvalidOperationException as e:
+        print 'Failed to send message to Harmony Link: {0}'.format(e.ToString())
+        return False

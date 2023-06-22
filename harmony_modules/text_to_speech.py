@@ -1,21 +1,22 @@
-# Koikaji TTS Module
+# Harmony Link Plugin for VNGE
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+#
+# This file contains all handling to be done with the Harmony Link TTS Module
+
+# Import Client base Module
+from harmony_modules.common import *
+
+# VNGE
+from vnsound import SoundSource
+from vngameengine import vnge_game as game
 
 import random
-
-from harmony_modules.common import HarmonyClientModuleBase
+import time
+from threading import Thread
 
 rng = random.WichmannHill()
 # we will not use simple random because of bug
 # see https://github.com/IronLanguages/ironpython2/issues/231 for details
-
-# VNGE
-# from vnsound import SoundSource
-# from vngameengine import vnge_game as game
-
-# Import Backend base Module
-from connector import *
-from kajiwoto import RPC_ACTION_KAJIWOTO_EVENT_KAJI_SPEECH, RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS
 
 
 class TTSProcessorThread(Thread):
@@ -46,12 +47,11 @@ class TTSProcessorThread(Thread):
             # here the sound file is played, you can mark some flag or delete the file
             print '[{0}]: done playing file: {1}!'.format(self.tts_handler.__class__.__name__, self.tts_handler.playing_utterance.filename)
             self.tts_handler.playing_utterance.Cleanup()
-            # TODO: Send Message to Koikaji Backend to delete the source file from disk
+            # TODO: Send Message to Harmony Link to delete the source file from disk
             self.tts_handler.fake_lipsync_stop()
-            # Recursive call to PlayVoice in case we have pending audios for this kaji
-            kaji_id = self.tts_handler.playing_utterance.kaji_id
+            # Recursive call to PlayVoice in case we have pending audios for this AI Entity
             self.tts_handler.playing_utterance = None
-            self.tts_handler.play_voice(kaji_id=kaji_id)
+            self.tts_handler.play_voice()
             return True
 
 
@@ -68,16 +68,16 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
 
     def handle_event(
             self,
-            rpc_response  # KoikajiBackendRPCResponse
+            event  # HarmonyLinkEvent
     ):
-        # Kaji Status update
-        if rpc_response.action == RPC_ACTION_KAJIWOTO_EVENT_KAJI_STATUS and rpc_response.result == RPC_RESULT_SUCCESS:
-            self.update_kaji("", kaji_data=rpc_response.params)
+        # AI Status update
+        if event.event_type == EVENT_TYPE_AI_STATUS and event.status == EVENT_STATE_DONE:
+            self.update_ai_state(ai_state=event.payload)
 
-        # Kaji Speech Utterance
-        if rpc_response.action == RPC_ACTION_KAJIWOTO_EVENT_KAJI_SPEECH and rpc_response.result == RPC_RESULT_SUCCESS:
+        # AI Speech Utterance
+        if event.event_type == EVENT_TYPE_AI_SPEECH and event.state == EVENT_STATE_DONE:
 
-            utterance_data = rpc_response.params
+            utterance_data = event.payload
 
             if utterance_data["type"] == "UTTERANCE_VERBAL" and len(utterance_data["audio_file"]) > 0:
                 audio_file = utterance_data["audio_file"]
@@ -85,34 +85,33 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
                 # soundType can be "BGM", "ENV", "SystemSE" or "GameSE"
                 # they are almost the same but with separated volume control in studio setting
                 utterance_sound_type = "BGM"
-                # utterance_player = SoundSource()
-                # err = utterance_player.CreateAudioSource(utterance_sound_type)
-                # if err:
-                #     utterance_player.Cleanup()
-                #     print '[{0}]: Unable to create sound source: {1}'.format(self.__class__.__name__, err)
-                #     return
-                #
-                # # load file
-                # err = utterance_player.LoadAudioFile(audio_file)
-                # if err:
-                #     utterance_player.Cleanup()
-                #     print '[{0}]: Unable to load audio file: {1}'.format(self.__class__.__name__, err)
-                #     return
-                #
-                # utterance_player.kaji_id = ""  # TODO Audio per Kaji later
-                # utterance_player.filename = audio_file
-                # print '[{0}]: Successfully loaded audio file: {1}'.format(self.__class__.__name__, audio_file)
+                utterance_player = SoundSource()
+                err = utterance_player.CreateAudioSource(utterance_sound_type)
+                if err:
+                    utterance_player.Cleanup()
+                    print '[{0}]: Unable to create sound source: {1}'.format(self.__class__.__name__, err)
+                    return
+
+                # load file
+                err = utterance_player.LoadAudioFile(audio_file)
+                if err:
+                    utterance_player.Cleanup()
+                    print '[{0}]: Unable to load audio file: {1}'.format(self.__class__.__name__, err)
+                    return
+
+                utterance_player.filename = audio_file
+                print '[{0}]: Successfully loaded audio file: {1}'.format(self.__class__.__name__, audio_file)
 
                 # Append to queue
-                # self.pending_utterances.append(utterance_player)
+                self.pending_utterances.append(utterance_player)
                 # Play
-                self.play_voice(kaji_id="")
+                self.play_voice()
 
             # TODO: Update chara to perform lipsync on play
 
         return
 
-    def play_voice(self, kaji_id):
+    def play_voice(self):
         if self.playing_utterance is not None:
             return
 

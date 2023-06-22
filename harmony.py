@@ -1,10 +1,10 @@
-#vngame;charastudio;Koikaji
+#vngame;charastudio;HarmonyAI
 
-# Koikaji Prototype main script
+# Harmony Link Plugin for VNGE
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
 #
-# This project aims at integrating Kajis from Kajiwoto into Koikatsu, by interfacing between actions in the game
-# and the actual conversation between an user and their Kaji.
+# This plugin aims at integrating fully AI controlled characters into IllusionSoft Games utilizing VNGE.
+# It is interfacing between actions in the game and the actual conversation between an user and their AI Companion.
 #
 # For more Info on the project goals, see README.md
 #
@@ -13,68 +13,98 @@ import ConfigParser
 import os
 import time
 
-from harmony_modules import connector #, kajiwoto, countenance, text_to_speech, speech_to_text
+from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text
 
 # Config
 _config = None
 
+# Init Handler - Special "Module"
+_initHandler = None
+
 # Define all used modules here
 _connector = None
-_kajiwotoModule = None
+_backendModule = None
 _countenanceModule = None
 _ttsModule = None
 _sttModule = None
 
 
+# Event Types
+EVENT_TYPE_INIT_CHARACTER = 'INIT_CHARACTER'
+
+
+# HarmonyInitHandler
+class HarmonyInitHandler(common.HarmonyClientModuleBase):
+    def __init__(self, backend_handler, scene_config, game):
+        # execute the base constructor
+        common.HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
+        # Set config
+        self.scene_config = scene_config
+        self.game = game
+
+    def handle_event(
+            self,
+            event  # HarmonyLinkEvent
+    ):
+        # Wait for Events required for initialization
+        if event.event_type == EVENT_TYPE_INIT_CHARACTER:
+            if event.status == common.EVENT_STATE_DONE:
+                # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
+                self.game.load_scene_immediately(self.scene_config["scene"])
+                self.game.set_timer(0.5, _load_scene_start)
+            else:
+                _error_abort(self.game, 'Harmony Link: Character Initialization failed.')
+
+            # Disable this handler, it is not needed anymore after init
+            self.deactivate()
+
+
 # Chara - Internal representation for a chara actor
 class Chara:
-    def __init__(self, actor, kaji_id=""):
+    def __init__(self, actor):
         self.actor = actor
-        self.kaji_id = kaji_id
         # Internal Handlers
         self.current_base_expression = None
 
 
 # start - VNGE game start hook
 def start(game):
-    global _config, _connector, _kajiwotoModule
+    global _config, _connector, _initHandler
 
     # -------- some options we want to init for the engine ---------
-    game.sceneDir = "harmony/"  # dir for Koikaji scenes
+    game.sceneDir = "harmony/"  # dir for Harmony Plugin scenes
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
     # game.isfAutoLipSync = True  # enable lip sync in framework
 
-    # Actual Koikaji Initialization
-    # Read Kajiwoto Credentials, Target Kaji and everything else needed from .ini file
+    # Actual Plugin Initialization
+    # Read Config data from .ini file
     _config = _load_config()
     scene_config = dict(_config.items('Scene'))
 
-    # Initialize Koikaji modules
+    # Initialize Client modules
     _init_modules(_config)
 
-    # Login to Kajiwoto
-    login_success = _kajiwotoModule.login()
-    if not login_success:
-        _error_abort(game, 'Koikaji: Failed to login to Kajiwoto.')
-        return
+    # Create Startup Init handler
+    _initHandler = HarmonyInitHandler(backend_handler=_connector, scene_config=scene_config, game=game)
+    _initHandler.activate()
 
-    # Select Kaji Room from settings by ID -> Needs to be a single, private Kaji for now
-    room_selected = _kajiwotoModule.select_room()
-    if not room_selected:
-        _error_abort(game, 'Koikaji: Failed to select Kaji room.')
+    # Initialize Character on Harmony Link
+    init_event = common.HarmonyLinkEvent(
+        event_id='start_listen',  # This is an arbitrary dummy ID to conform the Harmony Link API
+        event_type=EVENT_TYPE_INIT_CHARACTER,
+        status=common.EVENT_STATE_NEW,
+        payload={
+            'character_id': scene_config["character_id"]
+        }
+    )
+    init_send_success = _connector.send_event(init_event)
+    if init_send_success:
+        print 'Harmony Link: Initializing character \'{0}\'...'.format(scene_config["character_id"])
+    else:
+        _error_abort(game, 'Harmony Link: Failed to sent character initialize Event.')
         return
-
-    # Connect to Chat of the Kaji. Backend will send info on state, mood and last conversation
-    room_joined = _kajiwotoModule.join_room()
-    if not room_joined:
-        _error_abort(game, 'Koikaji: Failed to join Kaji room.')
-        return
-
-    # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
-    game.load_scene_immediately(scene_config["scene"])
-    game.set_timer(0.5, _load_scene_start)
 
 
 def _load_scene_start(game):
@@ -90,62 +120,62 @@ def real_start(game):
 
     game.scenef_register_actorsprops()
 
-    # Attach Kaji to Chara Actor
-    kaji_actor = game.scenef_get_actor("kaji")
-    if kaji_actor is None:
-        _error_abort(game, 'Koikaji: Actor for Chara "kaji" could not be loaded.')
+    # Attach Character to Chara Actor
+    scene_config = dict(_config.items('Scene'))
+    chara_actor = game.scenef_get_actor(scene_config["character_id"])
+    if chara_actor is None:
+        _error_abort(game, 'Harmony Link: Actor for Chara "{0}" could not be loaded.'.format(scene_config["character_id"]))
         return
 
-    kaji_chara = Chara(actor=kaji_actor, kaji_id=_kajiwotoModule.kaji.room_id)
-    kaji_chara.actor.set_mouth_open(0)
-
-    _modules_update_chara(_kajiwotoModule.kaji.room_id, kaji_chara)
+    _chara = Chara(actor=chara_actor)
+    _chara.actor.set_mouth_open(0)
+    # Update all modules with new chara actor
+    _modules_update_chara(_chara)
 
     # Initialize Player controls.
-    game.set_buttons(["Record Microphone", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])
+    game.set_buttons(["Record Microphone", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
+    # TODO: Hotkeys
     # TODO: Player face expression
     # TODO: Player movement & direct interaction
 
 
 # _init_modules initializes all the interfaces and handlers needed by harmony_modules
 def _init_modules(config):
-    global _connector, _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
+    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule
 
     # Init comms module for interfacing with external helper binaries
     _connector = connector.ConnectorEventHandler(endpoint=config.get('Connector', 'endpoint'), buffer_size=int(config.get('Connector', 'buffer_size')))
     _connector.start()
 
-    # # Init Kajiwoto Module
-    # _kajiwotoModule = kajiwoto.KajiwotoHandler(backend_handler=_connector, kajiwoto_config=dict(config.items('Kajiwoto')))
-    # _kajiwotoModule.activate()
-    #
-    # # Init Module for Audio Recording / Streaming + Player Speech-To-Text
-    # _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_connector, stt_config=dict(config.items('STT')))
-    #
-    # # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
-    #
-    # # TODO: Init Module for Kaji Roleplay to Animation -> Just very simple for now
-    #
-    # # Init Module for Kaji Expression Handling -> Just very simple for now
-    # _countenanceModule = countenance.CountenanceHandler(backend_handler=_connector, countenance_config=dict(config.items('Countenance')))
-    # _countenanceModule.activate()
-    #
-    # # TODO: Init Module for Kaji Response Handling: RP vs Speech -> Should literally just be a regex (currently handled async)
-    #
-    # # Init Module for Kaji Voice Streaming + Audio-2-LipSync
-    # _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_connector, tts_config=dict(config.items('TTS')))
-    # _ttsModule.activate()
+    # Init Backend Module
+    _backendModule = backend.BackendHandler(backend_handler=_connector, backend_config=dict(config.items('Backend')))
+    _backendModule.activate()
+
+    # Init Module for Audio Recording / Streaming + Player Speech-To-Text
+    _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_connector, stt_config=dict(config.items('STT')))
+
+    # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
+
+    # TODO: Init Module for AI Roleplay to Animation -> Just very simple for now
+
+    # Init Module for AI Expression Handling -> Just very simple for now
+    _countenanceModule = countenance.CountenanceHandler(backend_handler=_connector, countenance_config=dict(config.items('Countenance')))
+    _countenanceModule.activate()
+
+    # Init Module for AI Voice Streaming + Audio-2-LipSync
+    _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_connector, tts_config=dict(config.items('TTS')))
+    _ttsModule.activate()
 
     return None
 
 
-def _modules_update_chara(chara_id, chara):
-    global _kajiwotoModule, _countenanceModule, _ttsModule, _sttModule
+def _modules_update_chara(chara):
+    global _backendModule, _countenanceModule, _ttsModule, _sttModule
 
-    _kajiwotoModule.update_chara(chara_id, chara)
-    _countenanceModule.update_chara(chara_id, chara)
-    _ttsModule.update_chara(chara_id, chara)
-    _sttModule.update_chara(chara_id, chara)
+    _backendModule.update_chara(chara)
+    _countenanceModule.update_chara(chara)
+    _ttsModule.update_chara(chara)
+    _sttModule.update_chara(chara)
 
 
 def _shutdown_modules():
@@ -192,7 +222,7 @@ def shutdown(game):
     # Shutdown Modules
     _shutdown_modules()
 
-    game.set_text("s", "Koikaji Module successfully stopped.")
+    game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
     game.set_buttons(["Return to main screen >>"], game.return_to_start_screen_clear())
 
 
@@ -202,15 +232,15 @@ def toggle_record_microphone(game):
     if _sttModule.is_recording_microphone:
         recording_aborted = _sttModule.stop_listen("")
         if not recording_aborted:
-            print 'Koikaji: Failed to record from microphone.'
+            print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
             return
         # Update Buttons
-        game.set_buttons(["Record Microphone", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])
+        game.set_buttons(["Record Microphone", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
 
     else:
         recording_started = _sttModule.start_listen("")
         if not recording_started:
-            print 'Koikaji: Failed to record from microphone.'
+            print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
             return
         # Update Buttons
-        game.set_buttons(["Stop Recording", ">> End Koikaji Demo >>"], [toggle_record_microphone, shutdown])
+        game.set_buttons(["Stop Recording", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
