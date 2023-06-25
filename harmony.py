@@ -50,7 +50,7 @@ class HarmonyInitHandler(common.HarmonyClientModuleBase):
         if event.event_type == EVENT_TYPE_INIT_CHARACTER:
             if event.status == common.EVENT_STATE_DONE:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
-                self.game.load_scene_immediately(self.scene_config["scene"])
+                self.game.load_scene(self.scene_config["scene"])
                 self.game.set_timer(0.5, _load_scene_start)
             else:
                 _error_abort(self.game, 'Harmony Link: Character Initialization failed.')
