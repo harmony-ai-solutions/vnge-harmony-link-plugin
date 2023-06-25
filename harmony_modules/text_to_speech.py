@@ -57,9 +57,9 @@ class TTSProcessorThread(Thread):
 
 # TextToSpeechHandler - main module class
 class TextToSpeechHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_handler, tts_config):
+    def __init__(self, backend_connector, tts_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
         # Set config
         self.config = tts_config
         # TTS Handling
@@ -75,7 +75,7 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
             self.update_ai_state(ai_state=event.payload)
 
         # AI Speech Utterance
-        if event.event_type == EVENT_TYPE_AI_SPEECH and event.state == EVENT_STATE_DONE:
+        if event.event_type == EVENT_TYPE_AI_SPEECH and event.status == EVENT_STATE_DONE:
 
             utterance_data = event.payload
 

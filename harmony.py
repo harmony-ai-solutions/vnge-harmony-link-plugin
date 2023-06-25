@@ -35,9 +35,9 @@ EVENT_TYPE_INIT_CHARACTER = 'INIT_CHARACTER'
 
 # HarmonyInitHandler
 class HarmonyInitHandler(common.HarmonyClientModuleBase):
-    def __init__(self, backend_handler, scene_config, game):
+    def __init__(self, backend_connector, scene_config, game):
         # execute the base constructor
-        common.HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
+        common.HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
         # Set config
         self.scene_config = scene_config
         self.game = game
@@ -87,8 +87,10 @@ def start(game):
     _init_modules(_config)
 
     # Create Startup Init handler
-    _initHandler = HarmonyInitHandler(backend_handler=_connector, scene_config=scene_config, game=game)
+    _initHandler = HarmonyInitHandler(backend_connector=_connector, scene_config=scene_config, game=game)
     _initHandler.activate()
+
+    time.sleep(1)
 
     # Initialize Character on Harmony Link
     init_event = common.HarmonyLinkEvent(
@@ -148,22 +150,22 @@ def _init_modules(config):
     _connector.start()
 
     # Init Backend Module
-    _backendModule = backend.BackendHandler(backend_handler=_connector, backend_config=dict(config.items('Backend')))
+    _backendModule = backend.BackendHandler(backend_connector=_connector, backend_config=dict(config.items('Backend')))
     _backendModule.activate()
 
     # Init Module for Audio Recording / Streaming + Player Speech-To-Text
-    _sttModule = speech_to_text.SpeechToTextHandler(backend_handler=_connector, stt_config=dict(config.items('STT')))
+    _sttModule = speech_to_text.SpeechToTextHandler(backend_connector=_connector, stt_config=dict(config.items('STT')))
 
     # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
 
     # TODO: Init Module for AI Roleplay to Animation -> Just very simple for now
 
     # Init Module for AI Expression Handling -> Just very simple for now
-    _countenanceModule = countenance.CountenanceHandler(backend_handler=_connector, countenance_config=dict(config.items('Countenance')))
+    _countenanceModule = countenance.CountenanceHandler(backend_connector=_connector, countenance_config=dict(config.items('Countenance')))
     _countenanceModule.activate()
 
     # Init Module for AI Voice Streaming + Audio-2-LipSync
-    _ttsModule = text_to_speech.TextToSpeechHandler(backend_handler=_connector, tts_config=dict(config.items('TTS')))
+    _ttsModule = text_to_speech.TextToSpeechHandler(backend_connector=_connector, tts_config=dict(config.items('TTS')))
     _ttsModule.activate()
 
     return None
@@ -230,7 +232,7 @@ def toggle_record_microphone(game):
     global _sttModule
 
     if _sttModule.is_recording_microphone:
-        recording_aborted = _sttModule.stop_listen("")
+        recording_aborted = _sttModule.stop_listen()
         if not recording_aborted:
             print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
             return
@@ -238,7 +240,7 @@ def toggle_record_microphone(game):
         game.set_buttons(["Record Microphone", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
 
     else:
-        recording_started = _sttModule.start_listen("")
+        recording_started = _sttModule.start_listen()
         if not recording_started:
             print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
             return

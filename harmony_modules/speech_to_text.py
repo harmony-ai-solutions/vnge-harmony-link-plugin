@@ -9,9 +9,9 @@ from harmony_modules.common import *
 
 # CountenanceHandler - module main class
 class SpeechToTextHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_handler, stt_config):
+    def __init__(self, backend_connector, stt_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
         # Set config
         self.config = stt_config
         # Recording Handling
@@ -27,7 +27,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             status=EVENT_STATE_NEW,
             payload={}
         )
-        success = self.backendHandler.send_event(event)
+        success = self.backend_connector.send_event(event)
         if success:
             print 'Harmony Link: listening...'
             self.is_recording_microphone = True
@@ -46,7 +46,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             status=EVENT_STATE_NEW,
             payload={}
         )
-        success = self.backendHandler.send_event(event)
+        success = self.backend_connector.send_event(event)
         if success:
             print 'Harmony Link: listening stopped. Processing speech...'
             self.is_recording_microphone = False

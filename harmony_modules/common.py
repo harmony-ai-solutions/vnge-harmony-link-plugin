@@ -18,8 +18,8 @@ EVENT_TYPE_STT_STOP_LISTEN = 'STT_STOP_LISTEN'
 
 # HarmonyClientModuleBase - used for registering further modules for handling events
 class HarmonyClientModuleBase:
-    def __init__(self, backend_handler):
-        self.backendHandler = backend_handler
+    def __init__(self, backend_connector):
+        self.backend_connector = backend_connector
         self.active = False
         # AI State Details
         self.ai_state = None
@@ -27,11 +27,11 @@ class HarmonyClientModuleBase:
         self.chara = None
 
     def activate(self):
-        self.backendHandler.register_event_handler(self)
+        self.backend_connector.register_event_handler(self)
         self.active = True
 
     def deactivate(self):
-        self.backendHandler.unregister_event_handler(self)
+        self.backend_connector.unregister_event_handler(self)
         self.active = False
 
     def update_ai_state(self, ai_state):

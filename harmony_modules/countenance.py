@@ -30,9 +30,9 @@ expressions_female.update(conf_neo_female)
 
 # CountenanceHandler - module main class
 class CountenanceHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_handler, countenance_config):
+    def __init__(self, backend_connector, countenance_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_handler=backend_handler)
+        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
         # Set config
         self.config = countenance_config
 
