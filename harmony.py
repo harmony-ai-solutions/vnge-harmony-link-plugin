@@ -90,6 +90,7 @@ def start(game):
     _initHandler = HarmonyInitHandler(backend_connector=_connector, scene_config=scene_config, game=game)
     _initHandler.activate()
 
+    # Sleep 1 second to allow for the backend thread to connect to the websocket server
     time.sleep(1)
 
     # Initialize Character on Harmony Link
