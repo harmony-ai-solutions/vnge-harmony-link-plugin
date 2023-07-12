@@ -13,7 +13,7 @@ import ConfigParser
 import os
 import time
 
-from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text
+from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls
 
 # Config
 _config = None
@@ -27,6 +27,7 @@ _backendModule = None
 _countenanceModule = None
 _ttsModule = None
 _sttModule = None
+_controlsModule = None
 
 
 # Event Types
@@ -119,7 +120,7 @@ def _load_scene_start2(game):
 
 
 def real_start(game):
-    global _config
+    global _config, _sttModule, _controlsModule
 
     game.scenef_register_actorsprops()
 
@@ -136,15 +137,12 @@ def real_start(game):
     _modules_update_chara(_chara)
 
     # Initialize Player controls.
-    game.set_buttons(["Record Microphone", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
-    # TODO: Hotkeys
-    # TODO: Player face expression
-    # TODO: Player movement & direct interaction
+    _controlsModule.setup_game_controls(game, shutdown, _sttModule)
 
 
 # _init_modules initializes all the interfaces and handlers needed by harmony_modules
 def _init_modules(config):
-    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule
+    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
 
     # Init comms module for interfacing with external helper binaries
     _connector = connector.ConnectorEventHandler(endpoint=config.get('Connector', 'endpoint'), buffer_size=int(config.get('Connector', 'buffer_size')))
@@ -168,6 +166,10 @@ def _init_modules(config):
     # Init Module for AI Voice Streaming + Audio-2-LipSync
     _ttsModule = text_to_speech.TextToSpeechHandler(backend_connector=_connector, tts_config=dict(config.items('TTS')))
     _ttsModule.activate()
+
+    # Init Player Controls Module
+    _controlsModule = controls.ControlsHandler(backend_connector=_connector, controls_keymap_config=dict(config.items('Controls.Keymap')))
+    _controlsModule.activate()
 
     return None
 
@@ -228,22 +230,3 @@ def shutdown(game):
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
     game.set_buttons(["Return to main screen >>"], game.return_to_start_screen_clear())
 
-
-def toggle_record_microphone(game):
-    global _sttModule
-
-    if _sttModule.is_recording_microphone:
-        recording_aborted = _sttModule.stop_listen()
-        if not recording_aborted:
-            print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
-            return
-        # Update Buttons
-        game.set_buttons(["Record Microphone", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
-
-    else:
-        recording_started = _sttModule.start_listen()
-        if not recording_started:
-            print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
-            return
-        # Update Buttons
-        game.set_buttons(["Stop Recording", ">> End Harmony Link Demo >>"], [toggle_record_microphone, shutdown])
