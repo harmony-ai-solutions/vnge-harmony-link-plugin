@@ -13,8 +13,13 @@ EVENT_STATE_PENDING = 'PENDING'  # Event is in pending state (currently being pr
 # Event Types
 EVENT_TYPE_AI_STATUS = 'AI_STATUS'
 EVENT_TYPE_AI_SPEECH = 'AI_SPEECH'
+EVENT_TYPE_USER_UTTERANCE = 'USER_UTTERANCE'
 EVENT_TYPE_STT_START_LISTEN = 'STT_START_LISTEN'
 EVENT_TYPE_STT_STOP_LISTEN = 'STT_STOP_LISTEN'
+EVENT_TYPE_TTS_PLAYBACK_DONE = 'TTS_PLAYBACK_DONE'
+
+# Utterance Types
+UTTERANCE_NONVERBAL = 'UTTERANCE_NONVERBAL'
 
 # HarmonyClientModuleBase - used for registering further modules for handling events
 class HarmonyClientModuleBase:

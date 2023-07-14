@@ -46,8 +46,15 @@ class TTSProcessorThread(Thread):
         else:
             # here the sound file is played, you can mark some flag or delete the file
             print '[{0}]: done playing file: {1}!'.format(self.tts_handler.__class__.__name__, self.tts_handler.playing_utterance.filename)
+            # Send Message to Harmony Link to delete the source file from disk
+            playback_done_event = HarmonyLinkEvent(
+                event_id='playback_done',  # This is an arbitrary dummy ID to conform the Harmony Link API
+                event_type=EVENT_TYPE_TTS_PLAYBACK_DONE,
+                status=EVENT_STATE_NEW,
+                payload=self.tts_handler.playing_utterance.filename
+            )
+            self.tts_handler.backend_connector.send_event(playback_done_event)
             self.tts_handler.playing_utterance.Cleanup()
-            # TODO: Send Message to Harmony Link to delete the source file from disk
             self.tts_handler.fake_lipsync_stop()
             # Recursive call to PlayVoice in case we have pending audios for this AI Entity
             self.tts_handler.playing_utterance = None

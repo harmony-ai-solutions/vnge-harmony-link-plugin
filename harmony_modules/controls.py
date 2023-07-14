@@ -216,7 +216,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         # Buttons to send independent from voice input and clear
         GUILayout.BeginHorizontal()
         if GUILayout.Button("Send"):
-            if self.send_nonverbal_interaction():
+            if self.send_independent_nonverbal_interaction():
                 self.clear_nonverbal_interaction_field()
         if GUILayout.Button("Clear"):
             self.clear_nonverbal_interaction_field()
@@ -299,9 +299,37 @@ class ControlsHandler(HarmonyClientModuleBase):
             else:
                 self.nonverbal_gui_data.input_value = string
 
-    def send_nonverbal_interaction(self):
-        # TODO
-        print "Sending *{0}*".format(self.nonverbal_gui_data.input_value)
+    def send_independent_nonverbal_interaction(self):
+        if len(self.nonverbal_gui_data.input_value) == 0:
+            return
+
+        print "Sending independent nonverbal Interaction *{0}*".format(self.nonverbal_gui_data.input_value)
+        event = HarmonyLinkEvent(
+            event_id='new_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_USER_UTTERANCE,
+            status=EVENT_STATE_NEW,
+            payload={
+                'type': UTTERANCE_NONVERBAL,
+                'content': self.nonverbal_gui_data.input_value
+            }
+        )
+        return self.backend_connector.send_event(event)
+
+    def update_ongoing_nonverbal_interaction(self):
+        if len(self.nonverbal_gui_data.input_value) == 0:
+            return
+
+        print "Updating ongoing nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
+        event = HarmonyLinkEvent(
+            event_id='update_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_USER_UTTERANCE,
+            status=EVENT_STATE_PENDING,
+            payload={
+                'type': UTTERANCE_NONVERBAL,
+                'content': self.nonverbal_gui_data.input_value
+            }
+        )
+        return self.backend_connector.send_event(event)
 
     def clear_nonverbal_interaction_field(self):
         self.nonverbal_gui_data.input_value = ''
@@ -351,6 +379,8 @@ class ControlsHandler(HarmonyClientModuleBase):
             if not recording_started:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
+            # Update ongoing nonverbal interaction if set
+            self.update_ongoing_nonverbal_interaction()
             # Update Buttons
             self.game.set_buttons(
                 ["Stop Recording", ">> End Harmony Link Demo >>"],
