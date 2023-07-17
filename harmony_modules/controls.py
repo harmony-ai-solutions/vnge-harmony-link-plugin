@@ -315,7 +315,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         )
         return self.backend_connector.send_event(event)
 
-    def update_ongoing_nonverbal_interaction(self):
+    def update_delayed_nonverbal_interaction(self):
         if len(self.nonverbal_gui_data.input_value) == 0:
             return
 
@@ -323,9 +323,9 @@ class ControlsHandler(HarmonyClientModuleBase):
         event = HarmonyLinkEvent(
             event_id='update_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
             event_type=EVENT_TYPE_USER_UTTERANCE,
-            status=EVENT_STATE_PENDING,
+            status=EVENT_STATE_NEW,
             payload={
-                'type': UTTERANCE_NONVERBAL,
+                'type': UTTERANCE_NONVERBAL_DELAYED,
                 'content': self.nonverbal_gui_data.input_value
             }
         )
@@ -379,8 +379,8 @@ class ControlsHandler(HarmonyClientModuleBase):
             if not recording_started:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
-            # Update ongoing nonverbal interaction if set
-            self.update_ongoing_nonverbal_interaction()
+            # Update delayed nonverbal interaction if set
+            self.update_delayed_nonverbal_interaction()
             # Update Buttons
             self.game.set_buttons(
                 ["Stop Recording", ">> End Harmony Link Demo >>"],

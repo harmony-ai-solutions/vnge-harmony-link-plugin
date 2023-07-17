@@ -20,6 +20,7 @@ EVENT_TYPE_TTS_PLAYBACK_DONE = 'TTS_PLAYBACK_DONE'
 
 # Utterance Types
 UTTERANCE_NONVERBAL = 'UTTERANCE_NONVERBAL'
+UTTERANCE_NONVERBAL_DELAYED = 'UTTERANCE_NONVERBAL_DELAYED'
 
 # HarmonyClientModuleBase - used for registering further modules for handling events
 class HarmonyClientModuleBase:
