@@ -5,10 +5,6 @@
 # However, it cannot test the actual game loop
 #
 
-import sys
-sys.path.append(r"E:\Koikatsu Party After Party\BepInEx\plugins\Console")
-sys.path.append(r"E:\Koikatsu Party After Party\CharaStudio_Data\Managed")
-
 import clr
 # Pre-Load
 # clr.AddReference('Microsoft.Scripting.Metadata')
@@ -30,7 +26,7 @@ clr.AddReference('Assembly-CSharp-firstpass')
 clr.AddReference('InputSimulator')
 clr.AddReference('NLayer')
 
-import koikaji
+import harmony
 
 
 class FakeGData:
@@ -100,4 +96,4 @@ class FakeGameObj:
 
 
 # Run game start method
-koikaji.start(FakeGameObj())
+harmony.start(FakeGameObj())
