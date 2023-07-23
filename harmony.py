@@ -145,7 +145,12 @@ def _init_modules(config):
     global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
 
     # Init comms module for interfacing with external helper binaries
-    _connector = connector.ConnectorEventHandler(endpoint=config.get('Connector', 'endpoint'), buffer_size=int(config.get('Connector', 'buffer_size')))
+    _connector = connector.ConnectorEventHandler(
+        ws_endpoint=config.get('Connector', 'ws_endpoint'),
+        ws_buffer_size=int(config.get('Connector', 'ws_buffer_size')),
+        http_endpoint=config.get('Connector', 'http_endpoint'),
+        http_listen_port=config.get('Connector', 'http_listen_port')
+    )
     _connector.start()
 
     # Init Backend Module
