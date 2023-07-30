@@ -13,6 +13,7 @@ EVENT_STATE_PENDING = 'PENDING'  # Event is in pending state (currently being pr
 # Event Types
 EVENT_TYPE_AI_STATUS = 'AI_STATUS'
 EVENT_TYPE_AI_SPEECH = 'AI_SPEECH'
+EVENT_TYPE_AI_COUNTENANCE_UPDATE = 'AI_COUNTENANCE_UPDATE'
 EVENT_TYPE_USER_UTTERANCE = 'USER_UTTERANCE'
 EVENT_TYPE_STT_START_LISTEN = 'STT_START_LISTEN'
 EVENT_TYPE_STT_STOP_LISTEN = 'STT_STOP_LISTEN'
@@ -29,6 +30,7 @@ class HarmonyClientModuleBase:
         self.active = False
         # AI State Details
         self.ai_state = None
+        self.countenance_state = None
         # Chara Details
         self.chara = None
 
@@ -65,6 +67,23 @@ class HarmonyClientModuleBase:
             print '[{0}]: Persona: {1}.'.format(self.__class__.__name__, self.ai_state.persona)
             print '[{0}]: Status Message: {1}.'.format(self.__class__.__name__, self.ai_state.status_message)
 
+    def update_countenance_state(self, countenance_state):
+        print '[{0}]: Updated Countenance State:'.format(self.__class__.__name__)
+
+        if countenance_state is None or len(countenance_state) == 0:
+            self.countenance_state = None
+            print '[{0}]: Countenance State set to none'.format(self.__class__.__name__)
+
+        if self.countenance_state is None:
+            self.countenance_state = CountenanceState()
+
+        self.countenance_state.emotional_state = countenance_state["emotional_state"]
+        self.countenance_state.facial_expression = countenance_state["facial_expression"]
+
+        if isinstance(self.countenance_state, CountenanceState):
+            print '[{0}]: Emotional State: {1}.'.format(self.__class__.__name__, self.countenance_state.emotional_state)
+            print '[{0}]: Facial Expression: {1}.'.format(self.__class__.__name__, self.countenance_state.facial_expression)
+
     def update_chara(self, chara):
         print '[{0}]: Updated Chara:'.format(self.__class__.__name__)
         self.chara = chara
@@ -86,7 +105,7 @@ class HarmonyLinkEvent:
         self.payload = payload
 
 
-# AIStatus - describes the current state of an AI character
+# AIState - describes the current state of an AI character
 class AIState:
     def __init__(self, gender="", name="", mood="", behaviour="", persona="", status_message=""):
         self.gender = gender
@@ -95,3 +114,10 @@ class AIState:
         self.behaviour = behaviour
         self.persona = persona
         self.status_message = status_message
+
+
+# CountenanceState - describes the current state of an AI character
+class CountenanceState:
+    def __init__(self, emotional_state="", facial_expression=""):
+        self.emotional_state = emotional_state
+        self.facial_expression = facial_expression
