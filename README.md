@@ -1,34 +1,39 @@
 # Project Harmony.AI - Harmony Link VNGE-Plugin
-
+![Harmony Link Technical overview](docs/images/VNGE-Plugin.png)
 ---
 
-The Harmony Link VNGE-Plugin is an Event-Layer Plugin for Project Harmony.AI's [Harmony Link AI-middleware]().
+The Harmony Link VNGE-Plugin is an Event-Layer Plugin for Project Harmony.AI's [Harmony Link AI-middleware](https://github.com/harmony-ai-solutions/harmony-link).
 
 It is completely written in IronPython and builds upon [Keitaro's](https://www.patreon.com/KeiPlugins/) 
 VNGE (Visual Novel Game Engine) Mod for a series of recent
-Unity based Games made by japanese games company [Illusion](https://en.wikipedia.org/wiki/Illusion_(company\)).
+Unity based Games made by japanese games company [Illusion](https://en.wikipedia.org/wiki/Illusion_(company)).
 
 By implementing Harmony Link's Events API, it allows Players to extend Ingame Characters with AI-Powered functionality,
 such as Real-Time Conversation Abilities (Using AI Language models, Speech-to-Text and Text-to-Speech) and basic non-verbal
 Expressions and Interaction capabilities, turning them into interactive virtual companions.
 
-TODO: Demonstrator video
+We're still missing a proper showcasing video, however, you can get an Impression from this recent Developer VLOG:
+https://drive.google.com/file/d/13KTgbJuc-fSqjGG4Js1J7G6uubg3wxWt/view?usp=sharing
+
+Towards the end of the Beta Phase, we're planning to create a more detailed Feature Showcase.
 
 Currently, this Plugin as well as Harmony Link is still in an early development stage, and therefore is merely a tech
 demonstrator, rather than a fully fledged AI companion solution. However the long term development goal for Characters
 powered by Harmony Link is to allow them to freely move around in the virtual environment and interact with the Player
 and other AI powered entities "at their will".
 
-*For more details about the project and how you can support and get in touch with us, see* 
+*For more details about the project as well as how you can support and get in touch with us, see* 
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
-- 2023-08-10: Closed Beta Nr. 2 launched! Please reach out via Discord if you want to participate. 
+- 2023-08-16: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate. 
 
 ## Quickstart
-To get started quickly, please have a look at our [Quickstart guide](docs/Quickstart.md).
+To get started quickly, please have a look at our [Quickstart guide](https://project-harmony.youtrack.cloud/articles/HARMONY-A-9/Quickstart).
 
 ## Documentation & Resources
+For a detailed understanding of Harmony Link and the underlying concepts, as well as for getting started with development
+please take a look at our [technical documentation](docs/README.md).
 
 ---
 
