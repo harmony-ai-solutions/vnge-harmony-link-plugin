@@ -1,8 +1,8 @@
-# Project Harmony.AI - Harmony Link VNGE-Plugin
+# Project Harmony.AI - VNGE-Plugin for Harmony Link
 ![Harmony Link Technical overview](docs/images/VNGE-Plugin.png)
 ---
 
-The Harmony Link VNGE-Plugin is an Event-Layer Plugin for Project Harmony.AI's [Harmony Link AI-middleware](https://github.com/harmony-ai-solutions/harmony-link).
+The VNGE-Plugin for Harmony Link is an Event-Layer Plugin for Project Harmony.AI's [Harmony Link AI-middleware](https://github.com/harmony-ai-solutions/harmony-link).
 
 It is completely written in IronPython and builds upon [Keitaro's](https://www.patreon.com/KeiPlugins/) 
 VNGE (Visual Novel Game Engine) Mod for a series of recent
