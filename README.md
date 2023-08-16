@@ -54,15 +54,23 @@ Therefore, for all our current and future software offerings, we'll perform a co
 we can safely open source them in parts or even completely, as long as this appears to be non-harmful towards achieving
 the project's main goal.
 
+Also, we're constantly striving to keep our software offerings as accessible as possible when it comes to services which
+cannot be run or managed by everyone - For example our Harmony Speech TTS Engine. As long as this project exists,
+we'll be trying out utmost to provide free tiers for personal and public research use of our software and APIs.
+
+However, at the same time we'll also ensure everyone who supports us or actively joins forces with us on our journey, gets
+something proper back in turn. Therefore we're also maintaining a Patreon Page with different supporter tiers, as we are
+open towards collaboration with other businesses.
+
 ### How to reach out to us
 
 #### If you want to collaborate or support this Project financially:
 
-Join our Discord Server and subscribe to our Patreon - Even $1 helps us drive this project forward.
+Feel free to join our Discord Server and / or subscribe to our Patreon - Even $1 helps us drive this project forward.
 
-[Harmony.AI Discord Server](https://discord.gg/f6RQyhNPX8)
+![Harmony.AI Discord Server](docs/images/discord32.png) [Harmony.AI Discord Server](https://discord.gg/f6RQyhNPX8)
 
-[Harmony.AI Patreon]()
+![Harmony.AI Discord Server](docs/images/Patreon32.png) [Harmony.AI Patreon]()
 
 #### If you want to use our software commercially or discuss a business or development partnership:
 
