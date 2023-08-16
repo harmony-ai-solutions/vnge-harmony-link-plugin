@@ -27,7 +27,7 @@ and other AI powered entities "at their will".
 
 ## Announcements
 - 2023-08-17: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate.
-- 2023-08-17: Also, our brand new [Patreon Page](https://discord.gg/f6RQyhNPX8) launched today. It will allow you to directly
+- 2023-08-17: Also, our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
   support our project efforts if you find our software useful. 
 
 ## Quickstart
