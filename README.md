@@ -26,7 +26,9 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
-- 2023-08-16: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate. 
+- 2023-08-17: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate.
+- 2023-08-17: Also, our brand new [Patreon Page](https://discord.gg/f6RQyhNPX8) launched today. It will allow you to directly
+  support our project efforts if you find our software useful. 
 
 ## Quickstart
 To get started quickly, please have a look at our [Quickstart guide](https://project-harmony.youtrack.cloud/articles/HARMONY-A-9/Quickstart).
@@ -70,7 +72,7 @@ Feel free to join our Discord Server and / or subscribe to our Patreon - Even $1
 
 ![Harmony.AI Discord Server](docs/images/discord32.png) [Harmony.AI Discord Server](https://discord.gg/f6RQyhNPX8)
 
-![Harmony.AI Discord Server](docs/images/Patreon32.png) [Harmony.AI Patreon]()
+![Harmony.AI Discord Server](docs/images/Patreon32.png) [Harmony.AI Patreon](https://patreon.com/harmony_ai)
 
 #### If you want to use our software commercially or discuss a business or development partnership:
 
