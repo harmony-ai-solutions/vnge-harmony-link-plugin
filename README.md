@@ -38,6 +38,7 @@ please take a look at our [technical documentation](docs/README.md).
 ---
 
 ## About Project Harmony.AI
+![Harmony Link Technical overview](docs/images/Harmony-Main-Banner-200px.png)
 ### Our goal: Elevating Human <-to-> AI Interaction beyond known boundaries.
 Project Harmony.AI emerged from the idea to allow for a seamless living together between AI-driven characters and humans.
 Since it became obvious that a lot of technologies required for achieving this goal are not existing or still very experimental,
