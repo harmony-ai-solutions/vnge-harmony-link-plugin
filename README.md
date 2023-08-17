@@ -72,7 +72,7 @@ Feel free to join our Discord Server and / or subscribe to our Patreon - Even $1
 
 ![Harmony.AI Discord Server](docs/images/discord32.png) [Harmony.AI Discord Server](https://discord.gg/f6RQyhNPX8)
 
-![Harmony.AI Discord Server](docs/images/Patreon32.png) [Harmony.AI Patreon](https://patreon.com/harmony_ai)
+![Harmony.AI Discord Server](docs/images/patreon32.png) [Harmony.AI Patreon](https://patreon.com/harmony_ai)
 
 #### If you want to use our software commercially or discuss a business or development partnership:
 
