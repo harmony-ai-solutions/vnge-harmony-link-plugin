@@ -77,12 +77,33 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.shutdown_func = None
         # Module References
         self.stt_module = None
+        # Button handling
+        self.menu_buttons = {}
         # Keymap
         self.controls_keymap = {}
         self.controls_executing = {}
+        # Chat GUI
+        self.chat_gui_id = None
+        self.chat_gui_data = None
         # Nonverbal Action GUI
         self.nonverbal_gui_id = None
         self.nonverbal_gui_data = None
+
+    def deactivate(self):
+        HarmonyClientModuleBase.deactivate(self)
+        # Hide Windows on Shutdown
+        if self.chat_gui_id is not None:
+            self.toggle_chat_input(self.game)
+        if self.nonverbal_gui_id is not None:
+            self.toggle_nonverbal_actions(self.game)
+
+    def update_buttons(self):
+        text_list = [None] * len(self.menu_buttons)
+        action_list = [None] * len(self.menu_buttons)
+        for button in self.menu_buttons.values():
+            text_list[button["index"]] = button["text"]
+            action_list[button["index"]] = button["action"]
+        self.game.set_buttons(text_list, action_list)
 
     def setup_game_controls(self, game, shutdown_func, stt_module):
         # Link hard Game references
@@ -95,10 +116,29 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.game.event_reg_listener("update", self.on_input_update)
 
         # Basic Controls
-        self.game.set_buttons(
-            ["Record Microphone", ">> End Harmony Link Demo >>"],
-            [self.toggle_record_microphone, self.shutdown_func]
-        )
+        self.menu_buttons = {
+            "chat_input": {
+                "index": 0,
+                "text": "Hide Chat Input",
+                "action": self.toggle_chat_input
+            },
+            "nonverbal_actions": {
+                "index": 1,
+                "text": "Hide Nonverbal Actions",
+                "action": self.toggle_nonverbal_actions
+            },
+            "microphone": {
+                "index": 2,
+                "text": "Record Microphone",
+                "action": self.toggle_record_microphone
+            },
+            "shutdown": {
+                "index": 3,
+                "text": ">> End Harmony Link Demo >>",
+                "action": self.shutdown_func
+            }
+        }
+        self.update_buttons()
 
         # Hotkeys
         self.controls_keymap = {
@@ -106,9 +146,21 @@ class ControlsHandler(HarmonyClientModuleBase):
                 "key_codes": parseKeyCode(self.keymap_config["toggle_microphone"]),
                 "call_functions": [self.toggle_record_microphone],
                 "mode": "toggle"
+            },
+            "toggle_nonverbal_actions": {
+                "key_codes": parseKeyCode(self.keymap_config["toggle_nonverbal_actions"]),
+                "call_functions": [self.toggle_nonverbal_actions],
+                "mode": "toggle"
+            },
+            "toggle_chat_input": {
+                "key_codes": parseKeyCode(self.keymap_config["toggle_chat_input"]),
+                "call_functions": [self.toggle_chat_input],
+                "mode": "toggle"
             }
         }
 
+        # Chat Input UI
+        self.setup_chat_input_gui()
         # Non-Verbal Actions UI
         self.setup_nonverbal_actions_gui()
 
@@ -116,10 +168,97 @@ class ControlsHandler(HarmonyClientModuleBase):
         # TODO: Player movement & direct interaction
 
     # skin setup func
-    def skin_setup(self, g):
+    def nonverbal_actions_skin_setup(self, g):
         g.windowName = self.nonverbal_gui_data.wndNameNormal
         g.windowRect = self.nonverbal_gui_data.wndSizeNormal
         g.windowStyle = g.windowStyleDefault
+
+    def chat_input_skin_setup(self, g):
+        g.windowName = self.chat_gui_data.wndNameNormal
+        g.windowRect = self.chat_gui_data.wndSizeNormal
+        g.windowStyle = g.windowStyleDefault
+
+    def setup_chat_input_gui(self):
+        if self.chat_gui_id is not None:
+            # Already exists
+            return
+
+        self.chat_gui_data = GData()
+        self.chat_gui_data.gui_function = None
+        self.chat_gui_data.wndNameNormal = "Chat Input Window"
+        self.chat_gui_data.wndSizeNormal = Rect(150, 100, 400, 200)
+        # self.chat_gui_data.actions_per_row = 3
+        # self.chat_gui_data.current_tab = nonverbal_ui_general # TODO: Maybe later in case we support more than 1 character
+        self.chat_gui_data.posRateX, self.chat_gui_data.posRateY = 0.01, 0.001
+        self.chat_gui_data.sclRateX, self.chat_gui_data.sclRateY = 0.01, 0.001
+        self.chat_gui_data.input_value = ''
+
+        # setup skin
+        skin = SkinCustomWindow()
+        skin.funcSetup = self.chat_input_skin_setup
+        skin.funcWindowGUI = self.chat_input_gui_sub_window
+        # skin.metadata = game.gdata.vnphy
+        # skin.gui_data = self.nonverbal_gui_data
+
+        # open sub-window
+        self.chat_gui_id = self.game.new_extra_window_skin(skin)
+
+    def chat_input_gui_sub_window(self, window_controller, window_id):
+        ui_default_color = GUI.color
+
+        try:
+            # vnphy = baseController.skin.metadata
+            if self.chat_gui_data.gui_function is not None:
+                self.chat_gui_data.gui_function()
+            else:
+                self.chat_input_gui_main_window()
+        except:
+            traceback.print_exc()
+            self.close_chat_input_gui()
+
+        # close button
+        close_button_rect = Rect(window_controller.windowRect.width - 16, 3, 13, 13)
+        GUI.color = Color.red
+        if GUI.Button(close_button_rect, ""):
+            self.toggle_chat_input(self.game)
+        GUI.color = ui_default_color
+
+    def chat_input_gui_main_window(self):
+        ui_default_color = GUI.color
+
+        # Render default controls
+        self.chat_input_gui_render_tab_default_controls()
+
+    def chat_input_gui_render_tab_default_controls(self):
+        # Add Label
+        GUILayout.BeginHorizontal()
+        GUILayout.FlexibleSpace()
+        GUILayout.Label("Chat Message:", GUILayout.Width(150))
+        GUILayout.FlexibleSpace()
+        GUILayout.EndHorizontal()
+        # with Input field at the bottom
+        GUILayout.BeginHorizontal()
+        GUILayout.FlexibleSpace()
+        self.chat_gui_data.input_value = GUILayout.TextField(self.chat_gui_data.input_value, GUILayout.Width(350))
+        GUILayout.FlexibleSpace()
+        GUILayout.EndHorizontal()
+
+        # Buttons to send independent from voice input and clear
+        GUILayout.BeginHorizontal()
+        if GUILayout.Button("Send"):
+            if self.send_combined_interaction():
+                self.clear_chat_interaction_field()
+        if GUILayout.Button("Clear"):
+            self.clear_chat_interaction_field()
+        GUILayout.EndHorizontal()
+
+    def close_chat_input_gui(self):
+        if self.chat_gui_id is None:
+            return
+        wnd = self.game.get_extra_window(self.chat_gui_id)
+        if wnd is not None:
+            self.game.close_extra_window(self.chat_gui_id)
+            self.chat_gui_id = None
 
     def setup_nonverbal_actions_gui(self):
         if self.nonverbal_gui_id is not None:
@@ -129,7 +268,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.nonverbal_gui_data = GData()
         self.nonverbal_gui_data.gui_function = None
         self.nonverbal_gui_data.wndNameNormal = "Non-Verbal Actions Shim"
-        self.nonverbal_gui_data.wndSizeNormal = Rect(100, 100, 400, 500)
+        self.nonverbal_gui_data.wndSizeNormal = Rect(150, 400, 400, 500)
         self.nonverbal_gui_data.actions_per_row = 3
         self.nonverbal_gui_data.current_tab = nonverbal_ui_general
         self.nonverbal_gui_data.posRateX, self.nonverbal_gui_data.posRateY = 0.01, 0.001
@@ -138,7 +277,7 @@ class ControlsHandler(HarmonyClientModuleBase):
 
         # setup skin
         skin = SkinCustomWindow()
-        skin.funcSetup = self.skin_setup
+        skin.funcSetup = self.nonverbal_actions_skin_setup
         skin.funcWindowGUI = self.nonverbal_actions_gui_sub_window
         # skin.metadata = game.gdata.vnphy
         # skin.gui_data = self.nonverbal_gui_data
@@ -163,7 +302,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         close_button_rect = Rect(window_controller.windowRect.width - 16, 3, 13, 13)
         GUI.color = Color.red
         if GUI.Button(close_button_rect, ""):
-            self.close_noverbal_actions_gui()
+            self.toggle_nonverbal_actions(self.game)
         GUI.color = ui_default_color
 
     def nonverbal_actions_gui_main_window(self):
@@ -315,6 +454,22 @@ class ControlsHandler(HarmonyClientModuleBase):
         )
         return self.backend_connector.send_event(event)
 
+    def send_combined_interaction(self):
+        if len(self.chat_gui_data.input_value) == 0:
+            return
+
+        print "Sending independent Interaction *{0}*".format(self.chat_gui_data.input_value)
+        event = HarmonyLinkEvent(
+            event_id='new_combined',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_USER_UTTERANCE,
+            status=EVENT_STATE_NEW,
+            payload={
+                'type': UTTERANCE_COMBINED,
+                'content': self.chat_gui_data.input_value
+            }
+        )
+        return self.backend_connector.send_event(event)
+
     def update_delayed_nonverbal_interaction(self):
         if len(self.nonverbal_gui_data.input_value) == 0:
             return
@@ -333,6 +488,9 @@ class ControlsHandler(HarmonyClientModuleBase):
 
     def clear_nonverbal_interaction_field(self):
         self.nonverbal_gui_data.input_value = ''
+
+    def clear_chat_interaction_field(self):
+        self.chat_gui_data.input_value = ''
 
     def on_input_update(self, game, event_id, u_param):
         # Meta Keys
@@ -369,10 +527,8 @@ class ControlsHandler(HarmonyClientModuleBase):
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
             # Update Buttons
-            self.game.set_buttons(
-                ["Record Microphone", ">> End Harmony Link Demo >>"],
-                [self.toggle_record_microphone, self.shutdown_func]
-            )
+            self.menu_buttons["microphone"]["text"] = "Record Microphone"
+            self.update_buttons()
 
         else:
             recording_started = self.stt_module.start_listen()
@@ -382,7 +538,31 @@ class ControlsHandler(HarmonyClientModuleBase):
             # Update delayed nonverbal interaction if set
             self.update_delayed_nonverbal_interaction()
             # Update Buttons
-            self.game.set_buttons(
-                ["Stop Recording", ">> End Harmony Link Demo >>"],
-                [self.toggle_record_microphone, self.shutdown_func]
-            )
+            self.menu_buttons["microphone"]["text"] = "Stop Recording"
+            self.update_buttons()
+
+    def toggle_nonverbal_actions(self, game):
+        if self.nonverbal_gui_id is not None:
+            self.close_noverbal_actions_gui()
+            # Update Buttons
+            self.menu_buttons["nonverbal_actions"]["text"] = "Show Nonverbal Actions"
+            self.update_buttons()
+        else:
+            # Create the GUI
+            self.setup_nonverbal_actions_gui()
+            # Update Buttons
+            self.menu_buttons["nonverbal_actions"]["text"] = "Hide Nonverbal Actions"
+            self.update_buttons()
+
+    def toggle_chat_input(self, game):
+        if self.chat_gui_id is not None:
+            self.close_chat_input_gui()
+            # Update Buttons
+            self.menu_buttons["chat_input"]["text"] = "Show Chat Window"
+            self.update_buttons()
+        else:
+            # Create the GUI
+            self.setup_chat_input_gui()
+            # Update Buttons
+            self.menu_buttons["chat_input"]["text"] = "Hide Chat Window"
+            self.update_buttons()

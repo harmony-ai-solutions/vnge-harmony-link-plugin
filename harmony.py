@@ -85,7 +85,7 @@ def start(game):
     scene_config = dict(_config.items('Scene'))
 
     # Initialize Client modules
-    _init_modules(_config)
+    _init_modules(_config, game)
 
     # Create Startup Init handler
     _initHandler = HarmonyInitHandler(backend_connector=_connector, scene_config=scene_config, game=game)
@@ -141,7 +141,7 @@ def real_start(game):
 
 
 # _init_modules initializes all the interfaces and handlers needed by harmony_modules
-def _init_modules(config):
+def _init_modules(config, game):
     global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
 
     # Init comms module for interfacing with external helper binaries
@@ -149,7 +149,9 @@ def _init_modules(config):
         ws_endpoint=config.get('Connector', 'ws_endpoint'),
         ws_buffer_size=int(config.get('Connector', 'ws_buffer_size')),
         http_endpoint=config.get('Connector', 'http_endpoint'),
-        http_listen_port=config.get('Connector', 'http_listen_port')
+        http_listen_port=config.get('Connector', 'http_listen_port'),
+        shutdown_func=shutdown,
+        game=game
     )
     _connector.start()
 
@@ -189,7 +191,13 @@ def _modules_update_chara(chara):
 
 
 def _shutdown_modules():
-    global _connector
+    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
+
+    _backendModule.deactivate()
+    _sttModule.deactivate()
+    _ttsModule.deactivate()
+    _countenanceModule.deactivate()
+    _controlsModule.deactivate()
 
     _connector.stop()
 
@@ -233,5 +241,5 @@ def shutdown(game):
     _shutdown_modules()
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
-    game.set_buttons(["Return to main screen >>"], game.return_to_start_screen_clear())
+    game.set_buttons(["Return to main screen >>"], [game.return_to_start_screen_clear()])
 

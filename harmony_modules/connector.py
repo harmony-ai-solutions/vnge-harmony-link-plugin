@@ -82,6 +82,8 @@ class ConnectorEventThread(Thread):
                 self.web_socket_task.Wait()  # This Directive ensures the task runs in background & handles WS heartbeat
             except AggregateException as e:
                 print 'Unable to start websocket communication with Harmony Link: {0}'.format(e.ToString())
+                print 'Shutting down...'
+                self.handler.shutdown_func(self.handler.game)
                 return
             # Init buffer
             connection_buffer = Array.CreateInstance(Byte, self.ws_buffer_size)
@@ -91,19 +93,25 @@ class ConnectorEventThread(Thread):
             self.running = True
             while self.running:
                 # Creates an async receive task and monitors until we get data from the backend
-                self.web_socket_receive_task = self.handler.web_socket_client.ReceiveAsync(connection_buffer_segment, self.cts.Token)
-                self.web_socket_receive_task.Wait()
+                try:
+                    self.web_socket_receive_task = self.handler.web_socket_client.ReceiveAsync(connection_buffer_segment, self.cts.Token)
+                    self.web_socket_receive_task.Wait()
 
-                print "message received"
+                    print "message received"
 
-                # Process data if task returns text data
-                if self.web_socket_receive_task.Result.MessageType == WebSocketMessageType.Text:
-                    received_data = connection_buffer[:self.web_socket_receive_task.Result.Count]
-                    message_string = UTF8.GetString(received_data)
-                    self.process_event_message(message_string=message_string, session_id="")
-                else:
-                    # Not a text message
-                    continue
+                    # Process data if task returns text data
+                    if self.web_socket_receive_task.Result.MessageType == WebSocketMessageType.Text:
+                        received_data = connection_buffer[:self.web_socket_receive_task.Result.Count]
+                        message_string = UTF8.GetString(received_data)
+                        self.process_event_message(message_string=message_string, session_id="")
+                    else:
+                        # Not a text message
+                        continue
+                except AggregateException as e:
+                    print 'websocket communication with Harmony Link failed: {0}'.format(e.ToString())
+                    print 'Shutting down...'
+                    self.handler.shutdown_func(self.handler.game)
+
             print 'ConnectorEventThread finished.'
         else:
             # Open HTTP Listenener and wait for messages
@@ -136,7 +144,7 @@ class ConnectorEventThread(Thread):
 class ConnectorEventHandler:
     global _use_websockets
 
-    def __init__(self, ws_endpoint, ws_buffer_size, http_endpoint, http_listen_port):
+    def __init__(self, ws_endpoint, ws_buffer_size, http_endpoint, http_listen_port, shutdown_func, game):
         # Setup Connector
         self.eventHandlers = []
         # Init job thread for checking on async requests
@@ -153,6 +161,9 @@ class ConnectorEventHandler:
             self.http_endpoint = http_endpoint
             self.http_listen_port = http_listen_port
             self.harmony_session_id = ""
+        # Plugin Shutdown Func in case Connector fails
+        self.shutdown_func = shutdown_func
+        self.game = game
 
     # start starts all subprocesses required for backend handling
     def start(self):
@@ -254,6 +265,7 @@ def _send_web_socket_event(
     except InvalidOperationException as e:
         print 'Failed to send message to Harmony Link: {0}'.format(e.ToString())
         return False
+
 
 # _do_rpc_call performs an RPC call to the Support Backend Module using provided client and endpoint
 def _send_http_event(
