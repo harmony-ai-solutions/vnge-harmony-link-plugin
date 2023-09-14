@@ -1,0 +1,2 @@
+Hello! This Folder might be pretty empty still.
+To prepare and add a scene, please visit:  https://project-harmony.youtrack.cloud/articles/HARMONY-A-9/Quickstart#scene-configuration
