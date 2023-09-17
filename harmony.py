@@ -1,4 +1,4 @@
-#vngame;charastudio;HarmonyAI
+#vngame;all;HarmonyAI
 
 # Harmony Link Plugin for VNGE
 # (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
@@ -12,6 +12,8 @@
 import ConfigParser
 import os
 import time
+
+from vngameengine import get_engine_id2
 
 from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls
 
@@ -51,8 +53,11 @@ class HarmonyInitHandler(common.HarmonyClientModuleBase):
         if event.event_type == EVENT_TYPE_INIT_CHARACTER:
             if event.status == common.EVENT_STATE_DONE:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
-                self.game.load_scene(self.scene_config["scene"])
-                self.game.set_timer(0.5, _load_scene_start)
+                if self.scene_config["scene"] is not None:
+                    self.game.load_scene(self.scene_config["scene"])
+                    self.game.set_timer(0.5, _load_scene_start)
+                else:
+                    real_start(self.game)
             else:
                 _error_abort(self.game, 'Harmony Link: Character Initialization failed.')
 
@@ -70,10 +75,13 @@ class Chara:
 
 # start - VNGE game start hook
 def start(game):
-    global _config, _connector, _initHandler
+    global _config
 
     # -------- some options we want to init for the engine ---------
-    game.sceneDir = "harmony/"  # dir for Harmony Plugin scenes
+    # Determine Game Engine ID
+    # this is the sub folder in harmony where Chara studio will look for scenes for the game
+    game.sceneDir = "harmony/{0}/".format(get_engine_id2())  # dir for Harmony Plugin scenes
+    print("Initializing VNGE-Plugin for Harmony Link with scene dir: " + game.sceneDir)
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
@@ -82,7 +90,41 @@ def start(game):
     # Actual Plugin Initialization
     # Read Config data from .ini file
     _config = _load_config()
-    scene_config = dict(_config.items('Scene'))
+    game.scenedata.scene_config = dict(_config.items('Scene'))
+
+    # select a scene or load scene from ini
+    if len(game.scenedata.scene_config["scene"]) == 0:
+        start_scene_select(game)
+    else:
+        start_harmony_ai(game)
+
+
+# scene selector by @countd360 - Thanks for the support
+def start_scene_select(game):
+    # helper
+    def select_scene(game, sfile):
+        game.set_text("s", "")
+        game.set_buttons([], [])
+        game.scenedata.scene_config["scene"] = sfile
+        start_harmony_ai(game)
+
+    # select scene from folder
+    harmony_scene_home = os.path.join(game.get_scene_dir(), "harmony", get_engine_id2())
+    harmony_scene_names = ["<color=#00ffff>>> Skip load and continue with current scene <<</color>"]
+    harmony_scene_actions = [(select_scene, None)]
+    for sfile in os.listdir(harmony_scene_home):
+        if sfile.lower().endswith(".png"):
+            harmony_scene_names.append("<color=#00ff00>" + os.path.splitext(sfile)[0] + "</color>")
+            harmony_scene_actions.append((select_scene, sfile))
+    harmony_scene_names.append("<color=#ff0000>>> Cancel and Quit <<</color>")
+    harmony_scene_actions.append([game.return_to_start_screen_clear])
+    game.set_text("s", "Choose a harmony scene:")
+    game.set_buttons(harmony_scene_names, harmony_scene_actions)
+
+
+def start_harmony_ai(game):
+    global _config, _connector, _initHandler
+    scene_config = game.scenedata.scene_config
 
     # Initialize Client modules
     _init_modules(_config, game)
@@ -105,7 +147,7 @@ def start(game):
     )
     init_send_success = _connector.send_event(init_event)
     if init_send_success:
-        print 'Harmony Link: Initializing character \'{0}\'...'.format(scene_config["character_id"])
+        print ('Harmony Link: Initializing character \'{0}\'...'.format(scene_config["character_id"]))
     else:
         _error_abort(game, 'Harmony Link: Failed to sent character initialize Event.')
         return
@@ -203,7 +245,7 @@ def _shutdown_modules():
 
 
 def _error_abort(game, error):
-    print error
+    print ("**** Error aborted ****\n>>" + error)
     shutdown(game)
 
 
@@ -241,5 +283,5 @@ def shutdown(game):
     _shutdown_modules()
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
-    game.set_buttons(["Return to main screen >>"], [game.return_to_start_screen_clear()])
+    game.set_buttons(["Return to main screen >>"], [[game.return_to_start_screen_clear]])
 

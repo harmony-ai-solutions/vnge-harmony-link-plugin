@@ -124,9 +124,15 @@ class ConnectorEventThread(Thread):
     def process_event_message(self, message_string, session_id):
         if len(message_string) == 0:
             print 'Warning: Message event was empty!'
-        message_json = json.loads(message_string)
-        message = HarmonyLinkEvent(**message_json)
-        self.handler.handle_event(event=message, session_id=session_id)
+
+        try:
+            message_json = json.loads(message_string)
+            print 'DEBUG: Event message received: {0}'.format(message_string)
+            message = HarmonyLinkEvent(**message_json)
+            self.handler.handle_event(event=message, session_id=session_id)
+        except ValueError as e:
+            print 'failed to read event message: {0}'.format(str(e))
+            print 'original message: {0}'.format(message_string)
 
     def is_running(self):
         return self.running
