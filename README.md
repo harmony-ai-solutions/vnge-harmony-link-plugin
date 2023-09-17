@@ -26,6 +26,8 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
+- 2023-09-17: **Version 0.1.8-beta2** released. For the full list of updates see our
+  [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
 - 2023-08-17: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate.
 - 2023-08-17: Also, our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
   support our project efforts if you find our software useful. 
