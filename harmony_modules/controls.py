@@ -15,6 +15,7 @@ from skin_customwindow import SkinCustomWindow
 
 import time
 import traceback
+import re
 
 # Nonverbal UI Tabs
 nonverbal_ui_general = "General"
@@ -89,6 +90,14 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.nonverbal_gui_id = None
         self.nonverbal_gui_data = None
 
+    def handle_event(
+            self,
+            event  # HarmonyLinkEvent
+    ):
+        # Chat history update
+        if event.event_type == EVENT_TYPE_CHAT_HISTORY and event.status == EVENT_STATE_DONE:
+            self.chat_window_update_history(history_data=event.payload)
+
     def deactivate(self):
         HarmonyClientModuleBase.deactivate(self)
         # Hide Windows on Shutdown
@@ -119,12 +128,12 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.menu_buttons = {
             "chat_input": {
                 "index": 0,
-                "text": "Hide Chat Input",
+                "text": "Show Chat Input",
                 "action": self.toggle_chat_input
             },
             "nonverbal_actions": {
                 "index": 1,
-                "text": "Hide Nonverbal Actions",
+                "text": "Show Nonverbal Actions",
                 "action": self.toggle_nonverbal_actions
             },
             "microphone": {
@@ -160,9 +169,9 @@ class ControlsHandler(HarmonyClientModuleBase):
         }
 
         # Chat Input UI
-        self.setup_chat_input_gui()
+        #self.setup_chat_input_gui()
         # Non-Verbal Actions UI
-        self.setup_nonverbal_actions_gui()
+        #self.setup_nonverbal_actions_gui()
 
         # TODO: Player face expression
         # TODO: Player movement & direct interaction
@@ -186,12 +195,26 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.chat_gui_data = GData()
         self.chat_gui_data.gui_function = None
         self.chat_gui_data.wndNameNormal = "Chat Input Window"
-        self.chat_gui_data.wndSizeNormal = Rect(150, 100, 400, 200)
+        self.chat_gui_data.wndSizeNormal = Rect(150, 100, 400, 500)
         # self.chat_gui_data.actions_per_row = 3
         # self.chat_gui_data.current_tab = nonverbal_ui_general # TODO: Maybe later in case we support more than 1 character
         self.chat_gui_data.posRateX, self.chat_gui_data.posRateY = 0.01, 0.001
         self.chat_gui_data.sclRateX, self.chat_gui_data.sclRateY = 0.01, 0.001
         self.chat_gui_data.input_value = ''
+        self.chat_gui_data.history = [''] * 6
+
+        # Send Request for history to Backend
+        get_history_event = HarmonyLinkEvent(
+            event_id='update_history',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_CHAT_HISTORY,
+            status=EVENT_STATE_NEW,
+            payload=None
+        )
+        send_success = self.backend_connector.send_event(get_history_event)
+        if send_success:
+            print('Harmony Link: Fetching chat history records...')
+        else:
+            print('Harmony Link: Failed to fetch chat records.')
 
         # setup skin
         skin = SkinCustomWindow()
@@ -223,17 +246,46 @@ class ControlsHandler(HarmonyClientModuleBase):
             self.toggle_chat_input(self.game)
         GUI.color = ui_default_color
 
+    def chat_window_update_history(self, history_data):
+        start_idx = 0
+        if len(history_data) < len(self.chat_gui_data.history):
+            start_idx = len(self.chat_gui_data.history) - len(history_data)
+        elif len(history_data) > len(self.chat_gui_data.history):
+            history_data = history_data[(len(history_data)-len(self.chat_gui_data.history)):]
+
+        for idx, value in enumerate(self.chat_gui_data.history):
+            if idx >= start_idx:
+                history_element = history_data[idx-start_idx]
+                self.chat_gui_data.history[idx] = history_element['Name'] + ': ' + history_element['Message']
+            else:
+                self.chat_gui_data.history[idx] = ""
+
     def chat_input_gui_main_window(self):
         ui_default_color = GUI.color
 
+        # Render chat history
+        self.chat_input_gui_render_history()
+
         # Render default controls
         self.chat_input_gui_render_tab_default_controls()
+
+    def chat_input_gui_render_history(self):
+        self.chat_gui_data.scrollPos = Vector2.zero
+        self.chat_gui_data.scrollPos = GUILayout.BeginScrollView(self.chat_gui_data.scrollPos, False, True)
+
+        GUILayout.BeginVertical(GUILayout.Width(350))
+        for idx, value in enumerate(self.chat_gui_data.history):
+            GUILayout.Label(self.chat_gui_data.history[idx], GUILayout.Width(350))
+        GUILayout.EndVertical()
+
+        GUILayout.EndScrollView()
+        GUILayout.FlexibleSpace()
 
     def chat_input_gui_render_tab_default_controls(self):
         # Add Label
         GUILayout.BeginHorizontal()
         GUILayout.FlexibleSpace()
-        GUILayout.Label("Chat Message:", GUILayout.Width(150))
+        GUILayout.Label("Enter new chat message:", GUILayout.Width(150))
         GUILayout.FlexibleSpace()
         GUILayout.EndHorizontal()
         # with Input field at the bottom
@@ -442,7 +494,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         if len(self.nonverbal_gui_data.input_value) == 0:
             return
 
-        print "Sending independent nonverbal Interaction *{0}*".format(self.nonverbal_gui_data.input_value)
+        print "Sending independent nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
         event = HarmonyLinkEvent(
             event_id='new_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
             event_type=EVENT_TYPE_USER_UTTERANCE,
@@ -458,7 +510,31 @@ class ControlsHandler(HarmonyClientModuleBase):
         if len(self.chat_gui_data.input_value) == 0:
             return
 
-        print "Sending independent Interaction *{0}*".format(self.chat_gui_data.input_value)
+        # Check for Commands
+        command = ""
+        message = self.chat_gui_data.input_value
+        match = re.match(r'^/(\w+)\s+(.*)', message)
+        if match:
+            command = match.group(1)
+            message = match.group(2)
+
+        if command == "say":
+            print "Generating speech for text: {0}".format(message)
+            event = HarmonyLinkEvent(
+                event_id='generate_speech',  # This is an arbitrary dummy ID to conform the Harmony Link API
+                event_type=EVENT_TYPE_TTS_GENERATE_SPEECH,
+                status=EVENT_STATE_NEW,
+                payload={
+                    'type': UTTERANCE_VERBAL,
+                    'content': message
+                }
+            )
+            return self.backend_connector.send_event(event)
+        elif len(command) > 0:
+            print 'Unknown command entered: {0}'.format(command)
+            return
+
+        print "Sending independent Interaction: {0}".format(self.chat_gui_data.input_value)
         event = HarmonyLinkEvent(
             event_id='new_combined',  # This is an arbitrary dummy ID to conform the Harmony Link API
             event_type=EVENT_TYPE_USER_UTTERANCE,
