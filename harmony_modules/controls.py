@@ -547,7 +547,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         return self.backend_connector.send_event(event)
 
     def update_delayed_nonverbal_interaction(self):
-        if len(self.nonverbal_gui_data.input_value) == 0:
+        if self.nonverbal_gui_id is None or len(self.nonverbal_gui_data.input_value) == 0:
             return
 
         print "Updating ongoing nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
