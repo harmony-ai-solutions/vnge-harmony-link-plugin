@@ -138,7 +138,7 @@ def start_harmony_ai(game):
 
     # Initialize Character on Harmony Link
     init_event = common.HarmonyLinkEvent(
-        event_id='start_listen',  # This is an arbitrary dummy ID to conform the Harmony Link API
+        event_id='init_character',  # This is an arbitrary dummy ID to conform the Harmony Link API
         event_type=EVENT_TYPE_INIT_CHARACTER,
         status=common.EVENT_STATE_NEW,
         payload={

@@ -41,6 +41,7 @@ def harmony_http_handler_factory(connector_thread):
             session_id = self.headers['Harmony-Session-Id']
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
+            print 'DEBUG: ConnectorEventThread Received POST message: {0}'.format(post_data)
             # Forward received data to connector
             connector_thread.process_event_message(message_string=post_data, session_id=session_id)
             # Send OK back to sender
