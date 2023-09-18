@@ -17,7 +17,7 @@ try:
     print 'WebSocket protocol supported. Communication will use WebSockets if enabled.'
     _use_websockets = True
 except Exception as e:
-    from System.Net import HttpWebRequest
+    from System.Net import WebClient, WebException
     from System.IO import StreamReader
 
     import urllib
@@ -291,36 +291,55 @@ def _send_http_event(
     # Build and Execute the request
     message_string = json.dumps(event, cls=HarmonyEventJSONEncoder)
 
-    # Create request
-    request = HttpWebRequest.Create(endpoint)
-    request.Method = "POST"
-    request.Accept = "application/json"
-    request.ContentType = "application/json"
-    request.Headers.Add("Harmony-Session-Id", session_id)
-    request.Headers.Add("Harmony-Result-Port", result_port)
+    # Create WebClient instance
+    client = WebClient()
+    # Set headers
+    client.Headers["Accept"] = "application/json"
+    client.Headers["Content-Type"] = "application/json"
+    client.Headers["Harmony-Session-Id"] = session_id
+    client.Headers["Harmony-Result-Port"] = result_port
 
-    byte_array = UTF8.GetBytes(message_string)
-    request.ContentLength = byte_array.Length
-    data_stream = request.GetRequestStream()
-    data_stream.Write(byte_array, 0, byte_array.Length)
-    data_stream.Close()
+    try:
+        # Send request and get response data
+        response_data = client.UploadString(endpoint, "POST", message_string)
+        # Assuming a successful response, status code would be 200 OK
+        response_status_code = 200
 
-    # Get response
-    response = request.GetResponse()
-    response_status_code = int(response.StatusCode)
-    response_data = StreamReader(response.GetResponseStream()).ReadToEnd()
-    response_headers = {}
-    for i in range(response.Headers.Count):
-        response_headers[response.Headers.Keys[i]] = response.Headers[i]
-    response.Close()
+    except WebException as e:
+        # This block will handle HTTP error status codes
+        if e.Response:
+            response_status_code = int(e.Response.StatusCode)
+
+            # To read the error response body (if any)
+            response = e.Response
+            response_stream = response.GetResponseStream()
+            reader = StreamReader(response_stream)
+            response_data = reader.ReadToEnd()
+            response_headers = {}
+            for i in range(response.Headers.Count):
+                response_headers[response.Headers.Keys[i]] = response.Headers[i]
+            reader.Close()
+
+            print "Response code: {0} - Message {1}".format(response_status_code, response_data)
+            print "Response headers: {0}".format(json.dumps(response_headers))
+
+            print 'Failed to send message to Harmony Link: {0}'.format(response.reason)
+            return False, None, None
+        else:
+            # Handle other web exceptions, which might not be tied to an HTTP status code
+            print 'Failed to send message to Harmony Link: {0}'.format(e)
+            return False, None, None
+
+    finally:
+        # Handling response headers and closing the client
+        response_headers = {}
+        for key in client.ResponseHeaders.AllKeys:
+            response_headers[key] = client.ResponseHeaders[key]
+
+        client.Dispose()
 
     print "Response code: {0} - Message {1}".format(response_status_code, response_data)
     print "Response headers: {0}".format(json.dumps(response_headers))
-
-    # Evaluate response
-    if response_status_code != 200:
-        print 'Failed to send message to Harmony Link: {0}'.format(response.reason)
-        return False, None, None
 
     # Return response data
     return True, response_data, response_headers
