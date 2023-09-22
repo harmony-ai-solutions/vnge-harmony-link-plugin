@@ -200,8 +200,9 @@ class ControlsHandler(HarmonyClientModuleBase):
         # self.chat_gui_data.current_tab = nonverbal_ui_general # TODO: Maybe later in case we support more than 1 character
         self.chat_gui_data.posRateX, self.chat_gui_data.posRateY = 0.01, 0.001
         self.chat_gui_data.sclRateX, self.chat_gui_data.sclRateY = 0.01, 0.001
+        self.chat_gui_data.scrollPos = Vector2.zero
         self.chat_gui_data.input_value = ''
-        self.chat_gui_data.history = [''] * 6
+        self.chat_gui_data.history = [''] * 10
 
         # Send Request for history to Backend
         get_history_event = HarmonyLinkEvent(
@@ -270,7 +271,6 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.chat_input_gui_render_tab_default_controls()
 
     def chat_input_gui_render_history(self):
-        self.chat_gui_data.scrollPos = Vector2.zero
         self.chat_gui_data.scrollPos = GUILayout.BeginScrollView(self.chat_gui_data.scrollPos, False, True)
 
         GUILayout.BeginVertical(GUILayout.Width(350))
@@ -278,8 +278,9 @@ class ControlsHandler(HarmonyClientModuleBase):
             GUILayout.Label(self.chat_gui_data.history[idx], GUILayout.Width(350))
         GUILayout.EndVertical()
 
-        GUILayout.EndScrollView()
         GUILayout.FlexibleSpace()
+
+        GUILayout.EndScrollView()
 
     def chat_input_gui_render_tab_default_controls(self):
         # Add Label
