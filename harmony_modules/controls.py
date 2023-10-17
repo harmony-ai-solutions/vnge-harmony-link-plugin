@@ -96,7 +96,9 @@ class ControlsHandler(HarmonyClientModuleBase):
     ):
         # Chat history update
         if event.event_type == EVENT_TYPE_CHAT_HISTORY and event.status == EVENT_STATE_DONE:
-            self.chat_window_update_history(history_data=event.payload)
+            if self.chat_gui_id is not None:
+                self.chat_gui_data.history_data = event.payload
+                self.chat_window_update_history()
 
     def deactivate(self):
         HarmonyClientModuleBase.deactivate(self)
@@ -202,6 +204,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.chat_gui_data.sclRateX, self.chat_gui_data.sclRateY = 0.01, 0.001
         self.chat_gui_data.scrollPos = Vector2.zero
         self.chat_gui_data.input_value = ''
+        self.chat_gui_data.history_data = []
         self.chat_gui_data.history = [''] * 10
 
         # Send Request for history to Backend
@@ -247,16 +250,19 @@ class ControlsHandler(HarmonyClientModuleBase):
             self.toggle_chat_input(self.game)
         GUI.color = ui_default_color
 
-    def chat_window_update_history(self, history_data):
+    def chat_window_update_history(self):
+        if self.chat_gui_id is not None:
+            return
+
         start_idx = 0
-        if len(history_data) < len(self.chat_gui_data.history):
-            start_idx = len(self.chat_gui_data.history) - len(history_data)
-        elif len(history_data) > len(self.chat_gui_data.history):
-            history_data = history_data[(len(history_data)-len(self.chat_gui_data.history)):]
+        if len(self.chat_gui_data.history_data) < len(self.chat_gui_data.history):
+            start_idx = len(self.chat_gui_data.history) - len(self.chat_gui_data.history_data)
+        elif len(self.chat_gui_data.history_data) > len(self.chat_gui_data.history):
+            self.chat_gui_data.history_data = self.chat_gui_data.history_data[(len(self.chat_gui_data.history_data)-len(self.chat_gui_data.history)):]
 
         for idx, value in enumerate(self.chat_gui_data.history):
             if idx >= start_idx:
-                history_element = history_data[idx-start_idx]
+                history_element = self.chat_gui_data.history_data[idx-start_idx]
                 self.chat_gui_data.history[idx] = history_element['Name'] + ': ' + history_element['Message']
             else:
                 self.chat_gui_data.history[idx] = ""
@@ -603,6 +609,12 @@ class ControlsHandler(HarmonyClientModuleBase):
             if not recording_aborted:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
+
+            if self.chat_gui_id is not None:
+                # Remove Recording message from history list
+                self.chat_gui_data.history_data.pop()
+                self.chat_window_update_history()
+
             # Update Buttons
             self.menu_buttons["microphone"]["text"] = "Record Microphone"
             self.update_buttons()
@@ -612,6 +624,15 @@ class ControlsHandler(HarmonyClientModuleBase):
             if not recording_started:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
+
+            if self.chat_gui_id is not None:
+                # Add Recording message to history list
+                self.chat_gui_data.history_data.append({
+                    'Name': 'User', # TODO: Properly fetch username
+                    'Message': '...speaking...'
+                })
+                self.chat_window_update_history()
+
             # Update delayed nonverbal interaction if set
             self.update_delayed_nonverbal_interaction()
             # Update Buttons
