@@ -26,10 +26,11 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
-- 2023-09-17: **Version 0.1.8-beta2** released. For the full list of updates see our
+- 2023-10-18: **Version 0.1.9** released. For the full list of updates see our
   [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
-- 2023-08-17: Closed Beta Nr. 2 launched! Please reach out via [Discord](https://discord.gg/f6RQyhNPX8) if you want to participate.
-- 2023-08-17: Also, our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
+- 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. It's still missing some content,
+  but finally we have an official Home on the Web. :-)
+- 2023-08-17: Our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
   support our project efforts if you find our software useful. 
 
 ## Quickstart
@@ -67,6 +68,8 @@ something proper back in turn. Therefore we're also maintaining a Patreon Page w
 open towards collaboration with other businesses.
 
 ### How to reach out to us
+
+[Official Website of Project Harmony.AI](https://project-harmony.ai/)
 
 #### If you want to collaborate or support this Project financially:
 

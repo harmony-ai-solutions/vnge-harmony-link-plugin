@@ -6,6 +6,8 @@ This is Harmony Link VNGE-Plugin's technical documentation. For a more general o
 capabilities, please check out this repo's 
 [main page](https://github.com/harmony-ai-solutions/vnge-harmony-link-plugin).
 
+##### - More Details on this repo's codebase coming soon -
+
 
 
 ##### Random notes on this Project for development:
