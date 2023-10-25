@@ -251,7 +251,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         GUI.color = ui_default_color
 
     def chat_window_update_history(self):
-        if self.chat_gui_id is not None:
+        if self.chat_gui_id is None:
             return
 
         start_idx = 0
