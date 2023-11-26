@@ -26,8 +26,8 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
-- 2023-10-18: **Version 0.1.9** released. For the full list of updates see our
-  [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
+- 2023-11-26: **Version 0.1.10** released, featuring OpenAI as a new Character Backend Option. For the full list of
+  updates see our [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
 - 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. It's still missing some content,
   but finally we have an official Home on the Web. :-)
 - 2023-08-17: Our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
