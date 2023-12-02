@@ -583,16 +583,16 @@ class ControlsHandler(HarmonyClientModuleBase):
             # print commands, param
             (_, i_key, i_ctrl, i_alt, i_shift) = rules["key_codes"]
             if Input.GetKey(i_key):
-                # Simple cooldown of 100ms, if time is later than last cooldown set new one and execute
+                # Simple cooldown of 300ms, if time is later than last cooldown set new one and execute
                 now = time.time()
                 if action in self.controls_executing:
                     if self.controls_executing[action] > now:
                         if rules["mode"] == "toggle":
                             # toogle mode doesn't unlock as long as kept pressed
-                            self.controls_executing[action] = now + 0.1
+                            self.controls_executing[action] = now + 0.3
                         continue
 
-                self.controls_executing[action] = now + 0.1
+                self.controls_executing[action] = now + 0.3
 
                 print "Executing action: {0}".format(action)
                 if ctrl == i_ctrl and alt == i_alt and shift == i_shift:

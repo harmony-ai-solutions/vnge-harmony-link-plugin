@@ -89,7 +89,7 @@ def start(game):
 
     # Actual Plugin Initialization
     # Read Config data from .ini file
-    _config = _load_config()
+    _config = load_config()
     game.scenedata.scene_config = dict(_config.items('Scene'))
 
     # select a scene or load scene from ini
@@ -249,7 +249,7 @@ def _error_abort(game, error):
     shutdown(game)
 
 
-def _load_config():
+def load_config():
     # read from .ini file
     config = ConfigParser.SafeConfigParser()
     config_path = os.path.splitext(__file__)[0] + '.ini'
