@@ -82,7 +82,10 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
             self.update_ai_state(ai_state=event.payload)
 
         # AI Speech Utterance
-        if event.event_type == EVENT_TYPE_AI_SPEECH and event.status == EVENT_STATE_DONE:
+        if (
+                event.event_type == EVENT_TYPE_AI_SPEECH or
+                event.event_type == EVENT_TYPE_AI_ACTION
+        ) and event.status == EVENT_STATE_DONE:
 
             utterance_data = event.payload
 
