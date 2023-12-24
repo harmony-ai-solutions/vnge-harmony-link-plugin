@@ -86,7 +86,7 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
 
             utterance_data = event.payload
 
-            if utterance_data["type"] == "UTTERANCE_VERBAL" and len(utterance_data["audio_file"]) > 0:
+            if len(utterance_data["audio_file"]) > 0:
                 audio_file = utterance_data["audio_file"]
                 # Build Sound source and queue it for playing
                 # soundType can be "BGM", "ENV", "SystemSE" or "GameSE"
