@@ -12,10 +12,9 @@ By implementing Harmony Link's Events API, it allows Players to extend Ingame Ch
 such as Real-Time Conversation Abilities (Using AI Language models, Speech-to-Text and Text-to-Speech) and basic non-verbal
 Expressions and Interaction capabilities, turning them into interactive virtual companions.
 
-We're still missing a proper showcasing video, however, you can get an Impression from this recent Developer VLOG:
-https://drive.google.com/file/d/13KTgbJuc-fSqjGG4Js1J7G6uubg3wxWt/view?usp=sharing
+If you're curious for a little demonstration, please check out our Tech Demo on Youtube:
 
-Towards the end of the Beta Phase, we're planning to create a more detailed Feature Showcase.
+[![Add Human-like AI Characters to ANY Game - BETA Tech Demo #1 - Project Harmony AI](https://img.youtube.com/vi/wcuvrr2QSNY/0.jpg)](https://www.youtube.com/watch?v=wcuvrr2QSNY)
 
 Currently, this Plugin as well as Harmony Link is still in an early development stage, and therefore is merely a tech
 demonstrator, rather than a fully fledged AI companion solution. However the long term development goal for Characters
@@ -26,7 +25,9 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
-- 2023-11-26: **Version 0.1.10** released, featuring OpenAI as a new Character Backend Option. For the full list of
+- 2024-01-04: Our new **[Youtube-Channel](https://www.youtube.com/@Harmony-AI)** including the first official Tech Demo 
+  for Project Harmony is now live! Feel free to check it out.  
+- 2023-12-24: **Version 0.1.11** released, featuring OpenAI as a new Character and STT Backend Options. For the full list of
   updates see our [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
 - 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. It's still missing some content,
   but finally we have an official Home on the Web. :-)
@@ -84,6 +85,6 @@ Feel free to join our Discord Server and / or subscribe to our Patreon - Even $1
 Contact us directly via: [contact@project-harmony.ai](mailto:contact@project-harmony.ai)
 
 ---
-&copy; 2023 Harmony AI Solutions & Contributors
+&copy; 2023-2024 Harmony AI Solutions & Contributors
 
 Licensed under the Apache 2.0 License
