@@ -15,7 +15,7 @@ import time
 
 from vngameengine import get_engine_id2
 
-from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls
+from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls, movement
 
 # Config
 _config = None
@@ -30,6 +30,7 @@ _countenanceModule = None
 _ttsModule = None
 _sttModule = None
 _controlsModule = None
+_movementModule = None
 
 
 # Event Types
@@ -184,7 +185,7 @@ def real_start(game):
 
 # _init_modules initializes all the interfaces and handlers needed by harmony_modules
 def _init_modules(config, game):
-    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
+    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule, _movementModule
 
     # Init comms module for interfacing with external helper binaries
     _connector = connector.ConnectorEventHandler(
@@ -206,7 +207,9 @@ def _init_modules(config, game):
 
     # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
 
-    # TODO: Init Module for AI Roleplay to Animation -> Just very simple for now
+    # Init Module for AI Roleplay to Animation -> Just very simple for now
+    _movementModule = movement.MovementHandler(backend_connector=_connector, movement_config=dict(config.items('Movement')))
+    _movementModule.activate()
 
     # Init Module for AI Expression Handling -> Just very simple for now
     _countenanceModule = countenance.CountenanceHandler(backend_connector=_connector, countenance_config=dict(config.items('Countenance')))
@@ -224,22 +227,24 @@ def _init_modules(config, game):
 
 
 def _modules_update_chara(chara):
-    global _backendModule, _countenanceModule, _ttsModule, _sttModule
+    global _backendModule, _countenanceModule, _ttsModule, _sttModule, _movementModule
 
     _backendModule.update_chara(chara)
     _countenanceModule.update_chara(chara)
     _ttsModule.update_chara(chara)
     _sttModule.update_chara(chara)
+    _movementModule.update_chara(chara)
 
 
 def _shutdown_modules():
-    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule
+    global _connector, _backendModule, _countenanceModule, _ttsModule, _sttModule, _controlsModule, _movementModule
 
     _backendModule.deactivate()
     _sttModule.deactivate()
     _ttsModule.deactivate()
     _countenanceModule.deactivate()
     _controlsModule.deactivate()
+    _movementModule.deactivate()
 
     _connector.stop()
 
