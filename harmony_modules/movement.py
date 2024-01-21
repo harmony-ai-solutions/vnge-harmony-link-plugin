@@ -235,19 +235,19 @@ registered_actions = [
             '{{character}} jumps far over {{object}}',
             '{{character}} jumps quickly over {{object}}',
             '{{character}} stumbles while jumping over {{object}}',
-            '{{character}} lands on the other side of {{object}} after jumping over it',
             '{{character}} barely clears {{object}} with a jump',
-            '{{character}} struggles to jump over {{object}}',
-            '{{character}} fails to jump over {{object}} and falls',
-            '{{character}} trips over {{object}} while trying to jump over it'
+            '{{character}} struggles to jump over {{object}}'
         ],
         'confirmations': [
             '{{character}} makes it over {{object}}',
+            '{{character}} lands on the other side of {{object}} after jumping over it',
             '{{character}} succeeds in jumping over {{object}}'
         ],
         'rejections': [
             '{{character}} doesn\'t make it over {{object}}',
-            '{{character}} fails to jump over {{object}}'
+            '{{character}} fails to jump over {{object}}',
+            '{{character}} fails to jump over {{object}} and falls',
+            '{{character}} trips over {{object}} while trying to jump over it'
         ]
     },
     {
