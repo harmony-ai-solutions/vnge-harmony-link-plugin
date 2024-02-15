@@ -48,10 +48,10 @@ registered_actions = [
             '{{character}} tiptoes toward {{object}}'
         ],
         'confirmations': [
-            '{{none}}'
+            # '{{none}}'
         ],
         'rejections': [
-            '{{none}}'
+            # '{{none}}'
         ]
     },
     {
@@ -74,10 +74,10 @@ registered_actions = [
             '{{character}} sprints'
         ],
         'confirmations': [
-            '{{none}}'
+            # '{{none}}'
         ],
         'rejections': [
-            '{{none}}'
+            # '{{none}}'
         ]
     },
     {
@@ -96,10 +96,10 @@ registered_actions = [
             "{{character}} outpaces {{other_character}} easily"
         ],
         "confirmations": [
-            "{{none}}"
+            # '{{none}}'
         ],
         "rejections": [
-            "{{none}}"
+            # '{{none}}'
         ]
     },
     {
@@ -118,10 +118,10 @@ registered_actions = [
             "{{character}} hunkers down behind the {{object}}"
         ],
         "confirmations": [
-            "{{none}}"
+            # '{{none}}'
         ],
         "rejections": [
-            "{{none}}"
+            # '{{none}}'
         ]
     },
     {
@@ -141,10 +141,10 @@ registered_actions = [
             "{{character}} appreciates the sturdiness of the {{object}} while leaning against it"
         ],
         "confirmations": [
-            "{{none}}"
+            # '{{none}}'
         ],
         "rejections": [
-            "{{none}}"
+            # '{{none}}'
         ]
     },
     {
@@ -168,10 +168,10 @@ registered_actions = [
             "{{character}} cautiously lays down on the {{object}}"
         ],
         'confirmations': [
-            "{{none}}"
+            # '{{none}}'
         ],
         'rejections': [
-            "{{none}}"
+            # '{{none}}'
         ]
     },
     {
@@ -195,10 +195,10 @@ registered_actions = [
             '{{character}} disengages from a sprawled layout'
         ],
         'confirmations': [
-            '{{none}}'
+            # '{{none}}'
         ],
         'rejections': [
-            '{{none}}'
+            # '{{none}}'
         ]
     },
     {
@@ -218,10 +218,10 @@ registered_actions = [
             '{{character}} makes a tiny leap'
         ],
         'confirmations': [
-            '{{none}}'
+            # '{{none}}'
         ],
         'rejections': [
-            '{{none}}'
+            # '{{none}}'
         ]
     },
     {
@@ -347,10 +347,10 @@ registered_actions = [
             "{{character}} leaves {{object}} on the ground"
         ],
         "confirmations": [
-            "{{none}}"
+            # '{{none}}'
         ],
         "rejections": [
-            "{{none}}"
+            # '{{none}}'
         ]
     },
     {

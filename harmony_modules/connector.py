@@ -72,7 +72,7 @@ class ConnectorEventThread(Thread):
             # Set params
             self.http_listen_port = int(http_listen_port)
             # Initialize HTTP Server
-            server_address = ('', self.http_listen_port)
+            server_address = ('localhost', self.http_listen_port)
             self.http_server = BaseHTTPServer.HTTPServer(server_address, harmony_http_handler_factory(self))
 
     def run(self):
