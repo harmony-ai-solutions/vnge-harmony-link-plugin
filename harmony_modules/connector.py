@@ -34,6 +34,7 @@ class HarmonyEventJSONEncoder(json.JSONEncoder):
     def default(self, o):
         return o.__dict__
 
+
 def harmony_http_handler_factory(connector_thread):
     class HarmonyEventHTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         def do_POST(self):
@@ -49,6 +50,7 @@ def harmony_http_handler_factory(connector_thread):
             self.end_headers()
 
     return HarmonyEventHTTPHandler
+
 
 # ConnectorEventThread - Thread for checking on async requests being processed
 class ConnectorEventThread(Thread):

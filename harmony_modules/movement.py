@@ -760,9 +760,23 @@ class MovementHandler(HarmonyClientModuleBase):
         # Movement related data
         self.animations_map = {}
 
+        # Debug trigger for building animation list
+        if int(self.config["debug"]) == 2:
+            self.debug_print_animation_list()
+
+    def debug_print_animation_list(self):
         # Debug: List all Animations existing in the game
+        #
+        # REMARK:
+        # This was the quickest hacky way to get the full animation list out of Chara Studio
+        # Coding this code above to iterate through objects was way more effort than it should be.
+        # But anyways, it's done now.
+        # Commented out sections can be used for little more detail, but it's mostly empty in my case, so not worth it.
+        #
+
+        # Get Info Object, which holds all the data we need
         info = Info.Instance
-        # print(json.dumps(dir(info)))
+        # print(json.dumps(dir(info))) -> dir() is helpful to get an idea of what the structure of an object even is
 
         animations = {}
         animation_groups = dict(info.dicAGroupCategory)
@@ -772,23 +786,43 @@ class MovementHandler(HarmonyClientModuleBase):
                 "categories": {}
             }
             categories = dict(animation_groups[group_id].dicCategory)
+            # print(json.dumps(categories))
             for category_id, category_name in categories.items():
-                animation_items = dict(info.dicAnimeLoadInfo[group_id][category_id])
-                animations[group_id]["categories"][category_id] = {
-                    "name": category_name,
-                    "animation_items": []
-                }
-                for item_info in animation_items.values():
-                    animations[group_id]["categories"][category_id]["animation_items"].append(item_info.name)
+                # Not all groups which exist in the Group Category list exist / have animations;
+                # this may cause reference errors, therefore double check here if the values exist
+                if group_id in info.dicAnimeLoadInfo:
+                    animation_info_group = info.dicAnimeLoadInfo[group_id]
+                    if category_id in animation_info_group:
+                        # Iterate over category items and add them to the animations list
+                        animation_items = dict(animation_info_group[category_id])
+                        animations[group_id]["categories"][category_id] = {
+                            "name": category_name,
+                            "animation_items": []
+                            # "animation_items": {}
+                        }
+                        for item_info in animation_items.values():
+                            animations[group_id]["categories"][category_id]["animation_items"].append(item_info.name)
+                            # animations[group_id]["categories"][category_id]["animation_items"][item_info.name] = dir(item_info)
+                            # animations[group_id]["categories"][category_id]["animation_items"][item_info.name] = {
+                            #     "bundlePath": item_info.bundlePath,
+                            #     "clip": item_info.clip,
+                            #     "fileName": item_info.fileName,
+                            #     "manifest": item_info.manifest,
+                            #     "name": item_info.name,
+                            #     # "option": item_info.option, -> Not serializable
+                            # }
 
+        # Print list to console
         print(json.dumps(animations))
-        raise RuntimeError("Dont want to start if debug")
+        # raise RuntimeError("Dont want to start if debug")
 
-    def create_animations_map(self):
+    def init_animations_map(self):
+        # This creates a map of
+
 
     def handle_event(
-            self,
-            event  # HarmonyLinkEvent
+        self,
+        event  # HarmonyLinkEvent
     ):
         # AI State update
         # if event.event_type == EVENT_TYPE_AI_STATUS and event.status == EVENT_STATE_DONE:
