@@ -50,16 +50,22 @@ class PerceptionHandler(HarmonyClientModuleBase):
                     event_entity_id
                 )
 
-                # TODO: assume event was recognized and forward to other handlers.
-
+                # assume event was recognized and forward to other handlers.
+                event = HarmonyLinkEvent(
+                    event_id='actor_{0}_VAD_utterance_processed'.format(self.entity_controller.entity_id),
+                    event_type=EVENT_TYPE_USER_UTTERANCE,
+                    status=EVENT_STATE_NEW,
+                    payload=utterance_data
+                )
+                self.backend_connector.send_event(event)
                 return
 
             # Check if this event could be recognized by the actor
-            self.handle_event_recognition(event, event_actor)
+            self.check_for_event_recognition(event, event_actor)
 
         return
 
-    def handle_event_recognition(self, event, event_actor):
+    def check_for_event_recognition(self, event, event_actor):
         # TODO
         return
 

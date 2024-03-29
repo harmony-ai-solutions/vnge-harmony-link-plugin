@@ -8,7 +8,8 @@ from harmony_modules.common import *
 
 # Constants
 RESULT_MODE_PROCESS = "process"
-RESULT_MODE_RETURN  = "return"
+RESULT_MODE_RETURN = "return"
+
 
 # CountenanceHandler - module main class
 class SpeechToTextHandler(HarmonyClientModuleBase):
@@ -29,17 +30,15 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
             utterance_data = event.payload
 
-            if utterance_data["type"] == UTTERANCE_VERBAL and len(utterance_data["content"]) > 0:
+            if len(utterance_data["content"]) > 0:
                 # Since this was an output created by the current entity, it needs to be distributed
                 # to the other entities, which then "decide" if it's relevant to them in some way or not
+                utterance_data["entity_id"] = self.entity_controller.entity_id
                 event = HarmonyLinkEvent(
-                    event_id='actor_{0}_utterance'.format(self.entity_controller.entity_id),  # This is an arbitrary dummy ID to conform the Harmony Link API
+                    event_id='actor_{0}_VAD_utterance'.format(self.entity_controller.entity_id),
                     event_type=EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE,
                     status=EVENT_STATE_DONE,
-                    payload={
-                        "entity_id": self.entity_controller.entity_id,
-                        "utterance_content": utterance_data["content"]
-                    }
+                    payload=utterance_data
                 )
 
                 for entity_id, controller in self.entity_controller.game.scenedata.active_entities:
