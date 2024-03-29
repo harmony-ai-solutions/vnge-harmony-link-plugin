@@ -64,9 +64,9 @@ class TTSProcessorThread(Thread):
 
 # TextToSpeechHandler - main module class
 class TextToSpeechHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_connector, tts_config):
+    def __init__(self, entity_controller, tts_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = tts_config
         # TTS Handling

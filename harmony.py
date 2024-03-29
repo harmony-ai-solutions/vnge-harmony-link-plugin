@@ -16,36 +16,35 @@ import threading
 
 from vngameengine import get_engine_id2
 
-from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls, movement
+from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls, movement, \
+    perception
+from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
 
 # Config
 _config = None
 
-# Character controllers
-_active_characters = {}
+# Character & user controllers
+_user_controlled_entity_id = None
+_active_entities = {}
+
 # List of ready characters - this is used to synchronize characters finished initialization
 _syncLock = threading.Lock()
-_ready_characters = []
-_failed_characters = []
+_ready_entities = []
+_failed_entities = []
 
-# Main Connector & Controls Module
-_connector = None
-_controlsModule = None
-_sttModule = None
-
-# Event Types
-EVENT_TYPE_INIT_CHARACTER = 'INIT_CHARACTER'
+# static actors in the scene, which may be relevant for movement or interactions
+_static_actors = {}
 
 
-# HarmonyInitHandler
-class HarmonyInitHandler(common.HarmonyClientModuleBase):
-    global _active_characters, _ready_characters, _failed_characters, _syncLock
+# EntityInitHandler
+class EntityInitHandler(common.HarmonyClientModuleBase):
+    global _active_entities, _ready_entities, _failed_entities, _syncLock
 
-    def __init__(self, backend_connector, character_id, scene_config, game):
+    def __init__(self, backend_connector, entity_id, scene_config, game):
         # execute the base constructor
         common.HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
         # Set config
-        self.character_id = character_id
+        self.entity_id = entity_id
         self.scene_config = scene_config
         self.game = game
 
@@ -54,13 +53,13 @@ class HarmonyInitHandler(common.HarmonyClientModuleBase):
             event  # HarmonyLinkEvent
     ):
         # Wait for Events required for initialization
-        if event.event_type == EVENT_TYPE_INIT_CHARACTER:
+        if event.event_type == EVENT_TYPE_INIT_ENTITY:
             # Acquire lock to avoid concurrency issues
             _syncLock.acquire()
             if event.status == common.EVENT_STATE_DONE:
-                _ready_characters.append(self.character_id)
+                _ready_entities.append(self.entity_id)
             else:
-                _failed_characters.append(self.character_id)
+                _failed_entities.append(self.entity_id)
 
             # Check for init done condition
             self.check_init_done()
@@ -70,8 +69,8 @@ class HarmonyInitHandler(common.HarmonyClientModuleBase):
             self.deactivate()
 
     def check_init_done(self):
-        if len(_ready_characters) + len(_failed_characters) == len(_active_characters):
-            if len(_failed_characters) == 0:
+        if len(_ready_entities) + len(_failed_entities) == len(_active_entities):
+            if len(_failed_entities) == 0:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
                 if self.scene_config["scene"] is not None:
                     self.game.load_scene(self.scene_config["scene"])
@@ -79,7 +78,7 @@ class HarmonyInitHandler(common.HarmonyClientModuleBase):
                 else:
                     real_start(self.game)
             else:
-                _error_abort(self.game, 'Harmony Link: Character Initialization failed.')
+                _error_abort(self.game, 'Harmony Link: Entity Initialization failed.')
 
 
 # Chara - Internal representation for a chara actor
@@ -90,49 +89,50 @@ class Chara:
         self.current_base_expression = None
 
 
-class CharacterController:
-    global _config
+class EntityController:  # TODO: Refactor this to use inheritance from base class with ActorEntity
 
-    def __init__(self, character_id, game, config):
+    def __init__(self, entity_id, game, config):
         # Flow Control
         self.is_active = False
         # Important reference
-        self.character_id = character_id
+        self.entity_id = entity_id
         self.game = game
         self.config = config
         self.chara = None
         # Mandatory Modules
         self.initHandler = None
         self.connector = None
-        # Character Feature Modules
+        # Feature Modules
         self.backendModule = None
         self.countenanceModule = None
         self.ttsModule = None
-        # self.sttModule = None
+        self.sttModule = None
         self.movementModule = None
+        self.perceptionModule = None
+        self.controlsModule = None
 
     def activate(self):
         if self.is_active:
             return
 
         # Set active
-        print 'Starting CharacterController for character \'{0}\'...'
+        print 'Starting ActorEntityController for entity \'{0}\'...'.format(self.entity_id)
         self.is_active = True
 
         # Initialize Character on Harmony Link
         init_event = common.HarmonyLinkEvent(
-            event_id='init_character',  # This is an arbitrary dummy ID to conform the Harmony Link API
-            event_type=EVENT_TYPE_INIT_CHARACTER,
+            event_id='init_entity',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_INIT_ENTITY,
             status=common.EVENT_STATE_NEW,
             payload={
-                'character_id': self.character_id
+                'entity_id': self.entity_id
             }
         )
-        init_send_success = _connector.send_event(init_event)
+        init_send_success = self.connector.send_event(init_event)
         if init_send_success:
-            print ('Harmony Link: Initializing character \'{0}\'...'.format(self.character_id))
+            print 'Harmony Link: Initializing entity \'{0}\'...'.format(self.entity_id)
         else:
-            raise RuntimeError('Harmony Link: Failed to sent character initialize Event for character \'{0}\'.'.format(self.character_id))
+            raise RuntimeError('Harmony Link: Failed to sent entity initialize Event for entity \'{0}\'.'.format(self.entity_id))
 
     def is_active(self):
         return self.is_active
@@ -153,47 +153,62 @@ class CharacterController:
 
         # Init Backend Module
         self.backendModule = backend.BackendHandler(
-            backend_connector=_connector,
+            entity_controller=self,
             backend_config=dict(self.config.items('Backend'))
         )
         self.backendModule.activate()
 
-        # # Init Module for Audio Recording / Streaming + Player Speech-To-Text
-        # self.sttModule = speech_to_text.SpeechToTextHandler(
-        #     backend_connector=_connector,
-        #     stt_config=dict(self.config.items('STT'))
-        # )
+        # Init Module for Audio Recording / Streaming + Player Speech-To-Text
+        self.sttModule = speech_to_text.SpeechToTextHandler(
+            entity_controller=self,
+            stt_config=dict(self.config.items('STT'))
+        )
 
         # TODO: Init Module for Roleplay Options by the player -> Just very simple, no lewd stuff
 
-        # Init Module for AI Roleplay to Animation -> Just very simple for now
-        self.movementModule = movement.MovementHandler(
-            backend_connector=_connector,
-            movement_config=dict(self.config.items('Movement'))
-        )
-        self.movementModule.activate()
-
-        # Init Module for AI Expression Handling -> Just very simple for now
+        # Init Module for AI Expression Handling
         self.countenanceModule = countenance.CountenanceHandler(
-            backend_connector=_connector,
+            entity_controller=self,
             countenance_config=dict(self.config.items('Countenance'))
         )
         self.countenanceModule.activate()
 
         # Init Module for AI Voice Streaming + Audio-2-LipSync
         self.ttsModule = text_to_speech.TextToSpeechHandler(
-            backend_connector=_connector,
+            entity_controller=self,
             tts_config=dict(self.config.items('TTS'))
         )
         self.ttsModule.activate()
+
+        # Init Module for AI Roleplay to Animation
+        self.movementModule = movement.MovementHandler(
+            entity_controller=self,
+            movement_config=dict(self.config.items('Movement'))
+        )
+        self.movementModule.activate()
+
+        # Init Module for AI Perception Handling
+        self.perceptionModule = perception.PerceptionHandler(
+            entity_controller=self,
+            perception_config=dict(self.config.items('Perception'))
+        )
+        self.perceptionModule.activate()
+
+        # Init User Controls Module
+        self.controlsModule = controls.ControlsHandler(
+            entity_controller=self,
+            game=self.game,
+            shutdown_func=shutdown,
+            controls_keymap_config=dict(self.config.items('Controls.Keymap'))
+        )
 
         return None
 
     def create_startup_handler(self):
         scene_config = self.game.scenedata.scene_config
-        self.initHandler = HarmonyInitHandler(
+        self.initHandler = EntityInitHandler(
             backend_connector=self.connector,
-            character_id=self.character_id,
+            entity_id=self.entity_id,
             scene_config=scene_config,
             game=self.game
         )
@@ -205,15 +220,16 @@ class CharacterController:
         self.backendModule.update_chara(self.chara)
         self.countenanceModule.update_chara(self.chara)
         self.ttsModule.update_chara(self.chara)
-        # self.sttModule.update_chara(self.chara)
+        self.sttModule.update_chara(self.chara)
         self.movementModule.update_chara(self.chara)
 
     def shutdown_modules(self):
         self.backendModule.deactivate()
-        # self.sttModule.deactivate()
+        self.sttModule.deactivate()
         self.ttsModule.deactivate()
         self.countenanceModule.deactivate()
         self.movementModule.deactivate()
+        self.controlsModule.deactivate()
 
         self.connector.stop()
 
@@ -268,31 +284,49 @@ def start_scene_select(game):
 
 
 def start_harmony_ai(game):
-    global _config, _connector, _active_characters
+    global _config, _user_controlled_entity_id, _active_entities
     scene_config = game.scenedata.scene_config
 
-    # Initialize global modules who need to operate independent from characters
-    _init_base_modules(_config, game)
+    # Determine user entities to be controlled
+    if "user_entity_id" not in scene_config or len(scene_config["user_entity_id"]) == 0:
+        _error_abort(game, 'Harmony Plugin: User entity id is invalid.')
+        return
 
-    # Determine characters to be controlled
-    if "character_id" not in scene_config or type(scene_config["character_id"]) != "string":
-        _error_abort(game, 'Harmony Plugin: Character list invalid.')
-    character_list = scene_config["character_id"].split(",")
-    for character_id in character_list:
-        # Create character controller
-        controller = CharacterController(character_id=character_id, game=game, config=_config)
+    # Determine character entities to be controlled
+    if "character_entity_id" not in scene_config or len(scene_config["character_entity_id"]) == 0:
+        _error_abort(game, 'Harmony Plugin: Character entity id/list is invalid.')
+        return
+
+    # Setup user entity
+    user_entity_id = scene_config["user_entity_id"].strip()
+    controller = EntityController(entity_id=user_entity_id, game=game, config=_config)
+    # Initialize Client modules
+    controller.init_modules()
+    # Create Startup Init handler
+    controller.create_startup_handler()
+    # Add to character list
+    _active_entities[user_entity_id] = controller
+    _user_controlled_entity_id = user_entity_id
+
+    # Setup character entities
+    character_list = scene_config["character_entity_id"].split(",")
+    for entity_id in character_list:
+        # Create entity controller for characters
+        entity_id = entity_id.strip()
+        controller = EntityController(entity_id=entity_id, game=game, config=_config)
         # Initialize Client modules
         controller.init_modules()
         # Create Startup Init handler
         controller.create_startup_handler()
         # Add to character list
-        _active_characters[character_id] = controller
+        _active_entities[entity_id] = controller
 
-    # Sleep 1 second to allow for the backend threads to connect to the websocket server
-    time.sleep(1)
+    # Warmup time to allow for the backend threads to connect to the websocket server
+    warmup_time = int(_config.get('Harmony', 'start_warmup_time'))
+    time.sleep(warmup_time)
 
-    # Initialize Characters on Harmony Link
-    for character_id, controller in _active_characters.items():
+    # Initialize Entities on Harmony Link
+    for entity_id, controller in _active_entities.items():
         try:
             controller.activate()
         except RuntimeError as e:
@@ -309,61 +343,34 @@ def _load_scene_start2(game):
 
 
 def real_start(game):
-    global _config, _controlsModule, _active_characters
+    global _config, _user_controlled_entity_id, _active_entities
 
+    scene_config = game.scenedata.scene_config
     game.scenef_register_actorsprops()
 
     # Link Chara Actor in scene with Character controller
-    for character_id, controller in _active_characters.items():
-        chara_actor = game.scenef_get_actor(character_id)
-        if chara_actor is None:
-            _error_abort(game, 'Harmony Link: Actor for Chara "{0}" could not be loaded.'.format(character_id))
+    for entity_id, controller in _active_entities.items():
+        # Get list of character and user entities
+        character_list = scene_config["character_entity_id"].split(",")
+
+        # Try to find actor for entity
+        chara_actor = game.scenef_get_actor(entity_id)
+        if chara_actor is None and entity_id in character_list:
+            _error_abort(game, 'Harmony Link: Chara Actor for Entity "{0}" could not be loaded.'.format(entity_id))
             return
+        elif chara_actor is not None:
+            chara = Chara(actor=chara_actor)
+            chara.actor.set_mouth_open(0)
+            # Update all controller modules with new chara actor
+            controller.update_chara(chara)
 
-        chara = Chara(actor=chara_actor)
-        chara.actor.set_mouth_open(0)
-        # Update all controller modules with new chara actor
-        controller.update_chara(chara)
+        # Initialize controls module if it's the user entity
+        if entity_id == _user_controlled_entity_id:
+            controller.controlsModule.activate()
 
-    # Initialize Player controls.
-    _controlsModule.setup_game_controls(game, shutdown, _sttModule)
-
-
-# _init_modules initializes all the interfaces and handlers needed by harmony_modules
-def _init_base_modules(config, game):
-    global _connector, _controlsModule, _sttModule
-
-    # Init comms module for interfacing with external helper binaries
-    _connector = connector.ConnectorEventHandler(
-        ws_endpoint=config.get('Connector', 'ws_endpoint'),
-        ws_buffer_size=int(config.get('Connector', 'ws_buffer_size')),
-        http_endpoint=config.get('Connector', 'http_endpoint'),
-        http_listen_port=config.get('Connector', 'http_listen_port'),
-        shutdown_func=shutdown,
-        game=game
-    )
-    _connector.start()
-
-    # Init Module for Audio Recording / Streaming + Player Speech-To-Text
-    _sttModule = speech_to_text.SpeechToTextHandler(
-        backend_connector=_connector,
-        stt_config=dict(config.items('STT'))
-    )
-
-    # Init Player Controls Module
-    _controlsModule = controls.ControlsHandler(
-        backend_connector=_connector,
-        controls_keymap_config=dict(config.items('Controls.Keymap'))
-    )
-    _controlsModule.activate()
-
-    return None
-
-
-def _shutdown_base_modules():
-    global _connector, _controlsModule
-    _controlsModule.deactivate()
-    _connector.stop()
+    # Link Entities within game object
+    game.scenedata.active_entities = _active_entities
+    game.scenedata.user_controlled_entity_id = _user_controlled_entity_id
 
 
 def _error_abort(game, error):
@@ -401,14 +408,11 @@ def _to_cam_animated(game, camera_id, time=3, move_style="fast-slow3"):
 
 
 def shutdown(game):
-    global _active_characters
+    global _active_entities
 
     # Shutdown all Characters
-    for controller in _active_characters:
+    for controller in _active_entities:
         controller.shutdown_modules()
-
-    # Shutdown base Modules
-    _shutdown_base_modules()
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
     game.set_buttons(["Return to main screen >>"], [[game.return_to_start_screen_clear]])

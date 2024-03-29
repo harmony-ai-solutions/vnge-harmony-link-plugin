@@ -84,9 +84,9 @@ expressions_female = expressions_default.copy()
 
 # CountenanceHandler - module main class
 class CountenanceHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_connector, countenance_config):
+    def __init__(self, entity_controller, countenance_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = countenance_config
 

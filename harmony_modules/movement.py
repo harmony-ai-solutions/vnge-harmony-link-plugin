@@ -752,19 +752,19 @@ registered_actions = [
 
 # CountenanceHandler - module main class
 class MovementHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_connector, movement_config):
+    def __init__(self, entity_controller, movement_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = movement_config
         # Movement related data
         self.animations_map = {}
 
         # Debug trigger for building animation list
-        if int(self.config["debug"]) == 2:
-            self.debug_print_animation_list()
+        if int(self.config["debug_mode"]) == 2:
+            self._debug_print_animation_list()
 
-    def debug_print_animation_list(self):
+    def _debug_print_animation_list(self):
         # Debug: List all Animations existing in the game
         #
         # REMARK:
@@ -797,27 +797,37 @@ class MovementHandler(HarmonyClientModuleBase):
                         animation_items = dict(animation_info_group[category_id])
                         animations[group_id]["categories"][category_id] = {
                             "name": category_name,
-                            "animation_items": []
-                            # "animation_items": {}
+                            "animation_items": [],
+                            "animation_item_details": {}
                         }
                         for item_info in animation_items.values():
                             animations[group_id]["categories"][category_id]["animation_items"].append(item_info.name)
                             # animations[group_id]["categories"][category_id]["animation_items"][item_info.name] = dir(item_info)
-                            # animations[group_id]["categories"][category_id]["animation_items"][item_info.name] = {
-                            #     "bundlePath": item_info.bundlePath,
-                            #     "clip": item_info.clip,
-                            #     "fileName": item_info.fileName,
-                            #     "manifest": item_info.manifest,
-                            #     "name": item_info.name,
-                            #     # "option": item_info.option, -> Not serializable
-                            # }
+                            animations[group_id]["categories"][category_id]["animation_item_details"][item_info.name] = {
+                                "bundlePath": item_info.bundlePath,
+                                "clip": item_info.clip,
+                                "fileName": item_info.fileName,
+                                "manifest": item_info.manifest,
+                                "name": item_info.name,
+                                # "option": item_info.option, -> Not serializable
+                            }
 
         # Print list to console
-        print(json.dumps(animations))
+        # print(json.dumps(animations))
+
+        # Write to output file in chara dir
+        animation_data = json.dumps(animations)
+        file_handle = open('animation_list.json', 'w')
+        file_handle.write(animation_data)
+        file_handle.close()
+
         # raise RuntimeError("Dont want to start if debug")
 
     def init_animations_map(self):
         # This creates a map of
+        self.animations_map = {
+
+        }
 
 
     def handle_event(
