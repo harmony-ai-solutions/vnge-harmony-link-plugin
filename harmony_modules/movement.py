@@ -22,7 +22,7 @@ import time
 import json
 
 #
-registered_actions = [
+_registered_actions = [
     # Basic movement and interaction
     {
         'name': 'move',
@@ -752,6 +752,8 @@ registered_actions = [
 
 # CountenanceHandler - module main class
 class MovementHandler(HarmonyClientModuleBase):
+    global _registered_actions
+
     def __init__(self, entity_controller, movement_config):
         # execute the base constructor
         HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
@@ -763,6 +765,10 @@ class MovementHandler(HarmonyClientModuleBase):
         # Debug trigger for building animation list
         if int(self.config["debug_mode"]) == 2:
             self._debug_print_animation_list()
+
+        # Active Movement & interaction related
+        self.current_action_graph = None  # graph of actions to be performed by this entity after current action
+        self.current_action_vector = None  # current action being executed by this entity
 
     def _debug_print_animation_list(self):
         # Debug: List all Animations existing in the game
@@ -829,38 +835,78 @@ class MovementHandler(HarmonyClientModuleBase):
 
         }
 
-
     def handle_event(
         self,
         event  # HarmonyLinkEvent
     ):
-        # AI State update
-        # if event.event_type == EVENT_TYPE_AI_STATUS and event.status == EVENT_STATE_DONE:
-        #     self.update_ai_state(ai_state=event.payload)
-        #     # Update face expression based on status context
-        #     self.update_chara_from_state()
-        #
-        # if event.event_type == EVENT_TYPE_AI_COUNTENANCE_UPDATE and event.status == EVENT_STATE_DONE:
-        #     self.update_countenance_state(countenance_state=event.payload)
-        #     # Update face expression based on status context
-        #     self.update_chara_from_state()
+        # Requested Props and active entities in the scene
+        if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_SCENE_DATA and event.status == EVENT_STATE_DONE:
+            # Define scene Data Object according to SceneDataV1 spec
+            scene_data = {
+                "characters": [],
+                "objects": []
+            }
 
-        # if event.event_type == EVENT_TYPE_AI_SPEECH and event.status == EVENT_STATE_DONE:
-        #
-        #     utterance_data = event.payload
-        #
-        #     if utterance_data["type"] == "UTTERANCE_NONVERBAL" and len(utterance_data["content"]) > 0:
-        #         # Update face expression based on nonverbal action context
-        #         self.update_chara_from_action(utterance_data["content"])
+            # Get all characters and convert them to match CharacterDefinitionV1 spec
+            for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+                if controller.chara is None:
+                    # Ignore entities without representation in the scene
+                    continue
 
-        return
+                # get position & orientation
+                position_vector = controller.chara.actor.pos()
+                orientation_vector = controller.chara.actor.rot()
 
-    def update_chara_from_state(self):
-        if self.chara is None or self.countenance_state is None:
-            return
+                # Build definition object
+                character_definition_v1 = {
+                    "name": entity_id,
+                    "position": [position_vector.x, position_vector.y, position_vector.z],
+                    "orientation": [orientation_vector.x, orientation_vector.y, orientation_vector.z],
+                    "current_action": controller.movementModule.current_action_vector
+                }
+                scene_data["characters"].append(character_definition_v1)
 
-        # Update Countenance
-        # self.countenance_update('', self.countenance_state.emotional_state, self.countenance_state.facial_expression)
+            # Get all objects and convert them to match ObjectDefinitionV1 spec
+            for prop_id, prop_object in self.entity_controller.game.scenedata.registered_props.items():
+                # get position & orientation
+                position_vector = prop_object.pos()
+                orientation_vector = prop_object.rot()
+
+                # Build definition object
+                object_definition_v1 = {
+                    "name": prop_id,
+                    "position": [position_vector.x, position_vector.y, position_vector.z],
+                    "orientation": [orientation_vector.x, orientation_vector.y, orientation_vector.z],
+                }
+                scene_data["objects"].append(object_definition_v1)
+
+            # Build response event & send it to Harmony Link
+            event = HarmonyLinkEvent(
+                event_id='actor_{0}_scene_data'.format(self.entity_controller.entity_id),
+                event_type=EVENT_TYPE_MOVEMENT_V1_UPDATE_SCENE_DATA,
+                status=EVENT_STATE_NEW,
+                payload=scene_data
+            )
+            send_success = self.backend_connector.send_event(event)
+            if send_success:
+                print('Harmony Link: Scene Data provided for entity "{0}"'.format(self.entity_controller.entity_id))
+            else:
+                print('Harmony Link: Failed to transmit scene data for entity "{0}"'.format(self.entity_controller.entity_id))
+
+        # Requested availiable Actions and embedding examples
+        if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
+            event = HarmonyLinkEvent(
+                event_id='actor_{0}_availiable_actions'.format(self.entity_controller.entity_id),
+                event_type=EVENT_TYPE_MOVEMENT_V1_REGISTER_ACTIONS,
+                status=EVENT_STATE_NEW,
+                payload=_registered_actions
+            )
+            send_success = self.backend_connector.send_event(event)
+            if send_success:
+                print('Harmony Link: Available actions provided for entity "{0}"'.format(self.entity_controller.entity_id))
+            else:
+                print('Harmony Link: Failed to transmit available actions for entity "{0}"'.format(
+                    self.entity_controller.entity_id))
 
     # def countenance_update(self, gender, emotion_name, expression_name):
     #     emotion = emotions_default['neutral']

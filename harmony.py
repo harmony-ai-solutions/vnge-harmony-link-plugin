@@ -23,9 +23,10 @@ from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
 # Config
 _config = None
 
-# Character & user controllers
+# Object, character & user controllers
 _user_controlled_entity_id = None
 _active_entities = {}
+_registered_props = {}
 
 # List of ready characters - this is used to synchronize characters finished initialization
 _syncLock = threading.Lock()
@@ -341,15 +342,30 @@ def _load_scene_start2(game):
 
 
 def real_start(game):
-    global _config, _user_controlled_entity_id, _active_entities
+    global _config, _user_controlled_entity_id, _active_entities, _registered_props
 
-    scene_config = dict(_config.items('Scene'))
+    game.scenedata.scene_config = dict(_config.items('Scene'))
     game.scenef_register_actorsprops()
+
+    # Setup object props if they are defined
+    props_list = game.scenef_get_all_props()
+    for prop_id in props_list:
+        prop_object = game.scenef_get_prop(prop_id)
+        if prop_object is None:
+            _error_abort(game, 'Harmony Link: Object for Prop "{0}" could not be loaded.'.format(prop_id))
+            return
+        # Add to list of object props
+        _registered_props[prop_id] = prop_id
+
+    # Link Props & Entities within game object
+    game.scenedata.registered_props = _registered_props
+    game.scenedata.active_entities = _active_entities
+    game.scenedata.user_controlled_entity_id = _user_controlled_entity_id
 
     # Link Chara Actor in scene with Character controller
     for entity_id, controller in _active_entities.items():
         # Get list of character and user entities
-        character_list = scene_config["character_entity_id"].split(",")
+        character_list = game.scenedata.scene_config["character_entity_id"].split(",")
 
         # Try to find actor for entity
         chara_actor = game.scenef_get_actor(entity_id)
@@ -367,9 +383,18 @@ def real_start(game):
             controller.controlsModule.activate()
             controller.sttModule.activate()
 
-    # Link Entities within game object
-    game.scenedata.active_entities = _active_entities
-    game.scenedata.user_controlled_entity_id = _user_controlled_entity_id
+        # Inform Harmony Link that the scene finished loading for this Entity
+        environment_loaded_event = common.HarmonyLinkEvent(
+            event_id='environment_loaded',
+            event_type=common.EVENT_TYPE_ENVIRONMENT_LOADED,
+            status=common.EVENT_STATE_NEW,
+            payload={}
+        )
+        send_success = controller.connector.send_event(environment_loaded_event)
+        if send_success:
+            print('Harmony Link: Scene Data finished loading for entity "{0}"'.format(entity_id))
+        else:
+            print('Harmony Link: Failed to transmit scene loading finished for entity "{0}"'.format(entity_id))
 
 
 def _error_abort(game, error):
