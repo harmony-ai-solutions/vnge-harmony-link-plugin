@@ -50,7 +50,7 @@ class PerceptionHandler(HarmonyClientModuleBase):
                     event_entity_id
                 )
 
-                # assume event was recognized and forward to other handlers.
+                # Forward it as explicit user utterance event to harmony link for this entity
                 event = HarmonyLinkEvent(
                     event_id='actor_{0}_VAD_utterance_processed'.format(self.entity_controller.entity_id),
                     event_type=EVENT_TYPE_USER_UTTERANCE,
@@ -62,6 +62,16 @@ class PerceptionHandler(HarmonyClientModuleBase):
 
             # Check if this event could be recognized by the actor
             self.check_for_event_recognition(event, event_actor)
+
+        # Suppress Speech output for the current entity
+        if event.event_type == EVENT_TYPE_STT_SPEECH_STARTED and event.status == EVENT_STATE_DONE:
+            # event_entity_id = event.payload
+            self.entity_controller.ttsModule.suppress_speech(suppress=True)
+
+        # Unsuppress Speech output for the current entity
+        if event.event_type == EVENT_TYPE_STT_SPEECH_STOPPED and event.status == EVENT_STATE_DONE:
+            # event_entity_id = event.payload
+            self.entity_controller.ttsModule.suppress_speech(suppress=False)
 
         return
 

@@ -38,6 +38,10 @@ class TTSProcessorThread(Thread):
             self.running = False
 
     def wait_voice_played(self):
+        if not self.tts_handler.playing_utterance:
+            print '[{0}]: ERROR: Tried to monitor an undefined utterance player!'.format(self.tts_handler.__class__.__name__)
+            return True
+
         if self.tts_handler.playing_utterance.isPlaying:
             # Add LipSync to chara
             self.tts_handler.fake_lipsync_update()
@@ -70,6 +74,7 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
         # Set config
         self.config = tts_config
         # TTS Handling
+        self.speech_suppressed = False
         self.playing_utterance = None
         self.pending_utterances = []
 
@@ -88,9 +93,22 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
         ) and event.status == EVENT_STATE_DONE:
 
             utterance_data = event.payload
+            audio_file = utterance_data["audio_file"]
 
-            if len(utterance_data["audio_file"]) > 0:
-                audio_file = utterance_data["audio_file"]
+            if len(audio_file) > 0:
+                # Just abort here if speech is suppressed for this actor
+                if self.speech_suppressed:
+                    print 'Speech currently suppressed. Ignoring utterance'.format()
+                    # Send Message to Harmony Link to delete the source file from disk
+                    playback_done_event = HarmonyLinkEvent(
+                        event_id='playback_done',  # This is an arbitrary dummy ID to conform the Harmony Link API
+                        event_type=EVENT_TYPE_TTS_PLAYBACK_DONE,
+                        status=EVENT_STATE_NEW,
+                        payload=audio_file
+                    )
+                    self.backend_connector.send_event(playback_done_event)
+                    return
+
                 # Build Sound source and queue it for playing
                 # soundType can be "BGM", "ENV", "SystemSE" or "GameSE"
                 # they are almost the same but with separated volume control in studio setting
@@ -131,6 +149,22 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
             print '[{0}]: Playing audio file: {1}'.format(self.__class__.__name__, self.playing_utterance.filename)
             # add monitor job to check play status and perform lipsync updates
             TTSProcessorThread(tts_handler=self).start()
+
+    def suppress_speech(self, suppress=False):
+        # Update suppression mode
+        # if not suppressed, just return
+        self.speech_suppressed = suppress
+        if not self.speech_suppressed:
+            return
+
+        if self.playing_utterance is None:
+            return
+
+        self.playing_utterance.Stop()
+        self.playing_utterance.Cleanup()
+        self.playing_utterance = None
+        self.pending_utterances = []
+        self.fake_lipsync_stop()
 
     def fake_lipsync_stop(self):
         if self.chara is not None:

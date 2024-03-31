@@ -41,11 +41,40 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
                     payload=utterance_data
                 )
 
-                for entity_id, controller in self.entity_controller.game.scenedata.active_entities:
+                # FIXME: This is not very performant, will cause issues with many characters
+                for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
                     if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
                         continue
-                    # FIXME: This is not very performant, will cause issues with many characters
                     controller.perceptionModule.handle_event(event)
+
+        # User / Source entity starts talking
+        if event.event_type == EVENT_TYPE_STT_SPEECH_STARTED and event.status == EVENT_STATE_DONE:
+            # This event is intended to perform as an "interruption event" for LLM and TTS
+            # on the listening entities.
+            # FIXME: This is not very performant, will cause issues with many characters
+            for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+                if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
+                    continue
+                #
+                event.payload = {
+                    "entity_id": self.entity_controller.entity_id
+                }
+                controller.perceptionModule.handle_event(event)
+
+        # User / Source entity stops talking
+        if event.event_type == EVENT_TYPE_STT_SPEECH_STOPPED and event.status == EVENT_STATE_DONE:
+            # This event is intended to perform as an "interruption event" for LLM and TTS
+            # on the listening entities.
+            # FIXME: This is not very performant, will cause issues with many characters
+            for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+                if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
+                    continue
+                #
+                event.payload = {
+                    "entity_id": self.entity_controller.entity_id
+                }
+                controller.perceptionModule.handle_event(event)
+
 
     def start_listen(self):
         if self.is_recording_microphone:
@@ -56,9 +85,9 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             event_type=EVENT_TYPE_STT_START_LISTEN,
             status=EVENT_STATE_NEW,
             payload={
-                "auto_vad": self.config['auto_vad'],
-                "vad_mode": self.config['vad_mode'],
-                "result_mode": RESULT_MODE_RETURN if self.config['auto_vad'] == 1 else RESULT_MODE_PROCESS
+                "auto_vad": bool(self.config['auto_vad']),
+                "vad_mode": int(self.config['vad_mode']),
+                "result_mode": RESULT_MODE_RETURN if bool(self.config['auto_vad']) else RESULT_MODE_PROCESS
             }
         )
         success = self.backend_connector.send_event(event)

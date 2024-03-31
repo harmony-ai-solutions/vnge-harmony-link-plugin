@@ -40,12 +40,11 @@ _static_actors = {}
 class EntityInitHandler(common.HarmonyClientModuleBase):
     global _active_entities, _ready_entities, _failed_entities, _syncLock
 
-    def __init__(self, backend_connector, entity_id, scene_config, game):
+    def __init__(self, entity_controller, entity_id, game):
         # execute the base constructor
-        common.HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        common.HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.entity_id = entity_id
-        self.scene_config = scene_config
         self.game = game
 
     def handle_event(
@@ -72,8 +71,9 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
         if len(_ready_entities) + len(_failed_entities) == len(_active_entities):
             if len(_failed_entities) == 0:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
-                if self.scene_config["scene"] is not None:
-                    self.game.load_scene(self.scene_config["scene"])
+                scene_config = self.game.scenedata.scene_config
+                if scene_config["scene"] is not None:
+                    self.game.load_scene(scene_config["scene"])
                     self.game.set_timer(0.5, _load_scene_start)
                 else:
                     real_start(self.game)
@@ -205,11 +205,9 @@ class EntityController:  # TODO: Refactor this to use inheritance from base clas
         return None
 
     def create_startup_handler(self):
-        scene_config = self.game.scenedata.scene_config
         self.initHandler = EntityInitHandler(
-            backend_connector=self.connector,
+            entity_controller=self,
             entity_id=self.entity_id,
-            scene_config=scene_config,
             game=self.game
         )
         self.initHandler.activate()
@@ -345,7 +343,7 @@ def _load_scene_start2(game):
 def real_start(game):
     global _config, _user_controlled_entity_id, _active_entities
 
-    scene_config = game.scenedata.scene_config
+    scene_config = dict(_config.items('Scene'))
     game.scenef_register_actorsprops()
 
     # Link Chara Actor in scene with Character controller
@@ -364,9 +362,10 @@ def real_start(game):
             # Update all controller modules with new chara actor
             controller.update_chara(chara)
 
-        # Initialize controls module if it's the user entity
+        # Initialize controls module and STT module if it's the user entity
         if entity_id == _user_controlled_entity_id:
             controller.controlsModule.activate()
+            controller.sttModule.activate()
 
     # Link Entities within game object
     game.scenedata.active_entities = _active_entities
@@ -411,7 +410,7 @@ def shutdown(game):
     global _active_entities
 
     # Shutdown all Characters
-    for controller in _active_entities:
+    for controller in _active_entities.values():
         controller.shutdown_modules()
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
