@@ -854,14 +854,14 @@ class MovementHandler(HarmonyClientModuleBase):
                     continue
 
                 # get position & orientation
-                position_vector = controller.chara.actor.pos()
-                orientation_vector = controller.chara.actor.rot()
+                position_vector = controller.chara.actor.pos
+                orientation_vector = controller.chara.actor.rot
 
                 # Build definition object
                 character_definition_v1 = {
                     "name": entity_id,
-                    "position": [position_vector.x, position_vector.y, position_vector.z],
-                    "orientation": [orientation_vector.x, orientation_vector.y, orientation_vector.z],
+                    "position": [float(position_vector.x), float(position_vector.y), float(position_vector.z)],
+                    "orientation": [float(orientation_vector.x), float(orientation_vector.y), float(orientation_vector.z)],
                     "current_action": controller.movementModule.current_action_vector
                 }
                 scene_data["characters"].append(character_definition_v1)
@@ -869,14 +869,14 @@ class MovementHandler(HarmonyClientModuleBase):
             # Get all objects and convert them to match ObjectDefinitionV1 spec
             for prop_id, prop_object in self.entity_controller.game.scenedata.registered_props.items():
                 # get position & orientation
-                position_vector = prop_object.pos()
-                orientation_vector = prop_object.rot()
+                position_vector = prop_object.pos
+                orientation_vector = prop_object.rot
 
                 # Build definition object
                 object_definition_v1 = {
                     "name": prop_id,
-                    "position": [position_vector.x, position_vector.y, position_vector.z],
-                    "orientation": [orientation_vector.x, orientation_vector.y, orientation_vector.z],
+                    "position": [float(position_vector.x), float(position_vector.y), float(position_vector.z)],
+                    "orientation": [float(orientation_vector.x), float(orientation_vector.y), float(orientation_vector.z)],
                 }
                 scene_data["objects"].append(object_definition_v1)
 
@@ -895,11 +895,16 @@ class MovementHandler(HarmonyClientModuleBase):
 
         # Requested availiable Actions and embedding examples
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
+            # Define actions Data Object according to ActionsDataV1 spec
+            actions_data = {
+                "actions": _registered_actions
+            }
+
             event = HarmonyLinkEvent(
                 event_id='actor_{0}_availiable_actions'.format(self.entity_controller.entity_id),
                 event_type=EVENT_TYPE_MOVEMENT_V1_REGISTER_ACTIONS,
                 status=EVENT_STATE_NEW,
-                payload=_registered_actions
+                payload=actions_data
             )
             send_success = self.backend_connector.send_event(event)
             if send_success:

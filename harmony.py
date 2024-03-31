@@ -355,7 +355,7 @@ def real_start(game):
             _error_abort(game, 'Harmony Link: Object for Prop "{0}" could not be loaded.'.format(prop_id))
             return
         # Add to list of object props
-        _registered_props[prop_id] = prop_id
+        _registered_props[prop_id] = prop_object
 
     # Link Props & Entities within game object
     game.scenedata.registered_props = _registered_props
