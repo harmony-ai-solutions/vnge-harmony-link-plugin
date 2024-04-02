@@ -913,6 +913,14 @@ class MovementHandler(HarmonyClientModuleBase):
                 print('Harmony Link: Failed to transmit available actions for entity "{0}"'.format(
                     self.entity_controller.entity_id))
 
+        # Action Graph received from Harmony Link
+        if event.event_type == EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS and event.status == EVENT_STATE_DONE:
+            # Action graph received.
+            action_graph = event.payload
+            if int(self.config["debug_mode"]) == 1:
+                print ('[DEBUG][entity-{0}]: Action Graph received: {1}'.format(self.entity_controller.entity_id, json.dumps(action_graph)))
+
+
     # def countenance_update(self, gender, emotion_name, expression_name):
     #     emotion = emotions_default['neutral']
     #     if emotion_name in emotions_default:
