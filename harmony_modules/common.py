@@ -11,16 +11,38 @@ EVENT_STATE_NEW = 'NEW'  # Event is new and has not been processed yet
 EVENT_STATE_PENDING = 'PENDING'  # Event is in pending state (currently being processed)
 
 # Event Types
+# Initialization
+EVENT_TYPE_INIT_ENTITY = 'INIT_ENTITY'
+EVENT_TYPE_ENVIRONMENT_LOADED = 'ENVIRONMENT_LOADED'
+# Chat LLM
 EVENT_TYPE_CHAT_HISTORY = 'CHAT_HISTORY'
 EVENT_TYPE_AI_STATUS = 'AI_STATUS'
 EVENT_TYPE_AI_SPEECH = 'AI_SPEECH'
 EVENT_TYPE_AI_ACTION = 'AI_ACTION'
-EVENT_TYPE_AI_COUNTENANCE_UPDATE = 'AI_COUNTENANCE_UPDATE'
 EVENT_TYPE_USER_UTTERANCE = 'USER_UTTERANCE'
+# Countenance
+EVENT_TYPE_AI_COUNTENANCE_UPDATE = 'AI_COUNTENANCE_UPDATE'
+# Movement
+EVENT_TYPE_MOVEMENT_V1_REQUEST_SCENE_DATA = 'MOVEMENT_V1_REQUEST_SCENE_DATA'
+EVENT_TYPE_MOVEMENT_V1_UPDATE_SCENE_DATA = 'MOVEMENT_V1_UPDATE_SCENE_DATA'
+EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS = 'MOVEMENT_V1_REQUEST_ACTIONS'
+EVENT_TYPE_MOVEMENT_V1_REGISTER_ACTION = 'MOVEMENT_V1_REGISTER_ACTION'
+EVENT_TYPE_MOVEMENT_V1_REGISTER_ACTIONS = 'MOVEMENT_V1_REGISTER_ACTIONS'
+EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS = 'MOVEMENT_V1_PERFORM_ACTIONS'
+# STT
 EVENT_TYPE_STT_START_LISTEN = 'STT_START_LISTEN'
 EVENT_TYPE_STT_STOP_LISTEN = 'STT_STOP_LISTEN'
+EVENT_TYPE_STT_INPUT_AUDIO = 'STT_INPUT_AUDIO'
+EVENT_TYPE_STT_OUTPUT_TEXT = 'STT_OUTPUT_TEXT'
+EVENT_TYPE_STT_SPEECH_STARTED = 'STT_SPEECH_STARTED'
+EVENT_TYPE_STT_SPEECH_STOPPED = 'STT_SPEECH_STOPPED'
+# TTS
 EVENT_TYPE_TTS_PLAYBACK_DONE = 'TTS_PLAYBACK_DONE'
 EVENT_TYPE_TTS_GENERATE_SPEECH = 'TTS_GENERATE_SPEECH'
+# Movement
+
+# Perception
+EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE = 'PERCEPTION_ACTOR_UTTERANCE'
 
 # Utterance Types
 UTTERANCE_COMBINED = 'UTTERANCE_COMBINED'
@@ -28,10 +50,12 @@ UTTERANCE_VERBAL = 'UTTERANCE_VERBAL'
 UTTERANCE_NONVERBAL = 'UTTERANCE_NONVERBAL'
 UTTERANCE_NONVERBAL_DELAYED = 'UTTERANCE_NONVERBAL_DELAYED'
 
+
 # HarmonyClientModuleBase - used for registering further modules for handling events
 class HarmonyClientModuleBase:
-    def __init__(self, backend_connector):
-        self.backend_connector = backend_connector
+    def __init__(self, entity_controller):
+        self.entity_controller = entity_controller
+        self.backend_connector = entity_controller.connector
         self.active = False
         # AI State Details
         self.ai_state = None
@@ -126,3 +150,10 @@ class CountenanceState:
     def __init__(self, emotional_state="", facial_expression=""):
         self.emotional_state = emotional_state
         self.facial_expression = facial_expression
+
+
+def get_actors_distance(actor1, actor2):
+    actor1_pos = actor1.pos()
+    actor2_pos = actor2.pos()
+
+

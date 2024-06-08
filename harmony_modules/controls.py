@@ -68,16 +68,16 @@ nonverbal_actions_interaction = {
 
 # ControlsHandler - module main class
 class ControlsHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_connector, controls_keymap_config):
+    def __init__(self, entity_controller, game, shutdown_func, controls_keymap_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.keymap_config = controls_keymap_config
         # Game Object reference
-        self.game = None
-        self.shutdown_func = None
+        self.game = game
+        self.shutdown_func = shutdown_func
         # Module References
-        self.stt_module = None
+        self.entity_controller = entity_controller
         # Button handling
         self.menu_buttons = {}
         # Keymap
@@ -100,29 +100,7 @@ class ControlsHandler(HarmonyClientModuleBase):
                 self.chat_gui_data.history_data = event.payload
                 self.chat_window_update_history()
 
-    def deactivate(self):
-        HarmonyClientModuleBase.deactivate(self)
-        # Hide Windows on Shutdown
-        if self.chat_gui_id is not None:
-            self.toggle_chat_input(self.game)
-        if self.nonverbal_gui_id is not None:
-            self.toggle_nonverbal_actions(self.game)
-
-    def update_buttons(self):
-        text_list = [None] * len(self.menu_buttons)
-        action_list = [None] * len(self.menu_buttons)
-        for button in self.menu_buttons.values():
-            text_list[button["index"]] = button["text"]
-            action_list[button["index"]] = button["action"]
-        self.game.set_buttons(text_list, action_list)
-
-    def setup_game_controls(self, game, shutdown_func, stt_module):
-        # Link hard Game references
-        self.game = game
-        self.shutdown_func = shutdown_func
-        # Link other modules
-        self.stt_module = stt_module
-
+    def activate(self):
         # Set Input Update Hooks to allowed
         self.game.event_reg_listener("update", self.on_input_update)
 
@@ -171,12 +149,37 @@ class ControlsHandler(HarmonyClientModuleBase):
         }
 
         # Chat Input UI
-        #self.setup_chat_input_gui()
+        # self.setup_chat_input_gui()
         # Non-Verbal Actions UI
-        #self.setup_nonverbal_actions_gui()
+        # self.setup_nonverbal_actions_gui()
 
         # TODO: Player face expression
         # TODO: Player movement & direct interaction
+
+    def deactivate(self):
+        # Unregister event listener
+        self.game.event_unreg_listener("update", self.on_input_update)
+
+        # Stop recording if active
+        if self.entity_controller.sttModule and self.entity_controller.sttModule.is_recording_microphone:
+            self.toggle_record_microphone(self.game)
+
+        # Disable base controller
+        HarmonyClientModuleBase.deactivate(self)
+
+        # Hide UI Windows
+        if self.chat_gui_id is not None:
+            self.toggle_chat_input(self.game)
+        if self.nonverbal_gui_id is not None:
+            self.toggle_nonverbal_actions(self.game)
+
+    def update_buttons(self):
+        text_list = [None] * len(self.menu_buttons)
+        action_list = [None] * len(self.menu_buttons)
+        for button in self.menu_buttons.values():
+            text_list[button["index"]] = button["text"]
+            action_list[button["index"]] = button["action"]
+        self.game.set_buttons(text_list, action_list)
 
     # skin setup func
     def nonverbal_actions_skin_setup(self, g):
@@ -601,11 +604,11 @@ class ControlsHandler(HarmonyClientModuleBase):
                     break
 
     def toggle_record_microphone(self, game):
-        if not self.stt_module:
+        if not self.entity_controller.sttModule:
             return
 
-        if self.stt_module.is_recording_microphone:
-            recording_aborted = self.stt_module.stop_listen()
+        if self.entity_controller.sttModule.is_recording_microphone:
+            recording_aborted = self.entity_controller.sttModule.stop_listen()
             if not recording_aborted:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return
@@ -620,7 +623,7 @@ class ControlsHandler(HarmonyClientModuleBase):
             self.update_buttons()
 
         else:
-            recording_started = self.stt_module.start_listen()
+            recording_started = self.entity_controller.sttModule.start_listen()
             if not recording_started:
                 print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
                 return

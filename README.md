@@ -25,12 +25,12 @@ and other AI powered entities "at their will".
 *[About Project Harmony.AI](#about-project-harmonyai) and [How to reach out](#how-to-reach-out-to-us) below.*
 
 ## Announcements
+- 2024-06-08: **Version 0.2.0** released, featuring a new Config UI, improved Speech-To-Text under Windows, and basic Movement
+  API support on Harmony-Link side. For the full list of updates see our 
+  [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
 - 2024-01-04: Our new **[Youtube-Channel](https://www.youtube.com/@Harmony-AI)** including the first official Tech Demo 
   for Project Harmony is now live! Feel free to check it out.  
-- 2023-12-24: **Version 0.1.11** released, featuring OpenAI as a new Character and STT Backend Options. For the full list of
-  updates see our [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
-- 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. It's still missing some content,
-  but finally we have an official Home on the Web. :-)
+- 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. Finally we have an official Home on the Web. :-)
 - 2023-08-17: Our brand new [Patreon Page](https://patreon.com/harmony_ai) launched today. It will allow you to directly
   support our project efforts if you find our software useful. 
 

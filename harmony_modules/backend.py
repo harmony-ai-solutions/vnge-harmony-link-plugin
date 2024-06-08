@@ -9,9 +9,9 @@ from harmony_modules.common import *
 
 # BackendHandler - module main class
 class BackendHandler(HarmonyClientModuleBase):
-    def __init__(self, backend_connector, backend_config):
+    def __init__(self, entity_controller, backend_config):
         # execute the base constructor
-        HarmonyClientModuleBase.__init__(self, backend_connector=backend_connector)
+        HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = backend_config
 
