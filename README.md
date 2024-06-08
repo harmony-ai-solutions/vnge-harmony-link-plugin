@@ -1,5 +1,5 @@
 # Project Harmony.AI - VNGE-Plugin for Harmony Link
-![Harmony Link Technical overview](docs/images/VNGE-Plugin.png)
+![VNGE-Plugin-Logo](docs/images/VNGE-Plugin.png)
 ---
 
 The VNGE-Plugin for Harmony Link is an Event-Layer Plugin for Project Harmony.AI's [Harmony Link AI-middleware](https://github.com/harmony-ai-solutions/harmony-link).
@@ -28,6 +28,7 @@ and other AI powered entities "at their will".
 - 2024-06-08: **Version 0.2.0** released, featuring a new Config UI, improved Speech-To-Text under Windows, and basic Movement
   API support on Harmony-Link side. For the full list of updates see our 
   [Changelog](https://project-harmony.youtrack.cloud/articles/HARMONY-A-10/Releases-Changelog).
+- 2024-06-08: **[ProjectP-Plugin for Harmony Link](https://github.com/harmony-ai-solutions/projectp-harmony-link-plugin)** released.
 - 2024-01-04: Our new **[Youtube-Channel](https://www.youtube.com/@Harmony-AI)** including the first official Tech Demo 
   for Project Harmony is now live! Feel free to check it out.  
 - 2023-10-01: Our official [Project Website](https://project-harmony.ai/) was launched. Finally we have an official Home on the Web. :-)
