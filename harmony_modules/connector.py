@@ -27,6 +27,7 @@ except Exception as e:
 from harmony_modules.common import HarmonyLinkEvent
 from threading import Thread, current_thread
 import json
+import time
 
 
 # Define Classes
@@ -74,8 +75,34 @@ class ConnectorEventThread(Thread):
             # Set params
             self.http_listen_port = int(http_listen_port)
             # Initialize HTTP Server
-            server_address = ('localhost', self.http_listen_port)
-            self.http_server = BaseHTTPServer.HTTPServer(server_address, harmony_http_handler_factory(self))
+            try:
+                server_address = ('localhost', self.http_listen_port)
+                self.http_server = BaseHTTPServer.HTTPServer(
+                    server_address,
+                    harmony_http_handler_factory(self),
+                    bind_and_activate=False
+                )
+                try:
+                    self.http_server.server_bind()
+                    self.http_server.server_activate()
+                except:
+                    self.http_server.server_close()
+                    raise
+            except SystemError:
+                print 'localhost not working, trying with IP 127.0.0.1 ...'
+                server_address = ('127.0.0.1', self.http_listen_port)
+                self.http_server = BaseHTTPServer.HTTPServer(
+                    server_address,
+                    harmony_http_handler_factory(self),
+                    bind_and_activate=False
+                )
+                try:
+                    self.http_server.server_bind()
+                    self.http_server.server_activate()
+                except:
+                    self.http_server.server_close()
+                    raise
+                pass
 
     def run(self):
         if _use_websockets:
@@ -205,6 +232,16 @@ class ConnectorEventHandler:
     # Upon receiving the result, perform the handling task
     def send_event(self, event):
         if _use_websockets:
+            # Use a while loop here because on some systems the init event gets sent already, despite the
+            # connection hasn't been fully established yet
+            retries = 0
+            while not self.eventJob.is_running() and retries < 5:
+                print 'ConnectorEventHandler: Waiting for connection init...'
+                time.sleep(1)
+                retries += 1
+            if not self.eventJob.is_running():
+                print 'Failed to send message to Harmony Link: WebSocket Connection Handshake failed'
+                return False
             return _send_web_socket_event(client=self.web_socket_client, event=event)
         else:
             success, response_body, response_headers = _send_http_event(

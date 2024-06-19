@@ -6,12 +6,15 @@
 # Import Backend base Module
 from harmony_modules.common import *
 
+import harmony_globals
+
 # VNGE
 from vngameengine import parseKeyCode, GData
 import unity_util
 from UnityEngine import GUI, GUILayout, Color
 from UnityEngine import Input, KeyCode, Rect, Vector2
 from skin_customwindow import SkinCustomWindow
+from libkfguictrl import ComboListBox
 
 import time
 import traceback
@@ -89,6 +92,8 @@ class ControlsHandler(HarmonyClientModuleBase):
         # Nonverbal Action GUI
         self.nonverbal_gui_id = None
         self.nonverbal_gui_data = None
+        # Entities and Interaction Target
+        self.interaction_target_entity_controller = None  # Pick first tone by default if some are given
 
     def handle_event(
             self,
@@ -108,7 +113,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.menu_buttons = {
             "chat_input": {
                 "index": 0,
-                "text": "Show Chat Input",
+                "text": "Show Chat Window",
                 "action": self.toggle_chat_input
             },
             "nonverbal_actions": {
@@ -173,6 +178,33 @@ class ControlsHandler(HarmonyClientModuleBase):
         if self.nonverbal_gui_id is not None:
             self.toggle_nonverbal_actions(self.game)
 
+    def draw_interaction_target_selector(self):
+        self.chat_gui_data.target_selector = ComboListBox(
+            Rect(20, 20, 300, 25),
+            # max height of the dropdown list, one item takes about 20px, so 80 will show 4 items at once.
+            # list is limited in parent window. Set a minus value like -80 if the combo box is on the bottom of window
+            # and then the list will be displayed above the box.
+            80,
+            # list or tuple of string, as options can be selected from dropdown list.
+            # Call importListItem(newItem) can add new options
+            self.chat_gui_data.interaction_target_options,
+            # Selected Index
+            0
+        )
+
+        # Add OnChangeHandler
+        self.chat_gui_data.target_selector.onSelectChangeCallback = self.on_change_interaction_target
+
+        # Render
+        self.chat_gui_data.target_selector.paint()
+
+    def on_change_interaction_target(self, target_selector_combobox, new_index, new_entity_id):
+        if target_selector_combobox is None:
+            return
+
+        self.interaction_target_entity_controller = harmony_globals.active_entities[new_entity_id]
+        print('Controls Module: Selected Interaction Target: {0}'.format(self.interaction_target_entity_controller.entity_id))
+
     def update_buttons(self):
         text_list = [None] * len(self.menu_buttons)
         action_list = [None] * len(self.menu_buttons)
@@ -192,6 +224,20 @@ class ControlsHandler(HarmonyClientModuleBase):
         g.windowRect = self.chat_gui_data.wndSizeNormal
         g.windowStyle = g.windowStyleDefault
 
+    def fetch_chat_history_for_interaction_target(self):
+        # Send Request for history to Backend
+        get_history_event = HarmonyLinkEvent(
+            event_id='update_history',  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_CHAT_HISTORY,
+            status=EVENT_STATE_NEW,
+            payload=None
+        )
+        send_success = self.backend_connector.send_event(get_history_event)
+        if send_success:
+            print('Harmony Link: Fetching chat history records...')
+        else:
+            print('Harmony Link: Failed to fetch chat records.')
+
     def setup_chat_input_gui(self):
         if self.chat_gui_id is not None:
             # Already exists
@@ -210,18 +256,20 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.chat_gui_data.history_data = []
         self.chat_gui_data.history = [''] * 10
 
-        # Send Request for history to Backend
-        get_history_event = HarmonyLinkEvent(
-            event_id='update_history',  # This is an arbitrary dummy ID to conform the Harmony Link API
-            event_type=EVENT_TYPE_CHAT_HISTORY,
-            status=EVENT_STATE_NEW,
-            payload=None
-        )
-        send_success = self.backend_connector.send_event(get_history_event)
-        if send_success:
-            print('Harmony Link: Fetching chat history records...')
-        else:
-            print('Harmony Link: Failed to fetch chat records.')
+        # Define Dropdown for Target Selection
+        self.chat_gui_data.target_selector = None
+        # Populate options and mark first option as selected
+        self.chat_gui_data.interaction_target_options = []
+        for entity_id in harmony_globals.active_entities.keys():
+            if self.entity_controller.entity_id != entity_id:
+                self.chat_gui_data.interaction_target_options.append(entity_id)
+        if len(self.chat_gui_data.interaction_target_options) > 0:
+            self.interaction_target_entity_controller = harmony_globals.active_entities[
+                self.chat_gui_data.interaction_target_options[0]
+            ]
+            print('Controls Module: Selected Interaction Target: {0}'.format(
+                self.interaction_target_entity_controller.entity_id)
+            )
 
         # setup skin
         skin = SkinCustomWindow()
@@ -272,6 +320,9 @@ class ControlsHandler(HarmonyClientModuleBase):
 
     def chat_input_gui_main_window(self):
         ui_default_color = GUI.color
+
+        # Render Target entity selector
+        self.draw_interaction_target_selector()
 
         # Render chat history
         self.chat_input_gui_render_history()

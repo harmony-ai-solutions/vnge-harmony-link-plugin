@@ -16,6 +16,8 @@ import threading
 
 from vngameengine import get_engine_id2
 
+import harmony_globals
+
 from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls, movement, \
     perception
 from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
@@ -23,23 +25,12 @@ from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
 # Config
 _config = None
 
-# Object, character & user controllers
-_user_controlled_entity_id = None
-_active_entities = {}
-_registered_props = {}
-
-# List of ready characters - this is used to synchronize characters finished initialization
 _syncLock = threading.Lock()
-_ready_entities = []
-_failed_entities = []
-
-# static actors in the scene, which may be relevant for movement or interactions
-_static_actors = {}
 
 
 # EntityInitHandler
 class EntityInitHandler(common.HarmonyClientModuleBase):
-    global _active_entities, _ready_entities, _failed_entities, _syncLock
+    global _syncLock
 
     def __init__(self, entity_controller, entity_id, game):
         # execute the base constructor
@@ -57,9 +48,9 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
             # Acquire lock to avoid concurrency issues
             _syncLock.acquire()
             if event.status == common.EVENT_STATE_DONE:
-                _ready_entities.append(self.entity_id)
+                harmony_globals.ready_entities.append(self.entity_id)
             else:
-                _failed_entities.append(self.entity_id)
+                harmony_globals.failed_entities.append(self.entity_id)
 
             # Check for init done condition
             self.check_init_done()
@@ -69,8 +60,8 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
             self.deactivate()
 
     def check_init_done(self):
-        if len(_ready_entities) + len(_failed_entities) == len(_active_entities):
-            if len(_failed_entities) == 0:
+        if len(harmony_globals.ready_entities) + len(harmony_globals.failed_entities) == len(harmony_globals.active_entities):
+            if len(harmony_globals.failed_entities) == 0:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
                 scene_config = self.game.scenedata.scene_config
                 if scene_config["scene"] is not None:
@@ -283,7 +274,7 @@ def start_scene_select(game):
 
 
 def start_harmony_ai(game):
-    global _config, _user_controlled_entity_id, _active_entities
+    global _config
     scene_config = game.scenedata.scene_config
 
     # Determine user entities to be controlled
@@ -304,8 +295,8 @@ def start_harmony_ai(game):
     # Create Startup Init handler
     controller.create_startup_handler()
     # Add to character list
-    _active_entities[user_entity_id] = controller
-    _user_controlled_entity_id = user_entity_id
+    harmony_globals.active_entities[user_entity_id] = controller
+    harmony_globals.user_controlled_entity_id = user_entity_id
 
     # Setup character entities
     character_list = scene_config["character_entity_id"].split(",")
@@ -318,14 +309,14 @@ def start_harmony_ai(game):
         # Create Startup Init handler
         controller.create_startup_handler()
         # Add to character list
-        _active_entities[entity_id] = controller
+        harmony_globals.active_entities[entity_id] = controller
 
     # Warmup time to allow for the backend threads to connect to the websocket server
     warmup_time = int(_config.get('Harmony', 'start_warmup_time'))
     time.sleep(warmup_time)
 
     # Initialize Entities on Harmony Link
-    for entity_id, controller in _active_entities.items():
+    for entity_id, controller in harmony_globals.active_entities.items():
         try:
             controller.activate()
         except RuntimeError as e:
@@ -342,7 +333,7 @@ def _load_scene_start2(game):
 
 
 def real_start(game):
-    global _config, _user_controlled_entity_id, _active_entities, _registered_props
+    global _config
 
     game.scenedata.scene_config = dict(_config.items('Scene'))
     game.scenef_register_actorsprops()
@@ -355,15 +346,15 @@ def real_start(game):
             _error_abort(game, 'Harmony Link: Object for Prop "{0}" could not be loaded.'.format(prop_id))
             return
         # Add to list of object props
-        _registered_props[prop_id] = prop_object
+        harmony_globals.registered_props[prop_id] = prop_object
 
     # Link Props & Entities within game object
-    game.scenedata.registered_props = _registered_props
-    game.scenedata.active_entities = _active_entities
-    game.scenedata.user_controlled_entity_id = _user_controlled_entity_id
+    game.scenedata.registered_props = harmony_globals.registered_props
+    game.scenedata.active_entities = harmony_globals.active_entities
+    game.scenedata.user_controlled_entity_id = harmony_globals.user_controlled_entity_id
 
     # Link Chara Actor in scene with Character controller
-    for entity_id, controller in _active_entities.items():
+    for entity_id, controller in harmony_globals.active_entities.items():
         # Get list of character and user entities
         character_list = game.scenedata.scene_config["character_entity_id"].split(",")
 
@@ -379,7 +370,7 @@ def real_start(game):
             controller.update_chara(chara)
 
         # Initialize controls module and STT module if it's the user entity
-        if entity_id == _user_controlled_entity_id:
+        if entity_id == harmony_globals.user_controlled_entity_id:
             controller.controlsModule.activate()
             controller.sttModule.activate()
 
@@ -432,10 +423,8 @@ def _to_cam_animated(game, camera_id, time=3, move_style="fast-slow3"):
 
 
 def shutdown(game):
-    global _active_entities
-
     # Shutdown all Characters
-    for controller in _active_entities.values():
+    for controller in harmony_globals.active_entities.values():
         controller.shutdown_modules()
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
