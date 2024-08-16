@@ -8,6 +8,7 @@ from System import Uri, Array, ArraySegment, Byte
 from System.Text.Encoding import UTF8
 
 _use_websockets = False
+_http_port_allocation_step = 0
 
 try:
     from System.Net import WebSockets
@@ -73,7 +74,7 @@ class ConnectorEventThread(Thread):
             self.web_socket_receive_task = None
         else:
             # Set params
-            self.http_listen_port = int(http_listen_port)
+            self.http_listen_port = http_listen_port
             # Initialize HTTP Server
             try:
                 server_address = ('localhost', self.http_listen_port)
@@ -181,22 +182,30 @@ class ConnectorEventHandler:
     global _use_websockets
 
     def __init__(self, ws_endpoint, ws_buffer_size, http_endpoint, http_listen_port, shutdown_func, game):
+        global _http_port_allocation_step
+        # Setup Config Params
+        self.ws_endpoint = ws_endpoint
+        self.ws_buffer_size = ws_buffer_size
+        self.http_endpoint = http_endpoint
+        self.http_listen_port = int(http_listen_port) + _http_port_allocation_step
+        _http_port_allocation_step += 1
+        self.harmony_session_id = ""
+
         # Setup Connector
         self.eventHandlers = []
-        # Init job thread for checking on async requests
-        self.eventJob = ConnectorEventThread(
-            handler=self,
-            ws_endpoint=ws_endpoint,
-            ws_buffer_size=ws_buffer_size,
-            http_listen_port=http_listen_port
-        )
         # Init clients required for comms
         if _use_websockets:
             self.web_socket_client = _init_web_socket_client()
         else:
-            self.http_endpoint = http_endpoint
-            self.http_listen_port = http_listen_port
-            self.harmony_session_id = ""
+            self.web_socket_client = None
+
+        # Init job thread for checking on async requests
+        self.eventJob = ConnectorEventThread(
+            handler=self,
+            ws_endpoint=self.ws_endpoint,
+            ws_buffer_size=self.ws_buffer_size,
+            http_listen_port=self.http_listen_port
+        )
         # Plugin Shutdown Func in case Connector fails
         self.shutdown_func = shutdown_func
         self.game = game
@@ -247,7 +256,7 @@ class ConnectorEventHandler:
             success, response_body, response_headers = _send_http_event(
                 endpoint=self.http_endpoint,
                 session_id=self.harmony_session_id,
-                result_port=self.http_listen_port,
+                result_port=str(self.http_listen_port),
                 event=event
             )
 

@@ -60,6 +60,10 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
             self.deactivate()
 
     def check_init_done(self):
+        print("Ready entities: {}".format(len(harmony_globals.ready_entities)))
+        print("Failed entities: {}".format(len(harmony_globals.failed_entities)))
+        print("Active entities: {}".format(len(harmony_globals.active_entities)))
+
         if len(harmony_globals.ready_entities) + len(harmony_globals.failed_entities) == len(harmony_globals.active_entities):
             if len(harmony_globals.failed_entities) == 0:
                 # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
