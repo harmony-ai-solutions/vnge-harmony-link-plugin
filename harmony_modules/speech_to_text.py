@@ -28,6 +28,8 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.config = stt_config
         # Get Base vars from config
         self.microphone_name = self.get_microphone()
+        self.channels = int(self.config['channels'])
+        self.bit_depth = int(self.config['bit_depth'])
         self.sample_rate = int(self.config['sample_rate'])
         self.clip_duration = int(self.config['clip_duration'])
         # Recording Handling
@@ -91,18 +93,26 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
                 controller.perceptionModule.handle_event(event)
 
         # Received event to start recording Audio through the Game's utilities
-        if event.event_type == EVENT_TYPE_STT_RECORD_MICROPHONE and event.status == EVENT_STATE_NEW:
+        if event.event_type == EVENT_TYPE_STT_FETCH_MICROPHONE and event.status == EVENT_STATE_NEW:
             # This event triggers the recording of an audio clip using the default microphone.
             # Upon finishing the recording, it will send the recorded audio to Harmony Link for VAD & STT transcription
             recording_task = event.payload
             # Extract parameters from recording task
-            duration = recording_task.get('duration', 5)  # Default to 5 seconds
+            duration_millis = recording_task.get('duration', 5000)  # Default to 5 seconds, in miliseconds
+            duration = duration_millis / 1000.0
+            start_time_millis = recording_task.get('start_time', int(time.time() * 1000))  # Start time in milliseconds
+            start_time = start_time_millis / 1000.0  # Convert start time to seconds
+
+            # Check for Start time overflow in case of long continuous recording
+            clip_rollover_time = self.recording_start_time + self.clip_duration
+            if clip_rollover_time < start_time:
+                start_time -= self.clip_duration
 
             # Start a new thread to handle recording
             event_time = time.time()
             recording_thread = threading.Thread(
                 target=self.process_recording_request,
-                args=(event.event_id, event_time, duration)
+                args=(event.event_id, start_time, duration)
             )
             recording_thread.start()
 
@@ -126,7 +136,8 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             payload={
                 "auto_vad": bool(self.config['auto_vad']),
                 "vad_mode": int(self.config['vad_mode']),
-                "result_mode": RESULT_MODE_RETURN if bool(self.config['auto_vad']) else RESULT_MODE_PROCESS
+                "result_mode": RESULT_MODE_RETURN if bool(self.config['auto_vad']) else RESULT_MODE_PROCESS,
+                "start_time": int(self.recording_start_time * 1000)  # Convert to milliseconds
             }
         )
         success = self.backend_connector.send_event(event)
@@ -225,13 +236,16 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         print 'Continuous recording stopped.'
         return True
 
-    def process_recording_request(self, event_id, request_time, duration):
-        # Wait for the requested duration
-        time.sleep(duration)
-
+    def process_recording_request(self, event_id, start_time, duration):
         # Calculate start and end times relative to recording start
-        start_time = request_time - self.recording_start_time
+        current_time = time.time()
+        start_time = start_time - self.recording_start_time
         end_time = start_time + duration
+
+        # Determine if we need to wait
+        wait_time = end_time - current_time
+        if wait_time > 0:
+            time.sleep(wait_time)
 
         # Calculate sample indices
         start_sample = int(start_time * self.sample_rate)
@@ -259,16 +273,22 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             return
 
         # Convert samples to 16-bit PCM byte data
-        byte_data = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
+        # TODO: Use config var here
+        audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
         # Encode to base64
-        encoded_data = base64.b64encode(byte_data)
+        # encoded_data = base64.b64encode(audio_bytes)
         # Send result event
         result_event = HarmonyLinkEvent(
             event_id=event_id,
-            event_type=EVENT_TYPE_STT_RECORD_MICROPHONE_RESULT,
+            event_type=EVENT_TYPE_STT_FETCH_MICROPHONE_RESULT,
             status=EVENT_STATE_DONE,
             payload={
-                'audio_data': encoded_data
+                'start_time': int(start_time * 1000),
+                'duration': int(duration * 1000),
+                'audio_bytes': audio_bytes,
+                'channels': self.channels,
+                'bit_depth': self.bit_depth,
+                'sample_rate': self.sample_rate,
             }
         )
         self.backend_connector.send_event(result_event)
