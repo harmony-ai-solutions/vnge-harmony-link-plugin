@@ -1,5 +1,5 @@
 # Harmony Link Connector Module for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This module uses the .NET hooks to interface with Harmony Link's Event Backend
 # Preferred Connection mode is WebSockets, which requires .NET Framework 4.5 or higher in the Game Libraries to work.

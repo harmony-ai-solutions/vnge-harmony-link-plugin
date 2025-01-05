@@ -1,7 +1,7 @@
 #vngame;all;HarmonyAI
 
 # Harmony Link Plugin for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This plugin aims at integrating fully AI controlled characters into IllusionSoft Games utilizing VNGE.
 # It is interfacing between actions in the game and the actual conversation between an user and their AI Companion.

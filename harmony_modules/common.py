@@ -1,5 +1,5 @@
 # Harmony Link Plugin for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This file contains basic types required by all plugin modules.
 

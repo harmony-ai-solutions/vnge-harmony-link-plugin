@@ -1,5 +1,5 @@
 # Harmony Link Plugin for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This file contains all handling to be done with the Harmony Link STT Module
 #
@@ -117,7 +117,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             recording_thread.start()
 
             # Mark event as processing and store it
-            event.status = EVENT_STATE_PROCESSING
+            event.status = EVENT_STATE_PENDING
             self.active_recording_events[event.event_id] = event
 
     def start_listen(self):
