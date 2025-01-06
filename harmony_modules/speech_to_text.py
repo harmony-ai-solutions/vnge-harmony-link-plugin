@@ -7,6 +7,7 @@
 from harmony_modules.common import *
 
 # VNGE
+from System import Array, Single
 from UnityEngine import AudioClip, Microphone
 
 import threading
@@ -27,11 +28,11 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         # Set config
         self.config = stt_config
         # Get Base vars from config
-        self.microphone_name = self.get_microphone()
         self.channels = int(self.config['channels'])
         self.bit_depth = int(self.config['bit_depth'])
         self.sample_rate = int(self.config['sample_rate'])
         self.clip_duration = int(self.config['clip_duration'])
+        self.microphone_name = self.get_microphone()
         # Recording Handling
         self.is_recording_microphone = False
         self.active_recording_events = {}
@@ -93,7 +94,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
                 controller.perceptionModule.handle_event(event)
 
         # Received event to start recording Audio through the Game's utilities
-        if event.event_type == EVENT_TYPE_STT_FETCH_MICROPHONE and event.status == EVENT_STATE_NEW:
+        if event.event_type == EVENT_TYPE_STT_FETCH_MICROPHONE and event.status == EVENT_STATE_DONE:
             # This event triggers the recording of an audio clip using the default microphone.
             # Upon finishing the recording, it will send the recorded audio to Harmony Link for VAD & STT transcription
             recording_task = event.payload
@@ -109,15 +110,14 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
                 start_time -= self.clip_duration
 
             # Start a new thread to handle recording
-            event_time = time.time()
+            # event_time = time.time()
             recording_thread = threading.Thread(
                 target=self.process_recording_request,
                 args=(event.event_id, start_time, duration)
             )
             recording_thread.start()
 
-            # Mark event as processing and store it
-            event.status = EVENT_STATE_PENDING
+            # Store event to mark it as processing
             self.active_recording_events[event.event_id] = event
 
     def start_listen(self):
@@ -179,6 +179,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
     def get_microphone(self):
         # Determine the microphone to use
         devices = Microphone.devices
+        device_capabilities = {}
         microphone_name = self.config['microphone']
         if len(devices) <= 0 or len(microphone_name) == 0:
             print 'No microphone available.'
@@ -186,10 +187,23 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         else:
             print 'Available microphones:'
             for mic_id, device in enumerate(devices):
-                print"{0} : {1}".format(mic_id, device)
+                # Get recording capabilities
+                minFreq, maxFreq = Microphone.GetDeviceCaps(device)
+                print "{0} : {1} (MinFreq: {2}, MaxFreq: {3})".format(mic_id, device, minFreq, maxFreq)
+                device_capabilities[device] = (minFreq, maxFreq)
 
         if microphone_name == 'default':
             microphone_name = devices[0]
+
+        # Check for correct sample rate being used
+        minFreq, maxFreq = device_capabilities[microphone_name]
+        if not minFreq == 0 and not maxFreq == 0:
+            if self.sample_rate > maxFreq:
+                self.sample_rate = maxFreq
+                print "correcting sample rate from config to {0}".format(self.sample_rate)
+            elif self.sample_rate < minFreq:
+                self.sample_rate = minFreq
+                print "correcting sample rate from config to {0}".format(self.sample_rate)
 
         return microphone_name
 
@@ -203,7 +217,6 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         print 'Recording with microphone: {0}'.format(self.microphone_name)
         loop = True
         self.recording_clip = Microphone.Start(self.microphone_name, loop, self.clip_duration, self.sample_rate)
-        self.recording_start_time = time.time()
         # Wait until recording has started
         start_time = time.time()
         while not Microphone.IsRecording(self.microphone_name):
@@ -212,6 +225,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
                 return False
             time.sleep(0.1)
         print 'Continuous recording started.'
+        self.recording_start_time = time.time()
         return True
 
     def stop_continuous_recording(self):
@@ -240,7 +254,9 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         # Calculate start and end times relative to recording start
         current_time = time.time()
         start_time = start_time - self.recording_start_time
+        print "Start time: {0}".format(start_time)
         end_time = start_time + duration
+        print "End time: {0}".format(end_time)
 
         # Determine if we need to wait
         wait_time = end_time - current_time
@@ -253,39 +269,60 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         total_samples = self.recording_clip.samples
 
         # Handle looping - Recorded audio clip will be looped over as soon as max duration is reached
-        samples = []
         if start_sample < end_sample <= total_samples:
             # Simple case: no looping
             length = end_sample - start_sample
-            samples = [0.0] * length
+            samples = Array.CreateInstance(Single, length)
             self.recording_clip.GetData(samples, start_sample)
         elif end_sample > total_samples:
             # Recording wrapped around the clip length
             first_part_length = total_samples - start_sample
             second_part_length = end_sample - total_samples
-            samples = [0.0] * (first_part_length + second_part_length)
+            samples = Array.CreateInstance(Single, first_part_length + second_part_length)
             # Get first part
-            self.recording_clip.GetData(samples[:first_part_length], start_sample)
+            #self.recording_clip.GetData(samples[:first_part_length], start_sample)
+            first_part_samples = Array.CreateInstance(Single, first_part_length)
+            self.recording_clip.GetData(first_part_samples, start_sample)
+            first_part_samples.CopyTo(samples, 0)
             # Get second part from the beginning of the clip
-            self.recording_clip.GetData(samples[first_part_length:], 0)
+            #self.recording_clip.GetData(samples[first_part_length:], 0)
+            second_part_samples = Array.CreateInstance(Single, second_part_length)
+            self.recording_clip.GetData(second_part_samples, 0)
+            second_part_samples.CopyTo(samples, first_part_length)
         else:
             print 'Invalid sample indices.'
             return
 
         # Convert samples to 16-bit PCM byte data
         # TODO: Use config var here
-        audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
-        # Encode to base64
+        # audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
+        # # Encode to base64
         # encoded_data = base64.b64encode(audio_bytes)
+
+        # Add debugging statements to check lengths and contents
+        print "Number of samples:", len(samples)
+        print "First 10 samples:", [samples[i] for i in range(min(10, len(samples)))]
+
+        audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
+
+        print "Length of audio_bytes:", len(audio_bytes)
+        print "First 20 bytes of audio_bytes:", audio_bytes[:20]
+
+        # Encode to base64
+        encoded_data = base64.b64encode(audio_bytes)
+
+        print "Length of encoded_data:", len(encoded_data)
+        print "First 50 characters of encoded_data:", encoded_data[:50]
+
         # Send result event
         result_event = HarmonyLinkEvent(
             event_id=event_id,
             event_type=EVENT_TYPE_STT_FETCH_MICROPHONE_RESULT,
-            status=EVENT_STATE_DONE,
+            status=EVENT_STATE_NEW,
             payload={
                 'start_time': int(start_time * 1000),
                 'duration': int(duration * 1000),
-                'audio_bytes': audio_bytes,
+                'audio_bytes': encoded_data,
                 'channels': self.channels,
                 'bit_depth': self.bit_depth,
                 'sample_rate': self.sample_rate,
