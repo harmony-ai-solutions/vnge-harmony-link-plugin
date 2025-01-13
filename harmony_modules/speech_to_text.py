@@ -270,7 +270,11 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         devices = Microphone.devices
         device_capabilities = {}
         microphone_name = self.config['microphone']
-        if len(devices) <= 0 or len(microphone_name) == 0:
+        # REMARK: Some Microphone names cannot be displayed on some Unity Versions
+        # https://stackoverflow.com/questions/44250989/unity-design-flaw-how-to-distinguish-microphones-with-empty-names-or-same-name
+        #
+        # Therefore we explicitly allow microphone name to be an empty string
+        if len(devices) <= 0:
             print 'No microphone available.'
             return None
         else:
@@ -283,6 +287,9 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
         if microphone_name == 'default':
             microphone_name = devices[0]
+        elif microphone_name not in device_capabilities:
+            print 'No microphone with provided name "{0}" available.'.format(microphone_name)
+            return None
 
         # Check for correct sample rate being used
         minFreq, maxFreq = device_capabilities[microphone_name]
@@ -299,7 +306,12 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
     def start_continuous_recording(self):
         # This starts a continous microphone recording clip which will be used to fetch
         # audio samples for Harmony's STT transcription module from
-        if self.microphone_name is None or isinstance(self.microphone_name, str) and len(self.microphone_name) == 0:
+
+        # REMARK: Some Microphone names cannot be displayed on some Unity Versions
+        # https://stackoverflow.com/questions/44250989/unity-design-flaw-how-to-distinguish-microphones-with-empty-names-or-same-name
+        #
+        # Therefore we explicitly allow microphone name to be an empty string
+        if self.microphone_name is None or not isinstance(self.microphone_name, str):
             print 'No microphone available.'
             return False
 
@@ -307,7 +319,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.recording_buffer = bytearray()
         self.dropped_buffer_bytes = 0
 
-        print 'Recording with microphone: {0}'.format(self.microphone_name)
+        print 'Recording with microphone: "{0}"'.format(self.microphone_name)
         self.recording_clip = Microphone.Start(self.microphone_name, True, self.record_stepping, self.sample_rate)
         # Wait until recording has started
         start_time = time.time()
