@@ -378,25 +378,28 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         # Calculate byte indices
         start_byte = int(start_time * self.bytes_per_second) - self.dropped_buffer_bytes
         end_byte = int(end_time * self.bytes_per_second) - self.dropped_buffer_bytes
-        total_bytes = end_byte - start_byte
-
-        # ensure we have the correct byte length in case of rounding errors
-        end_byte += total_bytes % self.bytes_per_sample
 
         # Get bytes from buffer
         audio_bytes = self.recording_buffer[start_byte:end_byte]
 
-        # # Encode to base64
-        # encoded_data = base64.b64encode(audio_bytes)
+        # ensure we have the correct byte length in case of rounding errors
+        missing_bytes_count = len(audio_bytes) % self.bytes_per_sample
+        if missing_bytes_count > 0:
+            # Calculate the number of bytes to add
+            padding_bytes = self.bytes_per_sample - missing_bytes_count
+            # Append zeros to make up the missing bytes
+            audio_bytes += bytearray(padding_bytes)
 
-        print "Length of audio_bytes:", len(audio_bytes)
-        print "First 20 bytes of audio_bytes:", audio_bytes[:20]
+        # DEBUG CODE
+        # print "Length of audio_bytes:", len(audio_bytes)
+        # print "First 20 bytes of audio_bytes:", audio_bytes[:20]
 
         # Encode to base64
         encoded_data = base64.b64encode(audio_bytes)
 
-        print "Length of encoded_data:", len(encoded_data)
-        print "First 50 characters of encoded_data:", encoded_data[:50]
+        # DEBUG CODE
+        # print "Length of encoded_data:", len(encoded_data)
+        # print "First 50 characters of encoded_data:", encoded_data[:50]
 
         # Send result event
         result_event = HarmonyLinkEvent(
