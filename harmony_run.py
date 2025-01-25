@@ -1,5 +1,5 @@
 # Execution test script
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This script simulates the part of initializing VNGE & all support libs for testing the initialization flow
 # However, it cannot test the actual game loop

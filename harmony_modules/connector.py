@@ -1,5 +1,5 @@
 # Harmony Link Connector Module for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This module uses the .NET hooks to interface with Harmony Link's Event Backend
 # Preferred Connection mode is WebSockets, which requires .NET Framework 4.5 or higher in the Game Libraries to work.
@@ -8,6 +8,7 @@ from System import Uri, Array, ArraySegment, Byte
 from System.Text.Encoding import UTF8
 
 _use_websockets = False
+_http_port_allocation_step = 0
 
 try:
     from System.Net import WebSockets
@@ -27,6 +28,7 @@ except Exception as e:
 from harmony_modules.common import HarmonyLinkEvent
 from threading import Thread, current_thread
 import json
+import time
 
 
 # Define Classes
@@ -72,10 +74,36 @@ class ConnectorEventThread(Thread):
             self.web_socket_receive_task = None
         else:
             # Set params
-            self.http_listen_port = int(http_listen_port)
+            self.http_listen_port = http_listen_port
             # Initialize HTTP Server
-            server_address = ('localhost', self.http_listen_port)
-            self.http_server = BaseHTTPServer.HTTPServer(server_address, harmony_http_handler_factory(self))
+            try:
+                server_address = ('localhost', self.http_listen_port)
+                self.http_server = BaseHTTPServer.HTTPServer(
+                    server_address,
+                    harmony_http_handler_factory(self),
+                    bind_and_activate=False
+                )
+                try:
+                    self.http_server.server_bind()
+                    self.http_server.server_activate()
+                except:
+                    self.http_server.server_close()
+                    raise
+            except SystemError:
+                print 'localhost not working, trying with IP 127.0.0.1 ...'
+                server_address = ('127.0.0.1', self.http_listen_port)
+                self.http_server = BaseHTTPServer.HTTPServer(
+                    server_address,
+                    harmony_http_handler_factory(self),
+                    bind_and_activate=False
+                )
+                try:
+                    self.http_server.server_bind()
+                    self.http_server.server_activate()
+                except:
+                    self.http_server.server_close()
+                    raise
+                pass
 
     def run(self):
         if _use_websockets:
@@ -154,22 +182,30 @@ class ConnectorEventHandler:
     global _use_websockets
 
     def __init__(self, ws_endpoint, ws_buffer_size, http_endpoint, http_listen_port, shutdown_func, game):
+        global _http_port_allocation_step
+        # Setup Config Params
+        self.ws_endpoint = ws_endpoint
+        self.ws_buffer_size = ws_buffer_size
+        self.http_endpoint = http_endpoint
+        self.http_listen_port = int(http_listen_port) + _http_port_allocation_step
+        _http_port_allocation_step += 1
+        self.harmony_session_id = ""
+
         # Setup Connector
         self.eventHandlers = []
-        # Init job thread for checking on async requests
-        self.eventJob = ConnectorEventThread(
-            handler=self,
-            ws_endpoint=ws_endpoint,
-            ws_buffer_size=ws_buffer_size,
-            http_listen_port=http_listen_port
-        )
         # Init clients required for comms
         if _use_websockets:
             self.web_socket_client = _init_web_socket_client()
         else:
-            self.http_endpoint = http_endpoint
-            self.http_listen_port = http_listen_port
-            self.harmony_session_id = ""
+            self.web_socket_client = None
+
+        # Init job thread for checking on async requests
+        self.eventJob = ConnectorEventThread(
+            handler=self,
+            ws_endpoint=self.ws_endpoint,
+            ws_buffer_size=self.ws_buffer_size,
+            http_listen_port=self.http_listen_port
+        )
         # Plugin Shutdown Func in case Connector fails
         self.shutdown_func = shutdown_func
         self.game = game
@@ -205,12 +241,22 @@ class ConnectorEventHandler:
     # Upon receiving the result, perform the handling task
     def send_event(self, event):
         if _use_websockets:
+            # Use a while loop here because on some systems the init event gets sent already, despite the
+            # connection hasn't been fully established yet
+            retries = 0
+            while not self.eventJob.is_running() and retries < 5:
+                print 'ConnectorEventHandler: Waiting for connection init...'
+                time.sleep(1)
+                retries += 1
+            if not self.eventJob.is_running():
+                print 'Failed to send message to Harmony Link: WebSocket Connection Handshake failed'
+                return False
             return _send_web_socket_event(client=self.web_socket_client, event=event)
         else:
             success, response_body, response_headers = _send_http_event(
                 endpoint=self.http_endpoint,
                 session_id=self.harmony_session_id,
-                result_port=self.http_listen_port,
+                result_port=str(self.http_listen_port),
                 event=event
             )
 

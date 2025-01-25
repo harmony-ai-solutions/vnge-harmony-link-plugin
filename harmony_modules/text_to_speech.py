@@ -1,5 +1,5 @@
 # Harmony Link Plugin for VNGE
-# (c) 2023 RuntimeRacer (runtimeracer@gmail.com)
+# (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
 # This file contains all handling to be done with the Harmony Link TTS Module
 
