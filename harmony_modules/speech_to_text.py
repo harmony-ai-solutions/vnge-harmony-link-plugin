@@ -33,7 +33,6 @@ class MicrophoneRecordingThread(Thread):
         self.last_sample_position = 0
         self.clip_samples = self.tts_handler.recording_clip.samples
         self.channels = self.tts_handler.channels
-        self.lock = Lock()
         self.bytes_per_sample = self.tts_handler.bytes_per_sample
         self.bytes_per_second = self.tts_handler.bytes_per_second
         self.max_buffer_bytes = self.tts_handler.max_buffer_bytes
@@ -71,7 +70,7 @@ class MicrophoneRecordingThread(Thread):
                 audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
 
                 # Lock the buffer while appending
-                with self.lock:
+                with self.tts_handler.lock:
                     # Append new audio bytes
                     self.tts_handler.recording_buffer.extend(audio_bytes)
                     # Remove oldest data if buffer exceeds max size
@@ -113,15 +112,12 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.recording_start_time = None # time.time
         self.recording_thread = None
         self.dropped_buffer_bytes = 0
+        self.lock = Lock()
         # Calculate bytes per second
         self.bytes_per_sample = self.bit_depth // 8
-        self.bytes_per_second = int(
-            self.sample_rate * self.channels * self.bytes_per_sample
-        )
+        self.bytes_per_second = self.sample_rate * self.channels * self.bytes_per_sample
         # Calculate maximum buffer size in bytes
-        self.max_buffer_bytes = int(
-            self.bytes_per_second * float(self.buffer_clip_duration)
-        )
+        self.max_buffer_bytes = self.bytes_per_second * self.buffer_clip_duration
 
     def handle_event(
             self,
@@ -183,16 +179,13 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             # Upon finishing the recording, it will send the recorded audio to Harmony Link for VAD & STT transcription
             recording_task = event.payload
             # Extract parameters from recording task
-            duration_millis = recording_task.get('duration', 5000)  # Default to 5 seconds, in miliseconds
-            duration = duration_millis / 1000.0
-            start_time_millis = recording_task.get('start_time', int(time.time() * 1000))  # Start time in milliseconds
-            start_time = start_time_millis / 1000.0  # Convert start time to seconds
+            start_byte = recording_task.get('start_byte', 0)
+            bytes_count = recording_task.get('bytes_count', self.bytes_per_second * 5)  # Default to 5 seconds
 
             # Start a new thread to handle recording
-            # event_time = time.time()
             fetch_microphone_thread = Thread(
                 target=self.process_recording_request,
-                args=(event.event_id, start_time, duration)
+                args=(event.event_id, start_byte, bytes_count)
             )
             fetch_microphone_thread.start()
 
@@ -221,9 +214,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             status=EVENT_STATE_NEW,
             payload={
                 "auto_vad": bool(self.config['auto_vad']),
-                "vad_mode": int(self.config['vad_mode']),
                 "result_mode": RESULT_MODE_RETURN if bool(self.config['auto_vad']) else RESULT_MODE_PROCESS,
-                "start_time": int(self.recording_start_time * 1000),  # Convert to milliseconds
                 "channels": self.channels,
                 "bit_depth": self.bit_depth,
                 "sample_rate": self.sample_rate
@@ -360,35 +351,45 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         print 'Continuous recording stopped.'
         return True
 
-    def process_recording_request(self, event_id, start_time, duration):
-        # Calculate start and end times relative to recording start
-        current_time = time.time()
-        start_time = start_time - self.recording_start_time
-        if start_time < 0:
-            start_time = 0.0
-        print "Start time: {0}".format(start_time)
-        end_time = start_time + duration
-        print "End time: {0}".format(end_time)
+    def get_buffer_fetch_indices(self, start_byte, end_byte):
+        actual_start_byte = start_byte - self.dropped_buffer_bytes
+        actual_end_byte = end_byte - self.dropped_buffer_bytes
+        buffer_size = len(self.recording_buffer)
+        return actual_start_byte, actual_end_byte, buffer_size
 
+    def process_recording_request(self, event_id, start_byte, bytes_count):
+        # Get end byte
+        end_byte = start_byte + bytes_count
         # Determine if we need to wait
-        wait_time = end_time - (current_time - self.recording_start_time)
-        if wait_time > 0:
-            time.sleep(wait_time)
+        with self.lock:
+            actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
-        # Calculate byte indices
-        start_byte = int(start_time * self.bytes_per_second) - self.dropped_buffer_bytes
-        end_byte = int(end_time * self.bytes_per_second) - self.dropped_buffer_bytes
+        # If start index is after current buffer boundary
+        while actual_start_byte > buffer_size:
+            time_till_buffer_reached = (actual_start_byte - buffer_size) / self.bytes_per_second
+            time.sleep(time_till_buffer_reached)
+            # Determine again if we need to wait more
+            with self.lock:
+                actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
+
+        # If end index is after current buffer boundary
+        while actual_end_byte > buffer_size:
+            time_till_buffer_reached = (actual_end_byte - buffer_size) / self.bytes_per_second
+            time.sleep(time_till_buffer_reached)
+            # Determine again if we need to wait more
+            with self.lock:
+                actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
         # Get bytes from buffer
-        audio_bytes = self.recording_buffer[start_byte:end_byte]
+        with self.lock:
+            actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
-        # ensure we have the correct byte length in case of rounding errors
-        missing_bytes_count = len(audio_bytes) % self.bytes_per_sample
-        if missing_bytes_count > 0:
-            # Calculate the number of bytes to add
-            padding_bytes = self.bytes_per_sample - missing_bytes_count
-            # Append zeros to make up the missing bytes
-            audio_bytes += bytearray(padding_bytes)
+            # Log final indices
+            print "Bytes count: {0}".format(bytes_count)
+            print "Start byte (total / buffer): {0} / {1}".format(start_byte, start_byte - self.dropped_buffer_bytes)
+            print "End byte (total / buffer): {0} / {1}".format(end_byte, end_byte - self.dropped_buffer_bytes)
+
+            audio_bytes = self.recording_buffer[actual_start_byte:actual_end_byte]
 
         # DEBUG CODE
         # print "Length of audio_bytes:", len(audio_bytes)
@@ -407,8 +408,6 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             event_type=EVENT_TYPE_STT_FETCH_MICROPHONE_RESULT,
             status=EVENT_STATE_NEW,
             payload={
-                'start_time': int(start_time * 1000),
-                'duration': int(duration * 1000),
                 'audio_bytes': encoded_data,
                 'channels': self.channels,
                 'bit_depth': self.bit_depth,
