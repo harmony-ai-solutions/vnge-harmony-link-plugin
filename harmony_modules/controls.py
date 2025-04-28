@@ -556,16 +556,25 @@ class ControlsHandler(HarmonyClientModuleBase):
             return
 
         print "Sending independent nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
+        utterance_data = {
+            'type': UTTERANCE_NONVERBAL,
+            'content': self.nonverbal_gui_data.input_value,
+            'entity_id': self.entity_controller.entity_id
+        }
+
         event = HarmonyLinkEvent(
-            event_id='new_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
-            event_type=EVENT_TYPE_USER_UTTERANCE,
-            status=EVENT_STATE_NEW,
-            payload={
-                'type': UTTERANCE_NONVERBAL,
-                'content': self.nonverbal_gui_data.input_value
-            }
+            event_id='actor_{0}_new_nonverbal'.format(self.entity_controller.entity_id),  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE,
+            status=EVENT_STATE_DONE,
+            payload=utterance_data
         )
-        return self.backend_connector.send_event(event)
+        # Since this was an output created by the current entity, it needs to be distributed
+        # to the other entities, which then "decide" if it's relevant to them in some way or not
+        # FIXME: This is not very performant, will cause issues with many characters
+        for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+            if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
+                continue
+            controller.perceptionModule.handle_event(event)
 
     def send_combined_interaction(self):
         if len(self.chat_gui_data.input_value) == 0:
@@ -596,32 +605,50 @@ class ControlsHandler(HarmonyClientModuleBase):
             return
 
         print "Sending independent Interaction: {0}".format(self.chat_gui_data.input_value)
+        utterance_data = {
+            'type': UTTERANCE_COMBINED,
+            'content': self.chat_gui_data.input_value,
+            'entity_id': self.entity_controller.entity_id
+        }
+
         event = HarmonyLinkEvent(
-            event_id='new_combined',  # This is an arbitrary dummy ID to conform the Harmony Link API
-            event_type=EVENT_TYPE_USER_UTTERANCE,
-            status=EVENT_STATE_NEW,
-            payload={
-                'type': UTTERANCE_COMBINED,
-                'content': self.chat_gui_data.input_value
-            }
+            event_id='actor_{0}_new_combined'.format(self.entity_controller.entity_id),  # This is an arbitrary dummy ID to conform the Harmony Link API
+            event_type=EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE,
+            status=EVENT_STATE_DONE,
+            payload=utterance_data
         )
-        return self.backend_connector.send_event(event)
+        # Since this was an output created by the current entity, it needs to be distributed
+        # to the other entities, which then "decide" if it's relevant to them in some way or not
+        # FIXME: This is not very performant, will cause issues with many characters
+        for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+            if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
+                continue
+            controller.perceptionModule.handle_event(event)
 
     def update_delayed_nonverbal_interaction(self):
         if self.nonverbal_gui_id is None or len(self.nonverbal_gui_data.input_value) == 0:
             return
 
         print "Updating ongoing nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
+        utterance_data = {
+            'type': UTTERANCE_NONVERBAL_DELAYED,
+            'content': self.nonverbal_gui_data.input_value,
+            'entity_id': self.entity_controller.entity_id
+        }
+
         event = HarmonyLinkEvent(
-            event_id='update_nonverbal',  # This is an arbitrary dummy ID to conform the Harmony Link API
-            event_type=EVENT_TYPE_USER_UTTERANCE,
-            status=EVENT_STATE_NEW,
-            payload={
-                'type': UTTERANCE_NONVERBAL_DELAYED,
-                'content': self.nonverbal_gui_data.input_value
-            }
+            event_id='actor_{0}_update_nonverbal'.format(self.entity_controller.entity_id),
+            event_type=EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE,
+            status=EVENT_STATE_DONE,
+            payload=utterance_data
         )
-        return self.backend_connector.send_event(event)
+        # Since this was an output created by the current entity, it needs to be distributed
+        # to the other entities, which then "decide" if it's relevant to them in some way or not
+        # FIXME: This is not very performant, will cause issues with many characters
+        for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+            if entity_id == self.entity_controller.entity_id or controller.perceptionModule is None:
+                continue
+            controller.perceptionModule.handle_event(event)
 
     def clear_nonverbal_interaction_field(self):
         self.nonverbal_gui_data.input_value = ''
