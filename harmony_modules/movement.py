@@ -1,12 +1,9 @@
 # Harmony Link Plugin for VNGE
 # (c) 2023-2025 Project Harmony.AI (contact@project-harmony.ai)
 #
-# This file contains an individual implementation of Countenance handling based on Harmony Link AIState Events.
+# This file contains an individual implementation of Movement handling based on Harmony Link ActionGraph Events.
 #
-# At a later point it is intended to have Harmony Link calculate countenance params internally and clients
-# just need to visualize these.
-#
-# However this is also a valid way to go in case the capabilities of the Event API are insufficient.
+# This module receives ActionGraphs from Harmony Link and executes them as animations and actions in the game.
 
 # Import Backend base Module
 from harmony_modules.common import *
@@ -21,754 +18,391 @@ from threading import Thread
 import time
 import json
 
-#
-_registered_actions = [
-    # Basic movement and interaction
-    {
-        'name': 'move',
-        'description': 'normal walking',
-        'examples': [
-            '{{character}} starts walking',
-            '{{character}} starts moving',
-            '{{character}} walks over to {{other_character}}',
-            '{{character}} walks over to {{object}}',
-            '{{character}} walks past {{object}} to {{other_object}}',
-            '{{character}} walks past {{other_character}} to {{other_object}}',
-            '{{character}} walks past {{other_character}} to {{character_group}}',
-            '{{character}} walks past {{character_group}} to {{other_character_group}}',
-            '{{character}} walks past {{object}} to {{other_character}}',
-            '{{character}} takes a step forward',
-            '{{character}} strides towards {{object}}',
-            '{{character}} strolls around {{object}}',
-            '{{character}} marches towards {{other_character}}',
-            '{{character}} saunters towards the {{object_collection}}',
-            '{{character}} advances toward {{character_group}}',
-            '{{character}} tip-toes closer to {{other_character}}',
-            '{{character}} quietly sneaks up on {{other_character}}',
-            '{{character}} tiptoes toward {{object}}'
-        ],
-        'confirmations': [
-            # '{{none}}'
-        ],
-        'rejections': [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'walk',
-        'description': 'fast walking',
-        'examples': [
-            '{{character}} jogs',
-            '{{character}} hurries',
-            '{{character}} rushes',
-            '{{character}} moves quickly',
-            '{{character}} speeds up',
-            '{{character}} walks briskly',
-            '{{character}} strides',
-            '{{character}} marches',
-            '{{character}} hastens',
-            '{{character}} trots',
-            '{{character}} scurries',
-            '{{character}} dashes',
-            '{{character}} bolts',
-            '{{character}} sprints'
-        ],
-        'confirmations': [
-            # '{{none}}'
-        ],
-        'rejections': [
-            # '{{none}}'
-        ]
-    },
-    {
-        "name": "run",
-        "description": "running",
-        "examples": [
-            "{{character}} runs forward quickly",
-            "{{character}} sprints ahead",
-            "{{character}} dashes past {{object}}",
-            "{{character}} rushes towards {{other_character}}",
-            "{{character}} bolts from {{character_group}} to {{other_character_group}}",
-            "{{character}} jogs around {{object_collection}}",
-            "{{character}} hurries while carrying {{object}}",
-            "{{character}} rapidly moves away from danger",
-            "{{character}} escapes by running fast",
-            "{{character}} outpaces {{other_character}} easily"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
-        "name": "sit_down",
-        "description": "sit down on the ground or an object",
-        "examples": [
-            "{{character}} sits down on the {{object}}",
-            "{{character}} lowers himself onto the {{object}}",
-            "{{character}} plops down on the {{object}}",
-            "{{character}} takes a seat on the {{object}}",
-            "{{character}} perches on the {{object}}",
-            "{{character}} settles into the {{object}}",
-            "{{character}} squats down on the {{object}}",
-            "{{character}} kneels down next to {{object}}",
-            "{{character}} sits cross-legged on the {{object}}",
-            "{{character}} hunkers down behind the {{object}}"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
-        "name": "lean_against",
-        "description": "sit down on the ground or an object",
-        "examples": [
-            "{{character}} leans against the {{object}}",
-            "{{character}} rests his back against the {{object}}",
-            "{{character}} finds support by leaning against the {{object}}",
-            "{{character}} uses the {{object}} as a prop to lean against",
-            "{{character}} relaxes by leaning against the {{object}}",
-            "{{character}} takes a break and leans against the {{object}}",
-            "{{character}} leans his weight against the {{object}}",
-            "{{character}} leans on the {{object}} for support",
-            "{{character}} finds comfort in leaning against the {{object}}",
-            "{{character}} enjoys the feeling of leaning against the {{object}}",
-            "{{character}} appreciates the sturdiness of the {{object}} while leaning against it"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'lay_down',
-        'description': 'lay down on the ground or an object',
-        'examples': [
-            "{{character}} lies down on the {{object}}",
-            "{{character}} curls up on the {{object}}",
-            "{{character}} sprawls out on the {{object}}",
-            "{{character}} takes a rest by laying down on the {{object}}",
-            "{{character}} finds a comfortable spot and lays down",
-            "{{character}} decides to take a nap on the {{object}}",
-            "{{character}} settles down for a quick rest on the {{object}}",
-            "{{character}} stretches out on the {{object}}",
-            "{{character}} gently lowers themselves onto the {{object}}",
-            "{{character}} lays down next to {{other_character}} on the {{object}}",
-            "{{character}} lays down their head on the {{object}}",
-            "{{character}} makes a pillow of their arms and lays down on the {{object}}",
-            "{{character}} lays down on the {{object}}, gently swinging back and forth",
-            "{{character}} carefully lays down on the {{object}}",
-            "{{character}} cautiously lays down on the {{object}}"
-        ],
-        'confirmations': [
-            # '{{none}}'
-        ],
-        'rejections': [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'stand_up',
-        'description': 'stand up from sitting or lying position',
-        'examples': [
-            '{{character}} rises from their seated position',
-            '{{character}} gets up from the {{object}}',
-            '{{character}} stands up after resting on {{object}}',
-            '{{character}} lifts themselves off {{object}}',
-            '{{character}} pushes themselves up from {{object}}',
-            '{{character}} climbs back onto their feet',
-            '{{character}} raises from a kneeling posture',
-            '{{character}} unfolds themself from a squatting stance',
-            '{{character}} rises slowly from {{object}}',
-            '{{character}} swiftly gets up from a prone position',
-            '{{character}} jumps up from {{object}}',
-            '{{character}} ascends from a crouching state',
-            '{{character}} elevates themself from {{object}}',
-            '{{character}} emerges from underneath {{object}}',
-            '{{character}} disengages from a sprawled layout'
-        ],
-        'confirmations': [
-            # '{{none}}'
-        ],
-        'rejections': [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'jump_fixed',
-        'description': 'jump at current position',
-        'examples': [
-            '{{character}} jumps in place',
-            '{{character}} leaps up from {{object}}',
-            '{{character}} springs into the air',
-            '{{character}} makes a vertical jump',
-            '{{character}} jumps straight up',
-            '{{character}} launches off {{object}}',
-            '{{character}} bounces upwards',
-            '{{character}} performs a standing jump',
-            '{{character}} executes a quick hop',
-            '{{character}} does a small lift',
-            '{{character}} makes a tiny leap'
-        ],
-        'confirmations': [
-            # '{{none}}'
-        ],
-        'rejections': [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'jump_over',
-        'description': 'jump over an object',
-        'examples': [
-            '{{character}} jumps over {{object}}',
-            '{{character}} leaps over {{object}}',
-            '{{character}} hops over {{object}}',
-            '{{character}} jumps high over {{object}}',
-            '{{character}} jumps far over {{object}}',
-            '{{character}} jumps quickly over {{object}}',
-            '{{character}} stumbles while jumping over {{object}}',
-            '{{character}} barely clears {{object}} with a jump',
-            '{{character}} struggles to jump over {{object}}'
-        ],
-        'confirmations': [
-            '{{character}} makes it over {{object}}',
-            '{{character}} lands on the other side of {{object}} after jumping over it',
-            '{{character}} succeeds in jumping over {{object}}'
-        ],
-        'rejections': [
-            '{{character}} doesn\'t make it over {{object}}',
-            '{{character}} fails to jump over {{object}}',
-            '{{character}} fails to jump over {{object}} and falls',
-            '{{character}} trips over {{object}} while trying to jump over it'
-        ]
-    },
-    {
-        'name': 'pick_up_left_hand',
-        'description': 'pick up an object with left hand',
-        'examples': [
-            '{{character}} picks up {{object}} with their left hand',
-            '{{character}} uses their left hand to lift {{object}}',
-            '{{character}} grabs {{object}} with their left hand',
-            '{{character}} lifts {{object}} using their left hand',
-            '{{character}} picks up {{object}} from the ground with their left hand',
-            '{{character}} retrieves {{object}} with their left hand',
-            '{{character}} collects {{object}} with their left hand',
-            '{{character}} acquires {{object}} with their left hand',
-            '{{character}} secures {{object}} with their left hand',
-            '{{character}} obtains {{object}} with their left hand',
-            '{{character}} grasps {{object}} with their left hand'
-        ],
-        'confirmations': [
-            '{{object}} is now in {{character}}\'s left hand',
-            '{{character}} has picked up {{object}} with their left hand',
-            '{{object}} is successfully held by {{character}}\'s left hand'
-        ],
-        'rejections': [
-            '{{object}} is too heavy for {{character}}\'s left hand',
-            '{{object}} slips out of {{character}}\'s left hand',
-            '{{character}}\'s left hand cannot hold {{object}}'
-        ]
-    },
-    {
-        'name': 'pick_up_right_hand',
-        'description': 'pick up an object with right hand',
-        'examples': [
-            '{{character}} picks up {{object}} with their right hand',
-            '{{character}} uses their right hand to lift {{object}}',
-            '{{character}} grabs {{object}} with their right hand',
-            '{{character}} lifts {{object}} using their right hand',
-            '{{character}} picks up {{object}} from the ground with their right hand',
-            '{{character}} retrieves {{object}} with their right hand',
-            '{{character}} collects {{object}} with their right hand',
-            '{{character}} acquires {{object}} with their right hand',
-            '{{character}} secures {{object}} with their right hand',
-            '{{character}} obtains {{object}} with their right hand',
-            '{{character}} grasps {{object}} with their right hand'
-        ],
-        'confirmations': [
-            '{{object}} is now in {{character}}\'s right hand',
-            '{{character}} has picked up {{object}} with their right hand',
-            '{{object}} is successfully held by {{character}}\'s right hand'
-        ],
-        'rejections': [
-            '{{object}} is too heavy for {{character}}\'s right hand',
-            '{{object}} slips out of {{character}}\'s right hand',
-            '{{character}}\'s right hand cannot hold {{object}}'
-        ]
-    },
-    {
-        'name': 'pick_up_both_hands',
-        'description': 'pick up an object with both hands',
-        'examples': [
-            '{{character}} reaches for {{object}} with both hands',
-            '{{character}} grabs {{object}} using both hands',
-            '{{character}} lifts {{object}} with both hands',
-            '{{character}} carefully picks up {{object}} with both hands',
-            '{{character}} positions both hands to lift {{object}}',
-            '{{character}} readies both hands to pick up {{object}}',
-            '{{character}} uses both hands to securely hold {{object}}',
-            '{{character}} brings both hands together to pick up {{object}}',
-            '{{character}} gathers both hands around {{object}} to lift it',
-            '{{character}} interlocks fingers to lift {{object}}'
-        ],
-        'confirmations': [
-            '{{character}} successfully lifts {{object}}',
-            '{{object}} is now held by {{character}} with both hands',
-            '{{character}} has picked up {{object}} with both hands'
-        ],
-        'rejections': [
-            '{{object}} is too heavy for {{character}} to lift with both hands',
-            '{{object}} cannot be lifted with both hands',
-            '{{character}} struggles to lift {{object}} with both hands',
-            '{{character}} fails to pick up {{object}} with both hands'
-        ]
-    },
-    {
-        "name": "drop_item",
-        "description": "drop item currently in hands to the ground",
-        "examples": [
-            "{{character}} drops {{object}} on the ground",
-            "{{character}} lets go of {{object}}",
-            "{{character}} releases {{object}}",
-            "{{character}} throws {{object}} down",
-            "{{character}} tosses {{object}} aside",
-            "{{character}} places {{object}} on the floor",
-            "{{character}} sets {{object}} down",
-            "{{character}} puts {{object}} on the ground",
-            "{{character}} lays {{object}} on the ground",
-            "{{character}} leaves {{object}} on the ground"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
-        'name': 'store_item',
-        'description': 'store item in hand in pocket / inventory',
-        'examples': [
-            '{{character}} puts {{object}} into their pocket',
-            '{{character}} stores {{object}} in their inventory',
-            '{{character}} stows away {{object}} in their bag',
-            '{{character}} hides {{object}} in their sleeve',
-            '{{character}} secures {{object}} in their belt',
-            '{{character}} places {{object}} in their backpack',
-            '{{character}} tucks {{object}} into their shirt',
-            '{{character}} slots {{object}} into their holster',
-            '{{character}} inserts {{object}} into their sheath',
-            '{{character}} deposits {{object}} in their container',
-            '{{character}} saves {{object}} in their storage'
-        ],
-        'confirmations': [
-            '{{object}} is now stored',
-            '{{object}} is securely in your possession',
-            '{{object}} is put away safely',
-            '{{object}} is in your inventory'
-        ],
-        'rejections': [
-            '{{object}} does not fit',
-            '{{object}} is too large',
-            '{{object}} is not suitable for storage'
-        ]
-    },
-    {
+from movement_definitions import registered_actions
 
-        'name': 'retrieve_item',
+# Action states for tracking execution lifecycle
+class ActionState:
+    QUEUED = "queued"
+    EXECUTING = "executing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    TIMEOUT = "timeout"
 
-        'description': 'retrieve item from pocket / inventory into hand',
+# ActionInstance - represents a single action to be executed with state and timing
+class ActionInstance:
+    def __init__(self, name, targets=None, transition_mode="linear", graph_id=None):
+        self.name = name  # Action name (e.g., "walk", "sit_down")
+        self.targets = targets or []  # List of ActionTargetV1 dicts
+        self.transition_mode = transition_mode  # How to transition into this action
+        self.graph_id = graph_id  # ID of the ActionGraph this belongs to
+        
+        # State and timing management
+        self.state = ActionState.QUEUED
+        self.start_time = None
+        self.expected_duration = None
+        self.actual_duration = None
+        self.timeout_timer = None
+        self.max_execution_time = 10.0  # Maximum time before action is considered stuck
 
-        'examples': [
-            '{{character}} reaches into {{character}}\'s pocket and pulls out {{object}}',
-            '{{character}} grabs {{object}} from {{character}}\'s inventory',
-            '{{character}} withdraws {{object}} from {{character}}\'s backpack',
-            '{{character}} takes {{object}} out of {{character}}\'s bag',
-            '{{character}} removes {{object}} from {{character}}\'s satchel',
-            '{{character}} fetches {{object}} from {{character}}\'s belt',
-            '{{character}} picks up {{object}} from {{character}}\'s holster',
-            '{{character}} lifts {{object}} out of {{character}}\'s pouch',
-            '{{character}} extracts {{object}} from {{character}}\'s sheath',
-            '{{character}} draws {{object}} from {{character}}\'s scabbard'
-        ],
-        'confirmations': [
-            '{{character}} holds {{object}} in hand',
-            '{{object}} now equipped by {{character}}',
-            '{{object}} ready to use in {{character}}\'s hand'
-        ],
-        'rejections': [
-            '{{object}} not found in {{character}}\'s possession',
-            '{{object}} stuck in {{character}}\'s pocket',
-            '{{object}} broken or damaged beyond repair'
-        ]
-    },
-    {
-        "name": "place_item",
-        "description": "place item currently in hands on the ground or an object",
-        "examples": [
-            "{{character}} lays down {{object}} on {{other_object}}",
-            "{{character}} sets {{object}} on {{other_object}}",
-            "{{character}} places {{object}} into {{other_object}}",
-            "{{character}} puts {{object}} next to {{other_object}}",
-            "{{character}} drops {{object}} at {{other_character}}\'s feet",
-            "{{character}} leaves {{object}} behind",
-            "{{character}} positions {{object}} carefully on {{other_object}}",
-            "{{character}} throws {{object}} onto {{other_object}}",
-            "{{character}} plops {{object}} down on {{other_object}}",
-            "{{character}} hangs {{object}} on {{other_object}}"
-        ],
-        "confirmations": [
-            "{{object}} has been placed",
-            "{{object}} is now on {{other_object}}",
-            "{{other_character}} sees {{object}} where it was placed"
-        ],
-        "rejections": [
-            "{{object}} cannot be placed there",
-            "{{object}} doesn't fit"
-        ]
-    },
-    {
-        'name': 'drop_item',
-        'description': 'drop item currently in hands to the ground',
-        'examples': [
-            '{{character}} drops {{object}} on the ground',
-            '{{character}} lets go of {{object}}',
-            '{{character}} releases {{object}}',
-            '{{character}} throws {{object}} down',
-            '{{character}} tosses {{object}} away',
-            '{{character}} sets {{object}} down',
-            '{{character}} unloads {{object}} from their inventory onto {{other_object}}',
-            '{{character}} discards {{object}}',
-            '{{character}} gets rid of {{object}} by dropping it'
-        ],
-        'confirmations': [
-            '{{object}} hits the ground',
-            '{{object}} falls to the floor',
-            '{{object}} lands with a thud',
-            '{{character}} sees {{object}} on the ground'
-        ],
-        'rejections': [
-            '{{character}} can\'t get rif of {{object}}',
-            '{{object}} bounces off and finds itself back in {{character}}\s hands',
-            '{{object}} keeps sticking to {{character}}'
-        ]
-    },
+    def start_execution(self, expected_duration=2.0):
+        """Mark action as started and set timing"""
+        self.state = ActionState.EXECUTING
+        self.start_time = time.time()
+        self.expected_duration = expected_duration
+        
+    def complete_execution(self, success=True):
+        """Mark action as completed and calculate actual duration"""
+        if self.start_time:
+            self.actual_duration = time.time() - self.start_time
+        
+        if success:
+            self.state = ActionState.COMPLETED
+        else:
+            self.state = ActionState.FAILED
+            
+        return self.actual_duration
 
-    # Chara interaction
-    {
-        'name': 'give_item',
-        'description': 'give item in hand to the other chara\'s hand',
-        'examples': [
-            '{{character}} passes {{object}} to {{other_character}}',
-            '{{character}} transfers {{object}} to {{other_character}}',
-            '{{character}} presents {{object}} to {{other_character}}',
-            '{{character}} offers {{object}} to {{other_character}}',
-            '{{character}} holds out {{object}} to {{other_character}}',
-            '{{character}} extends {{object}} towards {{other_character}}',
-            '{{character}} puts {{object}} into {{other_character}}\'s hand',
-            '{{character}} lays {{object}} in {{other_character}}\'s palm',
-            '{{character}} sets {{object}} down next to {{other_character}}',
-            '{{character}} places {{object}} by {{other_character}}'
-        ],
-        'confirmations': [
-            '{{other_character}} receives {{object}}',
-            '{{other_character}} grasps {{object}}',
-            '{{other_character}} catches {{object}}',
-            '{{other_character}} takes hold of {{object}}',
-            '{{other_character}} clutches {{object}}'
-        ],
-        'rejections': [
-            '{{other_character}} declines {{object}}',
-            '{{other_character}} pushes {{object}} away',
-            '{{other_character}} avoids {{object}}',
-            '{{other_character}} shuns {{object}}',
-            '{{other_character}} ignores {{object}}'
-        ]
-    },
-    {
-        'name': 'take_hand',
-        'description': 'take hand of the other chara, depending on position, and interlock',
-        'examples': [
-            '{{character}} reaches out to take {{other_character}}\'s hand',
-            '{{character}} extends a hand towards {{other_character}}',
-            '{{character}} offers a handshake to {{other_character}}',
-            '{{character}} grasps {{other_character}}\'s hand',
-            '{{character}} interlocks fingers with {{other_character}}',
-            '{{character}} holds hands with {{other_character}}',
-            '{{character}} takes {{other_character}}\'s hand in their own',
-            '{{character}} gently clasps {{other_character}}\'s hand',
-            '{{character}} links arms with {{other_character}}',
-            '{{character}} grabs {{other_character}}\'s hand',
-            '{{character}} seizes {{other_character}}\'s hand',
-            '{{character}} clutches {{other_character}}\'s hand'
-        ],
-        'confirmations': [
-            '{{other_character}} reciprocates the gesture',
-            '{{other_character}} tightens their grip',
-            '{{other_character}} squeezes {{character}}\'s hand back',
-            '{{other_character}} smiles and holds on',
-            '{{other_character}} returns the handshake firmly',
-            '{{other_character}} interlocks fingers with {{character}}'
-        ],
-        'rejections': [
-            '{{other_character}} pulls their hand away',
-            '{{other_character}} shakes their head and steps back',
-            '{{other_character}} recoils at the touch',
-            '{{other_character}} looks uncomfortable and avoids eye contact',
-            '{{other_character}} ignores the gesture'
-        ]
-    },
-    {
-        'name': 'caress_cheek',
-        'description': 'caress cheek of the other chara',
-        'examples': [
-            '{{character}} gently caresses {{other_character}}\'s cheek',
-            '{{character}} softly touches {{other_character}}\'s face',
-            '{{character}} runs their fingers along {{other_character}}\'s cheek',
-            '{{character}} leans in and caresses {{other_character}}\'s cheek',
-            '{{character}} smiles and caresses {{other_character}}\'s cheek',
-            '{{character}} lovingly strokes {{other_character}}\'s cheek',
-            '{{character}} tenderly caresses {{other_character}}\'s cheek',
-            '{{character}} sweetly touches {{other_character}}\'s cheek',
-            '{{character}} kindly caresses {{other_character}}\'s cheek',
-            '{{character}} carefully strokes {{other_character}}\'s cheek',
-            '{{character}} delicately touches {{other_character}}\'s cheek'
-        ],
-        'confirmations': [
-            '{{other_character}} leans into the touch',
-            '{{other_character}} closes their eyes',
-            '{{other_character}} smiles',
-            '{{other_character}} blushes',
-            '{{other_character}} sighs contentedly'
-        ],
-        'rejections': [
-            '{{other_character}} flinches',
-            '{{other_character}} pulls away',
-            '{{other_character}} looks uncomfortable',
-            '{{other_character}} tenses up',
-            '{{other_character}} glares at {{character}}'
-        ]
-    },
-    {
-        'name': 'caress_head',
-        'description': 'caress head of the other chara',
-        'examples': [
-            '{{character}} gently strokes {{other_character}}\'s hair',
-            '{{character}} caresses {{other_character}}\'s head',
-            '{{character}} runs fingers through {{other_character}}\'s hair',
-            '{{character}} softly combs {{other_character}}\'s hair with fingers',
-            '{{character}} tenderly touches {{other_character}}\'s forehead',
-            '{{character}} sweetly scratches {{other_character}}\'s temple',
-            '{{character}} leans in and lovingly tucks {{other_character}}\'s hair behind their ear',
-            '{{character}} delicately traces patterns on {{other_character}}\'s head with fingertips',
-            '{{character}} affectionately ruffles {{other_character}}\'s hair',
-            '{{character}} kindly soothes {{other_character}}\'s temples',
-            '{{character}} carefully brushes back {{other_character}}\'s bangs',
-            '{{character}} playfully messes up {{other_character}}\'s hairstyle',
-            '{{character}} curiously examines {{other_character}}\'s hair texture',
-            '{{character}} lovingly embraces {{other_character}}\'s head against their chest'
-        ],
-        'confirmations': [
-            '{{other_character}} purrs contentedly under your touch',
-            '{{other_character}} sighs pleasantly as you stroke their hair',
-            '{{other_character}} smiles warmly at your gentle gesture',
-            '{{other_character}} relaxes visibly in your comforting presence',
-            '{{other_character}} leans into your touch, seeking more connection',
-            '{{other_character}} nuzzles closer to you, enjoying the moment'
-        ],
-        'rejections': [
-            '{{other_character}} stiffens and moves away from your touch',
-            '{{other_character}} flinches slightly at your sudden movement',
-            '{{other_character}} frowns and expresses discomfort',
-            '{{other_character}} raises their hand to halt your actions',
-            '{{other_character}} steps back, creating distance between you both',
-            '{{other_character}} looks uncomfortable and avoids eye contact'
-        ]
-    },
-    {
-        'name': 'kiss_hand',
-        'description': 'take hand of the other chara, and kiss it in a romantic way',
-        'examples': [
-            '{{character}} gently takes {{other_character}}\'s hand',
-            '{{character}} reaches for {{other_character}}\'s hand',
-            '{{character}} brings {{other_character}}\'s hand to their lips',
-            '{{character}} softly kisses {{other_character}}\'s hand',
-            '{{character}} holds {{other_character}}\'s hand to their cheek',
-            '{{character}} gazes into {{other_character}}\'s eyes while kissing their hand',
-            '{{character}} intertwines their fingers with {{other_character}}\'s before kissing their hand',
-            '{{character}} lifts {{other_character}}\'s hand to their mouth',
-            '{{character}} presses a tender kiss to {{other_character}}\'s knuckles',
-            '{{character}} slowly traces {{other_character}}\'s fingers with their lips'
-        ],
-        'confirmations': [
-            '{{other_character}} blushes at the gesture',
-            '{{other_character}} smiles warmly at {{character}}',
-            '{{other_character}} squeezes {{character}}\'s hand back',
-            '{{other_character}} leans closer to {{character}}',
-            '{{other_character}} returns the gaze',
-            '{{other_character}} thanks {{character}} quietly'
-        ],
-        'rejections': [
-            '{{other_character}} pulls their hand away',
-            '{{other_character}} looks uncomfortable',
-            '{{other_character}} steps back from {{character}}',
-            '{{other_character}} avoids eye contact',
-            '{{other_character}} clears their throat awkwardly'
-        ]
-    },
-    {
-        'name': 'kiss_cheek',
-        'description': 'kiss cheek of the other chara',
-        'examples': [
-            '{{character}} leans towards {{other_character}} and kisses {{other_character}}\'s cheek',
-            '{{character}} gently plants a kiss on {{other_character}}\'s cheek',
-            '{{character}} softly presses lips against {{other_character}}\'s cheek',
-            '{{character}} approaches {{other_character}}, smiling, then kisses {{other_character}}\'s cheek',
-            '{{character}} whispers something sweet into {{other_character}}\'s ear before kissing {{other_character}}\'s cheek',
-            '{{character}} reaches out and affectionately kisses {{other_character}}\'s cheek',
-            '{{character}} warmly embraces {{other_character}} and kisses {{other_character}}\'s cheek',
-            '{{character}} comfortingly wraps arm around {{other_character}} and tenderly kisses {{other_character}}\'s cheek',
-            '{{character}} appreciatively thanks {{other_character}} with a gentle kiss on the cheek'
-        ],
-        'confirmations': [
-            '{{other_character}} blushes slightly and smiles back at {{character}}',
-            '{{other_character}} chuckles and returns the gesture, giving a quick peck on {{character}}\'s cheek',
-            '{{other_character}} shyly giggles and leans closer to {{character}}',
-            '{{other_character}} gazes into {{character}}\'s eyes and moves even closer, reciprocating the kiss',
-            '{{other_character}} feels flattered by {{character}}\'s affectionate act, responding positively',
-            '{{other_character}} seems touched and responds with a loving smile'
-        ],
-        'rejections': [
-            '{{other_character}} awkwardly pulls back and avoids eye contact',
-            '{{other_character}} hesitates before taking a step back, looking uncomfortable',
-            '{{other_character}} tries to maintain distance and politely declines',
-            '{{other_character}} raises a hand in protest, creating some space between them and {{character}}',
-            '{{other_character}} ducks away while averting \' gaze, displaying discomfort',
-            '{{other_character}} frowns and steps aside, signaling that they aren\'t interested in such gestures'
-        ]
-    },
-    {
-        'name': 'kiss_forehead',
-        'description': 'kiss forehead of the other chara',
-        'examples': [
-            '{{character}} leans in and kisses {{other_character}} on the forehead',
-            '{{character}} gently presses their lips to {{other_character}}\'s forehead',
-            '{{character}} softly plants a kiss on {{other_character}}\'s forehead',
-            '{{character}} reaches out and kisses {{other_character}}\'s forehead',
-            '{{character}} approaches {{other_character}} and kisses them on the forehead',
-            '{{character}} moves closer to {{other_character}} and kisses their forehead',
-            '{{character}} steps towards {{other_character}} and gives them a kiss on their forehead',
-            '{{character}} gets nearer to {{other_character}} and presses a kiss to their forehead',
-            '{{character}} comes close to {{other_character}} and kisses their forehead affectionately',
-            '{{character}} draws close to {{other_character}} and plants a tender kiss on their forehead'
-        ],
-        'confirmations': [
-            '{{other_character}} smiles',
-            '{{other_character}} blushes',
-            '{{other_character}} giggles',
-            '{{other_character}} closes their eyes',
-            '{{other_character}} sighs contentedly',
-            '{{other_character}} leans into the kiss'
-        ],
-        'rejections': [
-            '{{other_character}} turns their head away',
-            '{{other_character}} pulls back',
-            '{{other_character}} frowns',
-            '{{other_character}} looks uncomfortable',
-            '{{other_character}} pushes {{character}} away'
-        ]
-    },
-    {
-        'name': 'kiss_lips',
-        'description': 'kiss the other chara',
-        'examples': [
-            '{{character}} leans in and kisses {{other_character}} on the lips',
-            '{{character}} presses their lips against {{other_character}}\'s lips',
-            '{{character}} and {{other_character}} share a passionate kiss',
-            '{{character}} initiates a tender kiss with {{other_character}}',
-            '{{character}} softly brushes their lips against {{other_character}} mouth',
-            '{{character}} pulls {{other_character}} in for a deep kiss',
-            '{{character}} and {{other_character}} exchange a quick peck on the lips',
-            '{{character}} can\'t help but steal a kiss from {{other_character}}',
-            '{{character}} plants a gentle kiss on {{other_character}}\'s lips',
-            '{{character}} and {{other_character}} engage in a lingering kiss',
-            '{{character}} whispers sweet nothings as they kiss {{other_character}}'
-        ],
-        'confirmations': [
-            '{{other_character}} blushes and enjoys the kissing with {{character}}',
-            '{{other_character}} returns the kiss',
-            '{{other_character}} sighs contentedly after the kiss',
-            '{{other_character}} smiles at {{character}} after the kiss',
-            '{{other_character}} wraps their arms around {{character}} during the kiss'
-        ],
-        'rejections': [
-            '{{other_character}} turns their head away from the kiss',
-            '{{other_character}} stiffens up during the kiss',
-            '{{other_character}} pulls back abruptly from the kiss',
-            '{{other_character}} looks uncomfortable after the kiss',
-            '{{other_character}} wipes their lips after the kiss'
-        ]
-    },
-    {
-        "name": "push_away",
-        "description": "push away the other chara",
-        "examples": [
-            "{{character}} forcefully pushes {{other_character}} away",
-            "{{character}} pushes {{other_character}} with both hands",
-            "{{character}} shoves {{other_character}} aside",
-            "{{character}} nudges {{other_character}} out of the way",
-            "{{character}} elbows {{other_character}} out of the way",
-            "{{character}} forcefully moves {{other_character}} backwards",
-            "{{character}} makes {{other_character}} stumble back",
-            "{{character}} sends {{other_character}} flying with a powerful push",
-            "{{character}} uses their arm to push {{other_character}} back"
-        ],
-        "confirmations": [
-            "{{other_character}} falls backwards",
-            "{{other_character}} loses balance and topples over",
-            "{{other_character}} steps back surprisedly",
-            "{{other_character}} recoils from the sudden movement",
-            "{{other_character}} takes a step back from {{character}}"
-        ],
-        "rejections": [
-            "{{other_character}} resists the push",
-            "{{other_character}} grabs onto something nearby to keep standing",
-            "{{other_character}} braces themselves against the impact",
-            "{{other_character}} resists the attempt and remains steady",
-            "{{other_character}} sidesteps the push easily",
-            "{{other_character}} counters with a push of their own",
-        ]
-    },
-]
+    def get_execution_time(self):
+        """Get current execution time if action is running"""
+        if self.start_time and self.state == ActionState.EXECUTING:
+            return time.time() - self.start_time
+        return 0.0
 
+    def is_timeout(self):
+        """Check if action has exceeded maximum execution time"""
+        if self.state == ActionState.EXECUTING and self.start_time:
+            return self.get_execution_time() > self.max_execution_time
+        return False
 
-# CountenanceHandler - module main class
+# AnimationMapper - maps action names to game animation parameters
+class AnimationMapper:
+    def __init__(self):
+        self.animation_mappings = self._load_animation_mappings()
+    
+    def _load_animation_mappings(self):
+        """Load animation mappings - starting with hardcoded values"""
+        # TODO: Later load from animation_list.json analysis
+        return {
+            # Basic movement actions
+            "move": {"group": 0, "category": 0, "no": 0, "duration": 3.0, "speed": 0.3},
+            "walk": {"group": 0, "category": 0, "no": 1, "duration": 2.5, "speed": 0.5}, 
+            "run": {"group": 0, "category": 0, "no": 2, "duration": 2.0, "speed": 1.0},
+            
+            # Posture actions
+            "sit_down": {"group": 1, "category": 0, "no": 0, "duration": 2.0, "speed": 0.5},
+            "stand_up": {"group": 1, "category": 0, "no": 1, "duration": 1.5, "speed": 0.5},
+            "lay_down": {"group": 1, "category": 1, "no": 0, "duration": 2.5, "speed": 0.4},
+            
+            # Placeholder for other actions - will be expanded
+            "jump_fixed": {"group": 2, "category": 0, "no": 0, "duration": 1.0, "speed": 0.8},
+        }
+    
+    def get_animation_mapping(self, action_name):
+        """Get animation mapping for a specific action"""
+        return self.animation_mappings.get(action_name)
+    
+    def has_mapping(self, action_name):
+        """Check if action has animation mapping"""
+        return action_name in self.animation_mappings
+
+# ActionExecutor - executes individual actions in the game
+class ActionExecutor:
+    def __init__(self, movement_handler):
+        self.movement_handler = movement_handler
+        self.entity_controller = movement_handler.entity_controller
+        self.chara = None  # Will be set when character is available
+        
+    def update_chara(self, chara):
+        """Update character reference"""
+        self.chara = chara
+    
+    def execute_action(self, action_instance):
+        """Main action execution dispatcher"""
+        if not self.chara:
+            print("Warning: No character available for action execution")
+            self.movement_handler._on_action_completed(action_instance, False)
+            return
+            
+        action_name = action_instance.name
+        print("Executing action: {0}".format(action_name))
+        
+        # Get animation mapping for this action
+        animation_mapping = self.movement_handler.animation_mapper.get_animation_mapping(action_name)
+        
+        if not animation_mapping:
+            print("No animation mapping found for action: {0}".format(action_name))
+            self.movement_handler._on_action_completed(action_instance, False)
+            return
+        
+        # Start execution timing
+        expected_duration = animation_mapping.get("duration", 2.0)
+        action_instance.start_execution(expected_duration)
+        
+        # Set up timeout monitoring
+        self._setup_timeout_monitoring(action_instance)
+        
+        # Execute the action based on type
+        if action_name in ["move", "walk", "run"]:
+            self._execute_movement_action(action_instance, animation_mapping)
+        elif action_name in ["sit_down", "lay_down", "stand_up"]:
+            self._execute_posture_action(action_instance, animation_mapping)
+        elif action_name in ["jump_fixed"]:
+            self._execute_simple_action(action_instance, animation_mapping)
+        else:
+            print("Action type not yet implemented: {0}".format(action_name))
+            # For now, just execute as simple action
+            self._execute_simple_action(action_instance, animation_mapping)
+    
+    def _setup_timeout_monitoring(self, action_instance):
+        """Set up timeout monitoring for the action"""
+        def check_timeout():
+            if action_instance.is_timeout():
+                print("Action '{0}' timed out after {1:.2f}s".format(
+                    action_instance.name, action_instance.get_execution_time()))
+                action_instance.state = ActionState.TIMEOUT
+                self.movement_handler._on_action_completed(action_instance, False)
+        
+        # Schedule timeout check
+        game.set_timer(action_instance.max_execution_time, lambda g: check_timeout())
+    
+    def _execute_movement_action(self, action, mapping):
+        """Handle movement actions (walk, run, etc.)"""
+        try:
+            # Apply animation using VNGE character animation system
+            self.chara.actor.animate2(
+                mapping["group"],
+                mapping["category"], 
+                mapping["no"],
+                mapping["speed"]
+            )
+            
+            # Handle targets (look at target if specified)
+            self._handle_targets(action.targets)
+            
+            # Set timer for action completion
+            duration = mapping.get("duration", 3.0)
+            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            
+        except Exception as e:
+            print("Error executing movement action {0}: {1}".format(action.name, e))
+            self.movement_handler._on_action_completed(action, False)
+    
+    def _execute_posture_action(self, action, mapping):
+        """Handle posture changes (sit, stand, lay down)"""
+        try:
+            self.chara.actor.animate2(
+                mapping["group"],
+                mapping["category"],
+                mapping["no"],
+                mapping["speed"]
+            )
+            
+            self._handle_targets(action.targets)
+            
+            duration = mapping.get("duration", 2.0)
+            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            
+        except Exception as e:
+            print("Error executing posture action {0}: {1}".format(action.name, e))
+            self.movement_handler._on_action_completed(action, False)
+    
+    def _execute_simple_action(self, action, mapping):
+        """Handle simple animations (jumps, gestures, etc.)"""
+        try:
+            self.chara.actor.animate2(
+                mapping["group"],
+                mapping["category"],
+                mapping["no"],
+                mapping["speed"]
+            )
+            
+            self._handle_targets(action.targets)
+            
+            duration = mapping.get("duration", 1.5)
+            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            
+        except Exception as e:
+            print("Error executing simple action {0}: {1}".format(action.name, e))
+            self.movement_handler._on_action_completed(action, False)
+    
+    def _handle_targets(self, targets):
+        """Handle action targets (look_at_target, etc.)"""
+        for target in targets:
+            target_name = target.get("name")
+            look_at_target = target.get("look_at_target", False)
+            requires_consent = target.get("requires_consent", False)
+            
+            if look_at_target and target_name:
+                # TODO: Implement look-at functionality
+                print("Should look at target: {0}".format(target_name))
+            
+            if requires_consent:
+                # TODO: Implement consent checking
+                print("Action requires consent from: {0}".format(target_name))
+
+# MovementHandler - module main class
 class MovementHandler(HarmonyClientModuleBase):
-    global _registered_actions
+    global registered_actions
 
     def __init__(self, entity_controller, movement_config):
         # execute the base constructor
         HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = movement_config
-        # Movement related data
+        
+        # Movement execution components
+        self.animation_mapper = AnimationMapper()
+        self.action_executor = ActionExecutor(self)
+        
+        # Action execution state
+        self.action_queue = []  # Queue of ActionInstance objects to execute
+        self.current_action = None  # Currently executing ActionInstance
+        self.action_history = []  # Recently completed actions for debugging
+        self.max_history_size = 10
+        
+        # Performance monitoring
+        self.total_actions_executed = 0
+        self.total_actions_failed = 0
+        self.average_execution_time = 0.0
+        
+        # Legacy - keeping for compatibility
         self.animations_map = {}
 
         # Debug trigger for building animation list
         if int(self.config["debug_mode"]) == 2:
             self._debug_print_animation_list()
 
-        # Active Movement & interaction related
-        self.current_action_graph = None  # graph of actions to be performed by this entity after current action
-        self.current_action_vector = None  # current action being executed by this entity
+    def _execute_action_graph(self, action_graph):
+        """Execute ActionGraphV1 received from Harmony Link"""
+        try:
+            # Parse ActionGraphV1 structure according to Go base.go
+            graph_id = action_graph.get("graph_id")
+            graph_vectors = action_graph.get("graph_vector", [])  # Note: "graph_vector" not "actions"
+            graph_actor = action_graph.get("graph_actor")
+            
+            # Verify this action graph is for our entity
+            if graph_actor != self.entity_controller.entity_id:
+                print("ActionGraph actor mismatch: {0} != {1}".format(graph_actor, self.entity_controller.entity_id))
+                return
+            
+            print("Executing ActionGraph {0} with {1} action vectors".format(graph_id, len(graph_vectors)))
+            
+            # Queue all ActionVectors for execution
+            for action_vector in graph_vectors:
+                action_instance = ActionInstance(
+                    name=action_vector["action"],
+                    targets=action_vector.get("targets", []),
+                    transition_mode=action_vector.get("transition_mode", "linear"),
+                    graph_id=graph_id
+                )
+                self.action_queue.append(action_instance)
+                print("Queued action: {0} with {1} targets (state: {2})".format(
+                    action_instance.name, len(action_instance.targets), action_instance.state))
+            
+            # Start execution if not already running
+            if not self.current_action and self.action_queue:
+                self._execute_next_action()
+                
+        except Exception as e:
+            print("Error executing ActionGraph: {0}".format(e))
+            import traceback
+            traceback.print_exc()
+    
+    def _execute_next_action(self):
+        """Execute the next action in the queue"""
+        if not self.action_queue:
+            print("Action queue empty, execution complete")
+            self._print_execution_summary()
+            return
+            
+        self.current_action = self.action_queue.pop(0)
+        print("Starting execution of action: {0} (queue remaining: {1})".format(
+            self.current_action.name, len(self.action_queue)))
+        
+        # Check if we have animation mapping for this action
+        if not self.animation_mapper.has_mapping(self.current_action.name):
+            print("Warning: No animation mapping for action '{0}', skipping".format(self.current_action.name))
+            self._on_action_completed(self.current_action, False)
+            return
+        
+        # Delegate to ActionExecutor
+        self.action_executor.execute_action(self.current_action)
+    
+    def _on_action_completed(self, action_instance, success=True):
+        """Called when current action completes"""
+        if action_instance:
+            # Complete the action timing
+            actual_duration = action_instance.complete_execution(success)
+            
+            # Update performance metrics
+            self.total_actions_executed += 1
+            if not success:
+                self.total_actions_failed += 1
+            
+            if actual_duration:
+                # Update average execution time
+                if self.average_execution_time == 0.0:
+                    self.average_execution_time = actual_duration
+                else:
+                    self.average_execution_time = (self.average_execution_time + actual_duration) / 2.0
+            
+            # Log completion
+            status = "completed" if success else "failed"
+            timing_info = ""
+            if actual_duration:
+                timing_info = " (took {0:.2f}s, expected {1:.2f}s)".format(
+                    actual_duration, action_instance.expected_duration or 0.0)
+            
+            print("Action '{0}' {1}{2}".format(action_instance.name, status, timing_info))
+            
+            # Add to history
+            self.action_history.append({
+                'name': action_instance.name,
+                'state': action_instance.state,
+                'duration': actual_duration,
+                'expected_duration': action_instance.expected_duration,
+                'timestamp': time.time()
+            })
+            
+            # Limit history size
+            if len(self.action_history) > self.max_history_size:
+                self.action_history.pop(0)
+        
+        # Clear current action
+        if self.current_action == action_instance:
+            self.current_action = None
+        
+        # Execute next action if any
+        if self.action_queue:
+            # Add small delay for natural flow between actions
+            game.set_timer(0.5, lambda g: self._execute_next_action())
+        else:
+            print("All actions in ActionGraph completed")
+    
+    def _print_execution_summary(self):
+        """Print execution summary for debugging"""
+        if self.total_actions_executed > 0:
+            success_rate = ((self.total_actions_executed - self.total_actions_failed) / 
+                          float(self.total_actions_executed)) * 100.0
+            print("Action execution summary: {0} total, {1} failed, {2:.1f}% success rate, avg time: {3:.2f}s".format(
+                self.total_actions_executed, self.total_actions_failed, success_rate, self.average_execution_time))
+    
+    def get_action_status(self):
+        """Get current action execution status for monitoring"""
+        return {
+            'current_action': self.current_action.name if self.current_action else None,
+            'current_state': self.current_action.state if self.current_action else None,
+            'queue_length': len(self.action_queue),
+            'total_executed': self.total_actions_executed,
+            'total_failed': self.total_actions_failed,
+            'average_duration': self.average_execution_time,
+            'recent_history': self.action_history[-3:] if len(self.action_history) > 3 else self.action_history
+        }
+    
+    def update_chara(self, chara):
+        """Update character reference for action execution"""
+        self.chara = chara
+        self.action_executor.update_chara(chara)
 
     def _debug_print_animation_list(self):
         # Debug: List all Animations existing in the game
@@ -830,10 +464,8 @@ class MovementHandler(HarmonyClientModuleBase):
         # raise RuntimeError("Dont want to start if debug")
 
     def init_animations_map(self):
-        # This creates a map of
-        self.animations_map = {
-
-        }
+        # Legacy method - keeping for compatibility
+        self.animations_map = {}
 
     def handle_event(
         self,
@@ -857,12 +489,21 @@ class MovementHandler(HarmonyClientModuleBase):
                 position_vector = controller.chara.actor.pos
                 orientation_vector = controller.chara.actor.rot
 
-                # Build definition object
+                # Build definition object - include current action state if available
+                current_action_info = None
+                if hasattr(controller, 'movementModule') and controller.movementModule.current_action:
+                    action = controller.movementModule.current_action
+                    current_action_info = {
+                        "action": action.name,
+                        "targets": action.targets,
+                        "transition_mode": action.transition_mode
+                    }
+
                 character_definition_v1 = {
                     "name": entity_id,
                     "position": [float(position_vector.x), float(position_vector.y), float(position_vector.z)],
                     "orientation": [float(orientation_vector.x), float(orientation_vector.y), float(orientation_vector.z)],
-                    "current_action": controller.movementModule.current_action_vector
+                    "current_action": current_action_info
                 }
                 scene_data["characters"].append(character_definition_v1)
 
@@ -897,7 +538,7 @@ class MovementHandler(HarmonyClientModuleBase):
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
             # Define actions Data Object according to ActionsDataV1 spec
             actions_data = {
-                "actions": _registered_actions
+                "actions": registered_actions
             }
 
             event = HarmonyLinkEvent(
@@ -915,43 +556,10 @@ class MovementHandler(HarmonyClientModuleBase):
 
         # Action Graph received from Harmony Link
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS and event.status == EVENT_STATE_DONE:
-            # Action graph received.
+            # Action graph received from Harmony Link
             action_graph = event.payload
             if int(self.config["debug_mode"]) == 1:
-                print ('[DEBUG][entity-{0}]: Action Graph received: {1}'.format(self.entity_controller.entity_id, json.dumps(action_graph)))
-
-
-    # def countenance_update(self, gender, emotion_name, expression_name):
-    #     emotion = emotions_default['neutral']
-    #     if emotion_name in emotions_default:
-    #         emotion.update(emotions_default[emotion_name])
-    #
-    #     expression = expressions_default['normal']
-    #     if expression_name in expressions_default:
-    #         expression.update(expressions_default[expression_name])
-    #
-    #     # Check for gender specific emotions
-    #     if gender == "F" and emotion_name in emotions_female:
-    #         emotion = emotions_female['neutral']
-    #         if emotion_name in emotions_female:
-    #             emotion.update(emotions_female[emotion_name])
-    #
-    #         expression = expressions_female['normal']
-    #         if expression_name in expressions_female:
-    #             expression.update(expressions_female[expression_name])
-    #     elif gender == "M" and emotion_name in emotions_male:
-    #         emotion = emotions_male['neutral']
-    #         if emotion_name in emotions_male:
-    #             emotion.update(emotions_male[emotion_name])
-    #
-    #         expression = expressions_male['normal']
-    #         if expression_name in expressions_male:
-    #             expression.update(expressions_male[expression_name])
-    #
-    #     # Expression on top of emotion
-    #     target_state = emotion
-    #     target_state.update(expression)
-    #
-    #     for function in target_state:
-    #         if function in char_act_funcs:
-    #             char_act_funcs[function][0](self.chara.actor, target_state[function])
+                print('[DEBUG][entity-{0}]: ActionGraphV1 received: {1}'.format(self.entity_controller.entity_id, json.dumps(action_graph)))
+            
+            # Parse and execute ActionGraphV1
+            self._execute_action_graph(action_graph)
