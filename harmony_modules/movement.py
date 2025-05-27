@@ -489,21 +489,11 @@ class MovementHandler(HarmonyClientModuleBase):
                 position_vector = controller.chara.actor.pos
                 orientation_vector = controller.chara.actor.rot
 
-                # Build definition object - include current action state if available
-                current_action_info = None
-                if hasattr(controller, 'movementModule') and controller.movementModule.current_action:
-                    action = controller.movementModule.current_action
-                    current_action_info = {
-                        "action": action.name,
-                        "targets": action.targets,
-                        "transition_mode": action.transition_mode
-                    }
-
                 character_definition_v1 = {
                     "name": entity_id,
                     "position": [float(position_vector.x), float(position_vector.y), float(position_vector.z)],
                     "orientation": [float(orientation_vector.x), float(orientation_vector.y), float(orientation_vector.z)],
-                    "current_action": current_action_info
+                    "current_action": None
                 }
                 scene_data["characters"].append(character_definition_v1)
 
