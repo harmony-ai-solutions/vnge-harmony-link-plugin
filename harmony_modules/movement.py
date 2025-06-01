@@ -277,7 +277,7 @@ class MovementHandler(HarmonyClientModuleBase):
         try:
             # Parse ActionGraphV1 structure according to Go base.go
             graph_id = action_graph.get("graph_id")
-            graph_vectors = action_graph.get("graph_vector", [])  # Note: "graph_vector" not "actions"
+            graph_vectors = action_graph.get("graph_vector", [])
             graph_actor = action_graph.get("graph_actor")
             
             # Verify this action graph is for our entity
