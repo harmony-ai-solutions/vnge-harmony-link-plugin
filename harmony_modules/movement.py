@@ -20,6 +20,82 @@ import json
 
 from movement_definitions import registered_actions
 
+# Cognitive Integration Stub for future AI system integration
+class CognitiveIntegrationStub:
+    def __init__(self, movement_handler):
+        self.movement_handler = movement_handler
+        
+    def handle_decision_request(self, decision_request):
+        """Future integration point for entity cognitive system"""
+        if not decision_request:
+            return {"selected_option": "accept", "reasoning": "default"}
+            
+        decision_type = decision_request.get("decision_type", "")
+        context = decision_request.get("context", {})
+        
+        print("Cognitive Decision Request: {0} for entity {1}".format(
+            decision_type, decision_request.get("entity_id", "unknown")))
+        
+        if decision_type == "interaction_consent":
+            return self._simple_consent_decision(decision_request)
+        
+        return {"selected_option": "accept", "reasoning": "default decision"}
+    
+    def _simple_consent_decision(self, request):
+        """Simple stub for consent decisions - future cognitive system hook"""
+        context = request.get("context", {})
+        actor = context.get("actor", "")
+        action = context.get("action", "")
+        action_intimacy = context.get("action_intimacy", 0.5)
+        
+        print("Processing consent for action '{0}' from '{1}' (intimacy: {2:.2f})".format(
+            action, actor, action_intimacy))
+        
+        # Simple decision logic based on action intimacy
+        if action_intimacy > 0.8:
+            return {
+                "selected_option": "negotiate",
+                "reasoning": "High intimacy action requires discussion",
+                "emotional_state": "cautious"
+            }
+        elif action_intimacy > 0.6:
+            return {
+                "selected_option": "negotiate", 
+                "reasoning": "Moderate intimacy action - need to discuss",
+                "emotional_state": "hesitant"
+            }
+        else:
+            return {
+                "selected_option": "accept",
+                "reasoning": "Low intimacy action accepted",
+                "emotional_state": "neutral"
+            }
+    
+    def process_relationship_context(self, relationship_context):
+        """Process relationship context for decision making"""
+        if not relationship_context:
+            return
+            
+        relationship_score = relationship_context.get("relationship_score", 0.5)
+        trust_level = relationship_context.get("trust_level", 0.4)
+        interaction_count = relationship_context.get("interaction_count", 0)
+        
+        print("Relationship Context: score={0:.2f}, trust={1:.2f}, interactions={2}".format(
+            relationship_score, trust_level, interaction_count))
+    
+    def process_subjective_context(self, subjective_context):
+        """Process subjective context for decision making"""
+        if not subjective_context:
+            return
+            
+        mood = subjective_context.get("entity_mood", "neutral")
+        energy = subjective_context.get("energy_level", 0.8)
+        stress = subjective_context.get("stress", 0.2)
+        goals = subjective_context.get("current_goals", [])
+        
+        print("Subjective Context: mood={0}, energy={1:.2f}, stress={2:.2f}, goals={3}".format(
+            mood, energy, stress, goals))
+
 # Action states for tracking execution lifecycle
 class ActionState:
     QUEUED = "queued"
@@ -254,6 +330,9 @@ class MovementHandler(HarmonyClientModuleBase):
         self.animation_mapper = AnimationMapper()
         self.action_executor = ActionExecutor(self)
         
+        # Cognitive Integration - Future AI system integration stub
+        self.cognitive_stub = CognitiveIntegrationStub(self)
+        
         # Action execution state
         self.action_queue = []  # Queue of ActionInstance objects to execute
         self.current_action = None  # Currently executing ActionInstance
@@ -295,6 +374,10 @@ class MovementHandler(HarmonyClientModuleBase):
                     transition_mode=action_vector.get("transition_mode", "linear"),
                     graph_id=graph_id
                 )
+                
+                # Process cognitive integration for each target
+                self._process_cognitive_context(action_instance)
+                
                 self.action_queue.append(action_instance)
                 print("Queued action: {0} with {1} targets (state: {2})".format(
                     action_instance.name, len(action_instance.targets), action_instance.state))
@@ -398,6 +481,32 @@ class MovementHandler(HarmonyClientModuleBase):
             'average_duration': self.average_execution_time,
             'recent_history': self.action_history[-3:] if len(self.action_history) > 3 else self.action_history
         }
+    
+    def _process_cognitive_context(self, action_instance):
+        """Process cognitive integration context for action targets - Future AI system hook"""
+        for target in action_instance.targets:
+            # Process relationship context if present
+            relationship_context = target.get("relationship_context")
+            if relationship_context:
+                self.cognitive_stub.process_relationship_context(relationship_context)
+            
+            # Process subjective context if present  
+            subjective_context = target.get("subjective_context")
+            if subjective_context:
+                self.cognitive_stub.process_subjective_context(subjective_context)
+            
+            # Process decision requests if present
+            decision_request = target.get("decision_request")
+            if decision_request:
+                decision_response = self.cognitive_stub.handle_decision_request(decision_request)
+                print("Cognitive Decision Response: {0} -> {1} ({2})".format(
+                    decision_request.get("decision_id", "unknown"),
+                    decision_response.get("selected_option", "unknown"),
+                    decision_response.get("reasoning", "no reason provided")
+                ))
+                
+                # Store decision response in target for future reference
+                target["decision_response"] = decision_response
     
     def update_chara(self, chara):
         """Update character reference for action execution"""
