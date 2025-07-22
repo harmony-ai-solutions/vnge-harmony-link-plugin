@@ -45,6 +45,7 @@ EVENT_TYPE_TTS_GENERATE_SPEECH = 'TTS_GENERATE_SPEECH'
 
 # Perception
 EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE = 'PERCEPTION_ACTOR_UTTERANCE'
+EVENT_TYPE_PERCEPTION_ACTOR_ACTION = 'PERCEPTION_ACTOR_ACTION'
 
 # Utterance Types
 UTTERANCE_COMBINED = 'UTTERANCE_COMBINED'
@@ -157,5 +158,3 @@ class CountenanceState:
 def get_actors_distance(actor1, actor2):
     actor1_pos = actor1.pos()
     actor2_pos = actor2.pos()
-
-

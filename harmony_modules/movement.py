@@ -20,82 +20,6 @@ import json
 
 from movement_definitions import registered_actions
 
-# Cognitive Integration Stub for future AI system integration
-class CognitiveIntegrationStub:
-    def __init__(self, movement_handler):
-        self.movement_handler = movement_handler
-        
-    def handle_decision_request(self, decision_request):
-        """Future integration point for entity cognitive system"""
-        if not decision_request:
-            return {"selected_option": "accept", "reasoning": "default"}
-            
-        decision_type = decision_request.get("decision_type", "")
-        context = decision_request.get("context", {})
-        
-        print("Cognitive Decision Request: {0} for entity {1}".format(
-            decision_type, decision_request.get("entity_id", "unknown")))
-        
-        if decision_type == "interaction_consent":
-            return self._simple_consent_decision(decision_request)
-        
-        return {"selected_option": "accept", "reasoning": "default decision"}
-    
-    def _simple_consent_decision(self, request):
-        """Simple stub for consent decisions - future cognitive system hook"""
-        context = request.get("context", {})
-        actor = context.get("actor", "")
-        action = context.get("action", "")
-        action_intimacy = context.get("action_intimacy", 0.5)
-        
-        print("Processing consent for action '{0}' from '{1}' (intimacy: {2:.2f})".format(
-            action, actor, action_intimacy))
-        
-        # Simple decision logic based on action intimacy
-        if action_intimacy > 0.8:
-            return {
-                "selected_option": "negotiate",
-                "reasoning": "High intimacy action requires discussion",
-                "emotional_state": "cautious"
-            }
-        elif action_intimacy > 0.6:
-            return {
-                "selected_option": "negotiate", 
-                "reasoning": "Moderate intimacy action - need to discuss",
-                "emotional_state": "hesitant"
-            }
-        else:
-            return {
-                "selected_option": "accept",
-                "reasoning": "Low intimacy action accepted",
-                "emotional_state": "neutral"
-            }
-    
-    def process_relationship_context(self, relationship_context):
-        """Process relationship context for decision making"""
-        if not relationship_context:
-            return
-            
-        relationship_score = relationship_context.get("relationship_score", 0.5)
-        trust_level = relationship_context.get("trust_level", 0.4)
-        interaction_count = relationship_context.get("interaction_count", 0)
-        
-        print("Relationship Context: score={0:.2f}, trust={1:.2f}, interactions={2}".format(
-            relationship_score, trust_level, interaction_count))
-    
-    def process_subjective_context(self, subjective_context):
-        """Process subjective context for decision making"""
-        if not subjective_context:
-            return
-            
-        mood = subjective_context.get("entity_mood", "neutral")
-        energy = subjective_context.get("energy_level", 0.8)
-        stress = subjective_context.get("stress", 0.2)
-        goals = subjective_context.get("current_goals", [])
-        
-        print("Subjective Context: mood={0}, energy={1:.2f}, stress={2:.2f}, goals={3}".format(
-            mood, energy, stress, goals))
-
 # Action states for tracking execution lifecycle
 class ActionState:
     QUEUED = "queued"
@@ -318,7 +242,6 @@ class ActionExecutor:
 
 # MovementHandler - module main class
 class MovementHandler(HarmonyClientModuleBase):
-    global registered_actions
 
     def __init__(self, entity_controller, movement_config):
         # execute the base constructor
@@ -329,9 +252,6 @@ class MovementHandler(HarmonyClientModuleBase):
         # Movement execution components
         self.animation_mapper = AnimationMapper()
         self.action_executor = ActionExecutor(self)
-        
-        # Cognitive Integration - Future AI system integration stub
-        self.cognitive_stub = CognitiveIntegrationStub(self)
         
         # Action execution state
         self.action_queue = []  # Queue of ActionInstance objects to execute
@@ -363,10 +283,13 @@ class MovementHandler(HarmonyClientModuleBase):
             if graph_actor != self.entity_controller.entity_id:
                 print("ActionGraph actor mismatch: {0} != {1}".format(graph_actor, self.entity_controller.entity_id))
                 return
-            
-            print("Executing ActionGraph {0} with {1} action vectors".format(graph_id, len(graph_vectors)))
+
+            if len(graph_vectors) == 0:
+                print("ActionGraph {0} has no vectors, ignoring...".format(graph_id))
+                return
             
             # Queue all ActionVectors for execution
+            print("Executing ActionGraph {0} with {1} action vectors".format(graph_id, len(graph_vectors)))
             for action_vector in graph_vectors:
                 action_instance = ActionInstance(
                     name=action_vector["action"],
@@ -376,7 +299,7 @@ class MovementHandler(HarmonyClientModuleBase):
                 )
                 
                 # Process cognitive integration for each target
-                self._process_cognitive_context(action_instance)
+                self._process_target_behaviour(action_instance)
                 
                 self.action_queue.append(action_instance)
                 print("Queued action: {0} with {1} targets (state: {2})".format(
@@ -482,31 +405,54 @@ class MovementHandler(HarmonyClientModuleBase):
             'recent_history': self.action_history[-3:] if len(self.action_history) > 3 else self.action_history
         }
     
-    def _process_cognitive_context(self, action_instance):
-        """Process cognitive integration context for action targets - Future AI system hook"""
+    def _process_target_behaviour(self, action_instance):
+        """Process target behaviour - Route action events to target entities' perception handlers"""
+
         for target in action_instance.targets:
-            # Process relationship context if present
-            relationship_context = target.get("relationship_context")
-            if relationship_context:
-                self.cognitive_stub.process_relationship_context(relationship_context)
+            target_name = target.get("name")
             
-            # Process subjective context if present  
-            subjective_context = target.get("subjective_context")
-            if subjective_context:
-                self.cognitive_stub.process_subjective_context(subjective_context)
-            
-            # Process decision requests if present
-            decision_request = target.get("decision_request")
-            if decision_request:
-                decision_response = self.cognitive_stub.handle_decision_request(decision_request)
-                print("Cognitive Decision Response: {0} -> {1} ({2})".format(
-                    decision_request.get("decision_id", "unknown"),
-                    decision_response.get("selected_option", "unknown"),
-                    decision_response.get("reasoning", "no reason provided")
-                ))
+            # Skip if no target name specified
+            if not target_name:
+                continue
                 
-                # Store decision response in target for future reference
-                target["decision_response"] = decision_response
+            # Check if target is another entity (not an object)
+            target_entity_controller = None
+            for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
+                if entity_id == target_name:
+                    target_entity_controller = controller
+                    break
+            
+            # If target is another entity, route action event to its perception handler
+            if target_entity_controller and target_entity_controller.perceptionModule:
+                print("Routing action '{0}' from entity '{1}' to target entity '{2}' perception handler".format(
+                    action_instance.name, self.entity_controller.entity_id, target_name))
+                
+                # Create action event payload with comprehensive context
+                action_payload = {
+                    "actor_entity_id": self.entity_controller.entity_id,
+                    "target_entity_id": target_name,
+                    "action_name": action_instance.name,
+                    "action_graph_id": action_instance.graph_id,
+                    "transition_mode": action_instance.transition_mode,
+                    "requires_consent": target.get("requires_consent", False),
+                    "look_at_target": target.get("look_at_target", False),
+                }
+                
+                # Create and send action event to target entity's perception handler
+                action_event = HarmonyLinkEvent(
+                    event_id='actor_{0}_action_{1}_to_{2}'.format(self.entity_controller.entity_id, action_instance.name, target_name),
+                    event_type=EVENT_TYPE_PERCEPTION_ACTOR_ACTION,
+                    status=EVENT_STATE_DONE,
+                    payload=action_payload
+                )
+                
+                # Route to target entity's perception handler
+                target_entity_controller.perceptionModule.handle_event(action_event)
+                
+                print("Action event routed successfully to entity '{0}' perception handler".format(target_name))
+            else:
+                # Target is not an entity or has no perception module
+                print("Target '{0}' is not an entity or has no perception module - skipping action routing".format(target_name))
     
     def update_chara(self, chara):
         """Update character reference for action execution"""
@@ -650,8 +596,7 @@ class MovementHandler(HarmonyClientModuleBase):
             if send_success:
                 print('Harmony Link: Available actions provided for entity "{0}"'.format(self.entity_controller.entity_id))
             else:
-                print('Harmony Link: Failed to transmit available actions for entity "{0}"'.format(
-                    self.entity_controller.entity_id))
+                print('Harmony Link: Failed to transmit available actions for entity "{0}"'.format(self.entity_controller.entity_id))
 
         # Action Graph received from Harmony Link
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS and event.status == EVENT_STATE_DONE:

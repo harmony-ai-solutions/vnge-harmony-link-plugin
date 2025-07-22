@@ -39,6 +39,34 @@ class PerceptionHandler(HarmonyClientModuleBase):
             event  # HarmonyLinkEvent
     ):
 
+        if event.event_type == EVENT_TYPE_PERCEPTION_ACTOR_ACTION and event.status == EVENT_STATE_DONE:
+            # Action event received from another entity's movement handler
+            action_data = event.payload
+            actor_entity_id = action_data.get("actor_entity_id", "unknown")
+            action_name = action_data.get("action_name", "unknown")
+            
+            print('Entity "{0}" - Perception module: Received action "{1}" from entity "{2}"'.format(
+                self.entity_controller.entity_id,
+                action_name,
+                actor_entity_id
+            ))
+
+            action_actor = self.entity_controller.game.scenef_get_actor(actor_entity_id)
+            if action_actor is None:
+                 print 'Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
+                    self.entity_controller.entity_id,
+                    actor_entity_id
+                )                 
+
+            # Forward action event to Harmony Link backend for cognitive evaluation       
+            # event = HarmonyLinkEvent(
+            #     event_id='actor_{0}_action_target_from_{1}'.format(self.entity_controller.entity_id, actor_entity_id),
+            #     event_type=EVENT_TYPE_USER_UTTERANCE,
+            #     status=EVENT_STATE_NEW,
+            #     payload=action_data
+            # )
+            # self.backend_connector.send_event(event)
+
         if event.event_type == EVENT_TYPE_PERCEPTION_ACTOR_UTTERANCE and event.status == EVENT_STATE_DONE:
             # Get the chara actor for this entity
             utterance_data = event.payload
@@ -78,6 +106,3 @@ class PerceptionHandler(HarmonyClientModuleBase):
     def check_for_event_recognition(self, event, event_actor):
         # TODO
         return
-
-
-
