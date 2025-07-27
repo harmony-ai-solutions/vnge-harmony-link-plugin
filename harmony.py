@@ -112,7 +112,7 @@ class EntityController:  # TODO: Refactor this to use inheritance from base clas
             return
 
         # Set active
-        print 'Starting ActorEntityController for entity \'{0}\'...'.format(self.entity_id)
+        print('Starting ActorEntityController for entity \'{0}\'...'.format(self.entity_id))
         self.is_active = True
 
         # Initialize Character on Harmony Link
@@ -126,7 +126,7 @@ class EntityController:  # TODO: Refactor this to use inheritance from base clas
         )
         init_send_success = self.connector.send_event(init_event)
         if init_send_success:
-            print 'Harmony Link: Initializing entity \'{0}\'...'.format(self.entity_id)
+            print('Harmony Link: Initializing entity \'{0}\'...'.format(self.entity_id))
         else:
             raise RuntimeError('Harmony Link: Failed to sent entity initialize Event for entity \'{0}\'.'.format(self.entity_id))
 
@@ -393,7 +393,7 @@ def real_start(game):
 
 
 def _error_abort(game, error):
-    print ("**** Error aborted ****\n>>" + error)
+    print("**** Error aborted ****\n>>" + error)
     shutdown(game)
 
 

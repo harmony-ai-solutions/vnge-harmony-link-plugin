@@ -53,10 +53,10 @@ class PerceptionHandler(HarmonyClientModuleBase):
 
             action_actor = self.entity_controller.game.scenef_get_actor(actor_entity_id)
             if action_actor is None:
-                 print 'Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
+                 print('Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
                     self.entity_controller.entity_id,
                     actor_entity_id
-                )                 
+                ))
 
             # Forward action event to Harmony Link backend for cognitive evaluation       
             # event = HarmonyLinkEvent(
@@ -73,10 +73,10 @@ class PerceptionHandler(HarmonyClientModuleBase):
             event_entity_id = utterance_data["entity_id"]
             event_actor = self.entity_controller.game.scenef_get_actor(event_entity_id)
             if event_actor is None:
-                print 'Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
+                print('Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
                     self.entity_controller.entity_id,
                     event_entity_id
-                )
+                ))
 
                 # Forward it as explicit user utterance event to harmony link for this entity
                 event = HarmonyLinkEvent(

@@ -10,15 +10,12 @@ from harmony_modules.common import *
 
 # VNGE
 from Studio import Info
-from vngameengine import vnge_game as game
-from vnlibfaceexpressions import conf_neo_male, conf_neo_female
-from vnactor import char_act_funcs
 
-from threading import Thread
 import time
 import json
 
 from movement_definitions import registered_actions
+
 
 # Action states for tracking execution lifecycle
 class ActionState:
@@ -27,6 +24,7 @@ class ActionState:
     COMPLETED = "completed"
     FAILED = "failed"
     TIMEOUT = "timeout"
+
 
 # ActionInstance - represents a single action to be executed with state and timing
 class ActionInstance:
@@ -74,6 +72,7 @@ class ActionInstance:
             return self.get_execution_time() > self.max_execution_time
         return False
 
+
 # AnimationMapper - maps action names to game animation parameters
 class AnimationMapper:
     def __init__(self):
@@ -105,6 +104,7 @@ class AnimationMapper:
         """Check if action has animation mapping"""
         return action_name in self.animation_mappings
 
+
 # ActionExecutor - executes individual actions in the game
 class ActionExecutor:
     def __init__(self, movement_handler):
@@ -120,19 +120,20 @@ class ActionExecutor:
         """Main action execution dispatcher"""
         if not self.chara:
             print("Warning: No character available for action execution")
-            self.movement_handler._on_action_completed(action_instance, False)
+            self.movement_handler.on_action_completed(action_instance, False)
             return
             
         action_name = action_instance.name
         print("Executing action: {0}".format(action_name))
+
+        # Check if we have animation mapping for this action
+        if not self.movement_handler.animation_mapper.has_mapping(action_name):
+            print("Warning: No animation mapping for action '{0}', skipping".format(action_name))
+            self.movement_handler.on_action_completed(action_instance, False)
+            return
         
         # Get animation mapping for this action
         animation_mapping = self.movement_handler.animation_mapper.get_animation_mapping(action_name)
-        
-        if not animation_mapping:
-            print("No animation mapping found for action: {0}".format(action_name))
-            self.movement_handler._on_action_completed(action_instance, False)
-            return
         
         # Start execution timing
         expected_duration = animation_mapping.get("duration", 2.0)
@@ -140,6 +141,10 @@ class ActionExecutor:
         
         # Set up timeout monitoring
         self._setup_timeout_monitoring(action_instance)
+
+        # Process integration for targets
+        self.movement_handler.trigger_target_perception_check(action_instance)
+        # TODO: trigger perception for other entities who are not explicitly targeted but may perceive the action
         
         # Execute the action based on type
         if action_name in ["move", "walk", "run"]:
@@ -160,10 +165,10 @@ class ActionExecutor:
                 print("Action '{0}' timed out after {1:.2f}s".format(
                     action_instance.name, action_instance.get_execution_time()))
                 action_instance.state = ActionState.TIMEOUT
-                self.movement_handler._on_action_completed(action_instance, False)
+                self.movement_handler.on_action_completed(action_instance, False)
         
         # Schedule timeout check
-        game.set_timer(action_instance.max_execution_time, lambda g: check_timeout())
+        self.entity_controller.gameset_timer(action_instance.max_execution_time, lambda g: check_timeout())
     
     def _execute_movement_action(self, action, mapping):
         """Handle movement actions (walk, run, etc.)"""
@@ -176,16 +181,16 @@ class ActionExecutor:
                 mapping["speed"]
             )
             
-            # Handle targets (look at target if specified)
-            self._handle_targets(action.targets)
+            # Adjust current entity based on target details
+            self._adjust_for_targets(action.targets)
             
             # Set timer for action completion
             duration = mapping.get("duration", 3.0)
-            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
             print("Error executing movement action {0}: {1}".format(action.name, e))
-            self.movement_handler._on_action_completed(action, False)
+            self.movement_handler.on_action_completed(action, False)
     
     def _execute_posture_action(self, action, mapping):
         """Handle posture changes (sit, stand, lay down)"""
@@ -196,15 +201,16 @@ class ActionExecutor:
                 mapping["no"],
                 mapping["speed"]
             )
-            
-            self._handle_targets(action.targets)
+
+            # Adjust current entity based on target details
+            self._adjust_for_targets(action.targets)
             
             duration = mapping.get("duration", 2.0)
-            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
             print("Error executing posture action {0}: {1}".format(action.name, e))
-            self.movement_handler._on_action_completed(action, False)
+            self.movement_handler.on_action_completed(action, False)
     
     def _execute_simple_action(self, action, mapping):
         """Handle simple animations (jumps, gestures, etc.)"""
@@ -215,30 +221,27 @@ class ActionExecutor:
                 mapping["no"],
                 mapping["speed"]
             )
-            
-            self._handle_targets(action.targets)
+
+            # Adjust current entity based on target details
+            self._adjust_for_targets(action.targets)
             
             duration = mapping.get("duration", 1.5)
-            game.set_timer(duration, lambda g: self.movement_handler._on_action_completed(action, True))
+            self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
             print("Error executing simple action {0}: {1}".format(action.name, e))
-            self.movement_handler._on_action_completed(action, False)
+            self.movement_handler.on_action_completed(action, False)
     
-    def _handle_targets(self, targets):
-        """Handle action targets (look_at_target, etc.)"""
+    def _adjust_for_targets(self, targets):
+        """Adjust for targets (look_at_target, etc.)"""
         for target in targets:
             target_name = target.get("name")
             look_at_target = target.get("look_at_target", False)
-            requires_consent = target.get("requires_consent", False)
             
             if look_at_target and target_name:
                 # TODO: Implement look-at functionality
                 print("Should look at target: {0}".format(target_name))
-            
-            if requires_consent:
-                # TODO: Implement consent checking
-                print("Action requires consent from: {0}".format(target_name))
+
 
 # MovementHandler - module main class
 class MovementHandler(HarmonyClientModuleBase):
@@ -298,9 +301,6 @@ class MovementHandler(HarmonyClientModuleBase):
                     graph_id=graph_id
                 )
                 
-                # Process cognitive integration for each target
-                self._process_target_behaviour(action_instance)
-                
                 self.action_queue.append(action_instance)
                 print("Queued action: {0} with {1} targets (state: {2})".format(
                     action_instance.name, len(action_instance.targets), action_instance.state))
@@ -324,17 +324,11 @@ class MovementHandler(HarmonyClientModuleBase):
         self.current_action = self.action_queue.pop(0)
         print("Starting execution of action: {0} (queue remaining: {1})".format(
             self.current_action.name, len(self.action_queue)))
-        
-        # Check if we have animation mapping for this action
-        if not self.animation_mapper.has_mapping(self.current_action.name):
-            print("Warning: No animation mapping for action '{0}', skipping".format(self.current_action.name))
-            self._on_action_completed(self.current_action, False)
-            return
-        
+
         # Delegate to ActionExecutor
         self.action_executor.execute_action(self.current_action)
     
-    def _on_action_completed(self, action_instance, success=True):
+    def on_action_completed(self, action_instance, success=True):
         """Called when current action completes"""
         if action_instance:
             # Complete the action timing
@@ -381,7 +375,7 @@ class MovementHandler(HarmonyClientModuleBase):
         # Execute next action if any
         if self.action_queue:
             # Add small delay for natural flow between actions
-            game.set_timer(0.5, lambda g: self._execute_next_action())
+            self.entity_controller.gameset_timer(0.5, lambda g: self._execute_next_action())
         else:
             print("All actions in ActionGraph completed")
     
@@ -405,8 +399,8 @@ class MovementHandler(HarmonyClientModuleBase):
             'recent_history': self.action_history[-3:] if len(self.action_history) > 3 else self.action_history
         }
     
-    def _process_target_behaviour(self, action_instance):
-        """Process target behaviour - Route action events to target entities' perception handlers"""
+    def trigger_target_perception_check(self, action_instance):
+        """routes action events to target entities' perception handlers, so they may react to them"""
 
         for target in action_instance.targets:
             target_name = target.get("name")
@@ -421,38 +415,40 @@ class MovementHandler(HarmonyClientModuleBase):
                 if entity_id == target_name:
                     target_entity_controller = controller
                     break
-            
-            # If target is another entity, route action event to its perception handler
-            if target_entity_controller and target_entity_controller.perceptionModule:
-                print("Routing action '{0}' from entity '{1}' to target entity '{2}' perception handler".format(
-                    action_instance.name, self.entity_controller.entity_id, target_name))
-                
-                # Create action event payload with comprehensive context
-                action_payload = {
-                    "actor_entity_id": self.entity_controller.entity_id,
-                    "target_entity_id": target_name,
-                    "action_name": action_instance.name,
-                    "action_graph_id": action_instance.graph_id,
-                    "transition_mode": action_instance.transition_mode,
-                    "requires_consent": target.get("requires_consent", False),
-                    "look_at_target": target.get("look_at_target", False),
-                }
-                
-                # Create and send action event to target entity's perception handler
-                action_event = HarmonyLinkEvent(
-                    event_id='actor_{0}_action_{1}_to_{2}'.format(self.entity_controller.entity_id, action_instance.name, target_name),
-                    event_type=EVENT_TYPE_PERCEPTION_ACTOR_ACTION,
-                    status=EVENT_STATE_DONE,
-                    payload=action_payload
-                )
-                
-                # Route to target entity's perception handler
-                target_entity_controller.perceptionModule.handle_event(action_event)
-                
-                print("Action event routed successfully to entity '{0}' perception handler".format(target_name))
-            else:
-                # Target is not an entity or has no perception module
-                print("Target '{0}' is not an entity or has no perception module - skipping action routing".format(target_name))
+
+            # Evaluate Target
+            if target_entity_controller is None:
+                print("Target '{0}' is not a harmony link entity - skipping processing".format(target_name))
+                continue
+            if target_entity_controller.perceptionModule is None or not target_entity_controller.perceptionModule.is_active():
+                # Target entity has no active perception module
+                print("Target '{0}' is not a harmony link entity - skipping processing".format(target_name))
+                continue
+
+            print("Routing action '{0}' from entity '{1}' to perception handler of target entity '{2}'".format(
+                action_instance.name, self.entity_controller.entity_id, target_name))
+
+            # Create action event payload with comprehensive context
+            action_payload = {
+                "actor_entity_id": self.entity_controller.entity_id,
+                "target_entity_id": target_name,
+                "action_name": action_instance.name,
+                "action_graph_id": action_instance.graph_id,
+                "transition_mode": action_instance.transition_mode,
+            }
+
+            # Create and send action event to target entity's perception handler
+            action_event = HarmonyLinkEvent(
+                event_id='actor_{0}_action_{1}_forward_to_{2}'.format(self.entity_controller.entity_id, action_instance.name, target_name),
+                event_type=EVENT_TYPE_PERCEPTION_ACTOR_ACTION,
+                status=EVENT_STATE_DONE,
+                payload=action_payload
+            )
+
+            # Route to target entity's perception handler
+            target_entity_controller.perceptionModule.handle_event(action_event)
+            print("Action event routed successfully to perception handler of entity '{0}'".format(target_name))
+
     
     def update_chara(self, chara):
         """Update character reference for action execution"""
