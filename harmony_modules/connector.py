@@ -12,18 +12,17 @@ _http_port_allocation_step = 0
 
 try:
     from System.Net import WebSockets
-    from System.Net.WebSockets import WebSocketMessageType
+    from System.Net.WebSockets import WebSocketMessageType, WebSocketState
     from System import AggregateException, InvalidOperationException
     from System.Threading import CancellationTokenSource, CancellationToken
-    print 'WebSocket protocol supported. Communication will use WebSockets if enabled.'
+    print('WebSocket protocol supported. Communication will use WebSockets if enabled.')
     _use_websockets = True
 except Exception as e:
     from System.Net import HttpWebRequest
     from System.IO import StreamReader
-
     import urllib
     import BaseHTTPServer
-    print 'WebSocket protocol not supported. Fallback to Async HTTP.'
+    print('WebSocket protocol not supported. Fallback to Async HTTP.')
 
 from harmony_modules.common import HarmonyLinkEvent
 from threading import Thread, current_thread
@@ -44,7 +43,7 @@ def harmony_http_handler_factory(connector_thread):
             session_id = self.headers['Harmony-Session-Id']
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            print 'DEBUG: ConnectorEventThread Received POST message: {0}'.format(post_data)
+            print('DEBUG: ConnectorEventThread Received POST message: {0}'.format(post_data))
             # Forward received data to connector
             connector_thread.process_event_message(message_string=post_data, session_id=session_id)
             # Send OK back to sender
@@ -68,7 +67,7 @@ class ConnectorEventThread(Thread):
             # Set params
             self.ws_endpoint = ws_endpoint
             self.ws_buffer_size = ws_buffer_size
-            # Initialize WebSocket Handling
+            # Initialize WebSocket Handling with unified cancellation token
             self.cts = CancellationTokenSource()
             self.web_socket_task = None
             self.web_socket_receive_task = None
@@ -90,7 +89,7 @@ class ConnectorEventThread(Thread):
                     self.http_server.server_close()
                     raise
             except SystemError:
-                print 'localhost not working, trying with IP 127.0.0.1 ...'
+                print('localhost not working, trying with IP 127.0.0.1 ...')
                 server_address = ('127.0.0.1', self.http_listen_port)
                 self.http_server = BaseHTTPServer.HTTPServer(
                     server_address,
@@ -107,28 +106,38 @@ class ConnectorEventThread(Thread):
 
     def run(self):
         if _use_websockets:
-            # Connect to Web Socket Backend
-            try:
-                self.web_socket_task = self.handler.web_socket_client.ConnectAsync(Uri(self.ws_endpoint), CancellationToken.None)
-                self.web_socket_task.Wait()  # This Directive ensures the task runs in background & handles WS heartbeat
-            except AggregateException as e:
-                print 'Unable to start websocket communication with Harmony Link: {0}'.format(e.ToString())
-                print 'Shutting down...'
+            # Connect to Web Socket Backend with improved error handling
+            if not self._establish_websocket_connection():
+                print('Failed to establish WebSocket connection. Shutting down...')
                 self.handler.shutdown_func(self.handler.game)
                 return
+
             # Init buffer
             connection_buffer = Array.CreateInstance(Byte, self.ws_buffer_size)
             connection_buffer_segment = ArraySegment[Byte](connection_buffer)
+            
             # Set running
-            print 'Starting ConnectorEventThread'
+            print('Starting ConnectorEventThread')
             self.running = True
+            
             while self.running:
+                # Check connection state before attempting to receive
+                if not self._is_websocket_connected():
+                    print('WebSocket connection lost. Attempting to reconnect...')
+                    if not self._establish_websocket_connection():
+                        print('Failed to reconnect WebSocket. Shutting down...')
+                        self.handler.shutdown_func(self.handler.game)
+                        break
+                    # Reinitialize buffer after reconnection
+                    connection_buffer = Array.CreateInstance(Byte, self.ws_buffer_size)
+                    connection_buffer_segment = ArraySegment[Byte](connection_buffer)
+
                 # Creates an async receive task and monitors until we get data from the backend
                 try:
                     self.web_socket_receive_task = self.handler.web_socket_client.ReceiveAsync(connection_buffer_segment, self.cts.Token)
                     self.web_socket_receive_task.Wait()
 
-                    print "message received"
+                    print("message received")
 
                     # Process data if task returns text data
                     if self.web_socket_receive_task.Result.MessageType == WebSocketMessageType.Text:
@@ -139,37 +148,106 @@ class ConnectorEventThread(Thread):
                         # Not a text message
                         continue
                 except AggregateException as e:
-                    print 'websocket communication with Harmony Link failed: {0}'.format(e.ToString())
-                    print 'Shutting down...'
+                    print('websocket communication with Harmony Link failed: {0}'.format(e.ToString()))
+                    # Check if this is a cancellation (normal shutdown) or an error
+                    if not self.cts.Token.IsCancellationRequested:
+                        print('Unexpected WebSocket error. Attempting to reconnect...')
+                        # Brief delay before reconnection attempt
+                        time.sleep(2)
+                        continue
+                    else:
+                        print('WebSocket connection cancelled (normal shutdown)')
+                        break
+                except Exception as e:
+                    print('Unexpected error in WebSocket receive loop: {0}'.format(str(e)))
+                    print('Shutting down...')
                     self.handler.shutdown_func(self.handler.game)
+                    break
 
-            print 'ConnectorEventThread finished.'
+            print('ConnectorEventThread finished.')
         else:
             # Open HTTP Listenener and wait for messages
             # Set running
-            print 'Starting ConnectorEventThread'
+            print('Starting ConnectorEventThread')
             self.running = True
             self.http_server.serve_forever()
-            print 'ConnectorEventThread finished.'
+            print('ConnectorEventThread finished.')
+
+    def _establish_websocket_connection(self):
+        """Establish WebSocket connection with proper error handling and state verification"""
+        max_retries = 3
+        retry_delay = 2  # seconds
+        
+        for attempt in range(max_retries):
+            try:
+                print('Attempting WebSocket connection (attempt {0}/{1})...'.format(attempt + 1, max_retries))
+
+                # Create connection task with timeout
+                connection_timeout = CancellationTokenSource()
+                connection_timeout.CancelAfter(10000)  # 10 second timeout
+                
+                self.web_socket_task = self.handler.web_socket_client.ConnectAsync(
+                    Uri(self.ws_endpoint), 
+                    connection_timeout.Token
+                )
+                self.web_socket_task.Wait()
+                
+                # Verify connection state
+                if self._is_websocket_connected():
+                    print('WebSocket connection established successfully')
+                    return True
+                else:
+                    print('WebSocket connection failed - invalid state: {0}'.format(self.handler.web_socket_client.State))
+
+            except AggregateException as e:
+                print('WebSocket connection attempt {0} failed: {1}'.format(attempt + 1, e.ToString()))
+
+            except Exception as e:
+                print('Unexpected error during WebSocket connection attempt {0}: {1}'.format(attempt + 1, str(e)))
+
+            # Wait before retry (except on last attempt)
+            if attempt < max_retries - 1:
+                print('Waiting {0} seconds before retry...'.format(retry_delay))
+                time.sleep(retry_delay)
+                # Try to close and recreate the WebSocket client for clean retry
+                try:
+                    if self.handler.web_socket_client.State != WebSocketState.Closed:
+                        self.handler.web_socket_client.CloseAsync(WebSockets.WebSocketCloseStatus.NormalClosure, "Retry", getattr(CancellationToken, 'None')).Wait()
+                except:
+                    pass  # Ignore errors during cleanup
+                
+                # Recreate WebSocket client for next attempt
+                self.handler.web_socket_client = _init_web_socket_client()
+
+        print('Failed to establish WebSocket connection after {0} attempts'.format(max_retries))
+        return False
+
+    def _is_websocket_connected(self):
+        """Check if WebSocket is in a connected state"""
+        try:
+            return (self.handler.web_socket_client is not None and 
+                    self.handler.web_socket_client.State == WebSocketState.Open)
+        except:
+            return False
 
     def process_event_message(self, message_string, session_id):
         if len(message_string) == 0:
-            print 'Warning: Message event was empty!'
+            print('Warning: Message event was empty!')
 
         try:
             message_json = json.loads(message_string)
-            print 'DEBUG: Event message received: {0}'.format(message_string)
+            print('DEBUG: Event message received: {0}'.format(message_string))
             message = HarmonyLinkEvent(**message_json)
             self.handler.handle_event(event=message, session_id=session_id)
         except ValueError as e:
-            print 'failed to read event message: {0}'.format(str(e))
-            print 'original message: {0}'.format(message_string)
+            print('failed to read event message: {0}'.format(str(e)))
+            print('original message: {0}'.format(message_string))
 
     def is_running(self):
         return self.running
 
     def stop_execution(self):
-        print 'Stopping ConnectorEventThread...'
+        print('Stopping ConnectorEventThread...')
         if _use_websockets:
             self.cts.Cancel()
         else:
@@ -212,7 +290,7 @@ class ConnectorEventHandler:
 
     # start starts all subprocesses required for backend handling
     def start(self):
-        print 'Starting ConnectorEventHandler'
+        print('Starting ConnectorEventHandler')
         if not self.eventJob.is_running():
             self.eventJob.start()
 
@@ -223,7 +301,7 @@ class ConnectorEventHandler:
                 event_handler.deactivate()
 
         # Stop thread in case it's still running
-        print 'Stopping ConnectorEventHandler'
+        print('Stopping ConnectorEventHandler')
         if self.eventJob.is_running():
             self.eventJob.stop_execution()
             if self.eventJob is not current_thread():
@@ -245,12 +323,18 @@ class ConnectorEventHandler:
             # connection hasn't been fully established yet
             retries = 0
             while not self.eventJob.is_running() and retries < 5:
-                print 'ConnectorEventHandler: Waiting for connection init...'
+                print('ConnectorEventHandler: Waiting for connection init...')
                 time.sleep(1)
                 retries += 1
             if not self.eventJob.is_running():
-                print 'Failed to send message to Harmony Link: WebSocket Connection Handshake failed'
+                print('Failed to send message to Harmony Link: WebSocket Connection Handshake failed')
                 return False
+            
+            # Additional check for WebSocket connection state
+            if not self.eventJob._is_websocket_connected():
+                print('Failed to send message to Harmony Link: WebSocket not in connected state')
+                return False
+                
             return _send_web_socket_event(client=self.web_socket_client, event=event)
         else:
             success, response_body, response_headers = _send_http_event(
@@ -280,7 +364,7 @@ class ConnectorEventHandler:
         if not isinstance(event, HarmonyLinkEvent):
             if not isinstance(event, str):
                 event = json.dumps(event, cls=HarmonyEventJSONEncoder)
-            print 'Warning: Invalid event received. Data: {0}'.format(event)
+            print('Warning: Invalid event received. Data: {0}'.format(event))
         else:
             if _use_websockets or len(session_id) > 0 and session_id == self.harmony_session_id:
                 # Broadcast to event handlers
@@ -300,25 +384,53 @@ def _send_web_socket_event(
         client,  # System.Net.WebSockets.ClientWebSocket
         event,  # HarmonyLinkEvent
 ):
-    # Check valid input
+    # Check valid input and convert to HarmonyLinkEvent if needed
     if not isinstance(event, HarmonyLinkEvent):
-        if not isinstance(event, str):
-            event = json.dumps(event, cls=HarmonyEventJSONEncoder)
-        print 'Warning: Tried to send invalid event. Data: {0}'.format(event)
-        return
+        # If it's a dictionary, try to convert it to HarmonyLinkEvent
+        if isinstance(event, dict):
+            try:
+                event = HarmonyLinkEvent(**event)
+                print('DEBUG: Converted dictionary to HarmonyLinkEvent: {0}'.format(event.event_type))
+            except Exception as e:
+                print('Warning: Failed to convert dictionary to HarmonyLinkEvent: {0}'.format(str(e)))
+                print('Event data: {0}'.format(event))
+                return False
+        else:
+            # If it's not a dict or HarmonyLinkEvent, it's invalid
+            if not isinstance(event, str):
+                event_str = json.dumps(event, cls=HarmonyEventJSONEncoder)
+            else:
+                event_str = event
+            print('Warning: Tried to send invalid event. Data: {0}'.format(event_str))
+            return False
+
+    # Check WebSocket state before sending
+    try:
+        if client.State != WebSocketState.Open:
+            print('Failed to send message to Harmony Link: WebSocket not in Open state (current state: {0})'.format(client.State))
+            return False
+    except Exception as e:
+        print('Failed to check WebSocket state: {0}'.format(str(e)))
+        return False
 
     # Serialize the event
     message_string = json.dumps(event, cls=HarmonyEventJSONEncoder)
     encoded_message = UTF8.GetBytes(message_string)
     send_buffer = Array[Byte](encoded_message)
     send_buffer_segment = ArraySegment[Byte](send_buffer)
+    
     # Send it
     try:
-        send_task = client.SendAsync(send_buffer_segment, WebSocketMessageType.Text, True, CancellationToken.None)
+        print('DEBUG: Sending WebSocket message: {0}'.format(message_string))
+        send_task = client.SendAsync(send_buffer_segment, WebSocketMessageType.Text, True, getattr(CancellationToken, 'None'))
         send_task.Wait()
+        print('DEBUG: WebSocket message sent successfully')
         return True
     except InvalidOperationException as e:
-        print 'Failed to send message to Harmony Link: {0}'.format(e.ToString())
+        print('Failed to send message to Harmony Link: {0}'.format(e.ToString()))
+        return False
+    except AggregateException as e:
+        print('Failed to send message to Harmony Link: {0}'.format(e.ToString()))
         return False
 
 
@@ -329,12 +441,25 @@ def _send_http_event(
         result_port,  # str
         event,  # HarmonyLinkEvent
 ):
-    # Check valid input
+    # Check valid input and convert to HarmonyLinkEvent if needed
     if not isinstance(event, HarmonyLinkEvent):
-        if not isinstance(event, str):
-            event = json.dumps(event, cls=HarmonyEventJSONEncoder)
-        print 'Warning: Tried to send invalid event. Data: {0}'.format(event)
-        return
+        # If it's a dictionary, try to convert it to HarmonyLinkEvent
+        if isinstance(event, dict):
+            try:
+                event = HarmonyLinkEvent(**event)
+                print('DEBUG: Converted dictionary to HarmonyLinkEvent: {0}'.format(event.event_type))
+            except Exception as e:
+                print('Warning: Failed to convert dictionary to HarmonyLinkEvent: {0}'.format(str(e)))
+                print('Event data: {0}'.format(event))
+                return False, None, None
+        else:
+            # If it's not a dict or HarmonyLinkEvent, it's invalid
+            if not isinstance(event, str):
+                event_str = json.dumps(event, cls=HarmonyEventJSONEncoder)
+            else:
+                event_str = event
+            print('Warning: Tried to send invalid event. Data: {0}'.format(event_str))
+            return False, None, None
 
     # Build and Execute the request
     message_string = json.dumps(event, cls=HarmonyEventJSONEncoder)
@@ -362,12 +487,12 @@ def _send_http_event(
         response_headers[response.Headers.Keys[i]] = response.Headers[i]
     response.Close()
 
-    print "Response code: {0} - Message {1}".format(response_status_code, response_data)
-    print "Response headers: {0}".format(json.dumps(response_headers))
+    print("Response code: {0} - Message {1}".format(response_status_code, response_data))
+    print("Response headers: {0}".format(json.dumps(response_headers)))
 
     # Evaluate response
     if response_status_code != 200:
-        print 'Failed to send message to Harmony Link: {0}'.format(response.reason)
+        print('Failed to send message to Harmony Link: {0}'.format(response.reason))
         return False, None, None
 
     # Return response data

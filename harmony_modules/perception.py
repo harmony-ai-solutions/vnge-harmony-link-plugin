@@ -53,10 +53,20 @@ class PerceptionHandler(HarmonyClientModuleBase):
 
             action_actor = self.entity_controller.game.scenef_get_actor(actor_entity_id)
             if action_actor is None:
-                 print('Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
+                print('Entity "{0}" - Perception module: No actor chara found for entity ID "{1}"'.format(
                     self.entity_controller.entity_id,
                     actor_entity_id
                 ))
+                return
+
+            # Check whether entity can perceive the event
+            if not self.check_for_event_recognition(event, action_actor):
+                print('Entity "{0}" - Perception module: Ignoring event with ID "{1}" since it cannot be perceived by this entity'.format(
+                    self.entity_controller.entity_id,
+                    event.event_id
+                ))
+                return
+
 
             # Forward action event to Harmony Link backend for cognitive evaluation       
             # event = HarmonyLinkEvent(
@@ -77,6 +87,7 @@ class PerceptionHandler(HarmonyClientModuleBase):
                     self.entity_controller.entity_id,
                     event_entity_id
                 ))
+                # FIXME: more explicit user check here
 
                 # Forward it as explicit user utterance event to harmony link for this entity
                 event = HarmonyLinkEvent(
@@ -88,8 +99,13 @@ class PerceptionHandler(HarmonyClientModuleBase):
                 self.backend_connector.send_event(event)
                 return
 
-            # Check if this event could be recognized by the actor
-            self.check_for_event_recognition(event, event_actor)
+            # Check whether entity can perceive the event
+            if not self.check_for_event_recognition(event, event_actor):
+                print('Entity "{0}" - Perception module: Ignoring event with ID "{1}" since it cannot be perceived by this entity'.format(
+                    self.entity_controller.entity_id,
+                    event.event_id
+                ))
+                return
 
         # Suppress Speech output for the current entity
         if event.event_type == EVENT_TYPE_STT_SPEECH_STARTED and event.status == EVENT_STATE_DONE:
@@ -105,4 +121,4 @@ class PerceptionHandler(HarmonyClientModuleBase):
 
     def check_for_event_recognition(self, event, event_actor):
         # TODO
-        return
+        return True

@@ -575,7 +575,7 @@ class MovementHandler(HarmonyClientModuleBase):
             else:
                 print('Harmony Link: Failed to transmit scene data for entity "{0}"'.format(self.entity_controller.entity_id))
 
-        # Requested availiable Actions and embedding examples
+        # Requested available Actions and embedding examples
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
             # Define actions Data Object according to ActionsDataV1 spec
             actions_data = {
