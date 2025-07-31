@@ -62,6 +62,7 @@ class ConnectorEventThread(Thread):
         Thread.__init__(self)
         # Control flow
         self.running = False
+        self.shutting_down = False
         self.handler = handler
         if _use_websockets:
             # Set params
@@ -148,16 +149,18 @@ class ConnectorEventThread(Thread):
                         # Not a text message
                         continue
                 except AggregateException as e:
-                    print('websocket communication with Harmony Link failed: {0}'.format(e.ToString()))
                     # Check if this is a cancellation (normal shutdown) or an error
-                    if not self.cts.Token.IsCancellationRequested:
+                    if self.shutting_down or self.cts.Token.IsCancellationRequested:
+                        # This is expected during normal shutdown - don't log as error
+                        print('WebSocket connection cancelled (normal shutdown)')
+                        break
+                    else:
+                        # This is an unexpected error - log it and attempt to reconnect
+                        print('websocket communication with Harmony Link failed: {0}'.format(e.ToString()))
                         print('Unexpected WebSocket error. Attempting to reconnect...')
                         # Brief delay before reconnection attempt
                         time.sleep(2)
                         continue
-                    else:
-                        print('WebSocket connection cancelled (normal shutdown)')
-                        break
                 except Exception as e:
                     print('Unexpected error in WebSocket receive loop: {0}'.format(str(e)))
                     print('Shutting down...')
@@ -249,6 +252,8 @@ class ConnectorEventThread(Thread):
     def stop_execution(self):
         print('Stopping ConnectorEventThread...')
         if _use_websockets:
+            # Set shutdown flag before cancelling to suppress error messages
+            self.shutting_down = True
             self.cts.Cancel()
         else:
             self.http_server.shutdown()
