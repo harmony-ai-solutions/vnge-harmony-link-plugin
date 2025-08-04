@@ -5,6 +5,15 @@ The VNGE Harmony Link Plugin has core ActionGraph execution functionality implem
 
 ## What Works (Completed Features)
 
+### ✅ Entity Setup Enhancement (Just Completed)
+- **Automated Entity Discovery**: Plugin automatically fetches configured entities from Harmony Link
+- **Visual Setup Dialog**: Unity GUI dialog with pre-population of existing mappings
+- **Smart Pre-population**: Detects existing `-actor:` tags and preserves user configurations
+- **Enhanced Status Indicators**: Four distinct visual states (Previously tagged, Exact match, Manual, Unmapped)
+- **User Entity Selection**: Mandatory user entity selection with auto-detection of common patterns
+- **Startup Integration**: Seamlessly integrated into plugin initialization with backward compatibility
+- **Robust Error Handling**: Graceful fallback to traditional setup on discovery failures
+
 ### ✅ Core ActionGraph Execution
 - ActionGraphV1 parsing and validation functional
 - Sequential action queue processing working

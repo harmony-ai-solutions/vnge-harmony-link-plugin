@@ -1,7 +1,9 @@
 # VNGE Harmony Link Plugin - Active Context
 
 ## Current Work Focus
-The primary focus is on enhancing the Movement module's execution and refining plugin integration. This includes addressing issues with scene data initialization and implementing advanced target handling features.
+**JUST COMPLETED**: Entity Setup Enhancement - Comprehensive automated entity setup system that eliminates manual configuration requirements for users. This major enhancement provides seamless entity discovery, visual mapping interface, and intelligent pre-population of existing configurations.
+
+The primary focus continues on enhancing the Movement module's execution and refining plugin integration. This includes addressing issues with scene data initialization and implementing advanced target handling features.
 
 ### Animation System Extension (Priority: High)
 The current implementation has hardcoded animation mappings in `AnimationMapper._load_animation_mappings()`. With the comprehensive `animation_list_short.json` available, the next major step is extending the system to dynamically utilize the full VNGE animation database.
@@ -38,6 +40,35 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 - Decision request handling with structured responses
 
 ## Recent Changes
+
+### ✅ Entity Setup Enhancement (Just Completed)
+**Description**: Comprehensive automated entity setup system that eliminates manual configuration requirements for users.
+
+**Key Achievements:**
+- **Backend Infrastructure**: Added `FETCH_CONFIGURED_ENTITIES` event type to Harmony Link and common.py for entity discovery
+- **Entity Discovery Module**: Created `entity_discovery.py` with temporary connector and robust error handling
+- **Visual Setup Dialog**: Implemented Unity GUI dialog with pre-population of existing mappings
+- **Enhanced Status Indicators**: Four distinct visual states for mapping clarity:
+  - **Dark Green**: Previously tagged entities (from VNGE registry)
+  - **Blue**: Exact name matches (automatic detection)
+  - **Yellow**: Manual selections (user-configured)
+  - **Red**: Unmapped entities (requiring attention)
+- **Smart Pre-population**: Leverages `game.scenef_get_all_actors()` to detect existing `-actor:` tags
+- **Priority System**: Existing tags > exact matches > manual selection
+- **Startup Integration**: Seamlessly integrated into plugin initialization with backward compatibility
+
+**Technical Insights:**
+- **VNGE Infrastructure Leverage**: Used existing `scenef_register_actorsprops()` and `scenef_get_all_actors()` instead of manual folder scanning
+- **Temporary Connector Pattern**: Port offset strategy (base + 100) prevents conflicts with main entity connections
+- **Visual Feedback Design**: Color-coded status indicators provide immediate clarity about mapping sources
+- **User Experience Priority**: Always shows dialog to allow configuration experimentation and flexibility
+
+**Files Created/Modified:**
+- `harmony_modules/entity_discovery.py`: Entity discovery with temporary connector
+- `harmony_modules/entity_setup_dialog.py`: Unity GUI dialog with pre-population logic
+- `harmony.py`: Startup flow integration with entity setup detection
+- `harmony_modules/common.py`: New event type
+
 - **Enhanced Action Management**: Implemented comprehensive state management with timing control, timeout detection, and performance tracking for actions.
 - **Animation Execution System**: Improved animation execution with timeout management and graceful error handling.
 - **Development Infrastructure**: Enhanced debug modes, animation list export, and performance statistics.

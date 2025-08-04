@@ -21,6 +21,8 @@ import harmony_globals
 from harmony_modules import connector, common, backend, countenance, text_to_speech, speech_to_text, controls, movement, \
     perception
 from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
+from harmony_modules.entity_discovery import EntityDiscoveryHandler
+from harmony_modules.entity_setup_dialog import EntitySetupDialog, get_all_scene_actors
 
 # Config
 _config = None
@@ -336,9 +338,90 @@ def _load_scene_start2(game):
     real_start(game)
 
 
-def real_start(game):
-    global _config
+def should_show_entity_setup(game):
+    """
+    Determine if we should show the entity setup dialog.
+    
+    Always returns True if there are actors in the scene, as we want to show
+    the setup dialog every time to allow users to review/modify mappings.
+    """
+    # Check if scene has any actors at all
+    all_actors = get_all_scene_actors(game)
+    return len(all_actors) > 0
 
+
+def start_entity_discovery(game):
+    """Start the entity discovery and setup process"""
+    global _config
+    
+    try:
+        # Create discovery handler with current config
+        discovery = EntityDiscoveryHandler(_config)
+        
+        game.show_blocking_message("Fetching entities from Harmony Link...")
+        
+        # Fetch entities (this blocks for up to 5 seconds)
+        entities = discovery.fetch_entities()
+        
+        game.hide_blocking_message()
+        
+        if entities:
+            # Get all actors in scene (both labeled and unlabeled)
+            all_actors = get_all_scene_actors(game)
+            
+            if len(all_actors) > 0:
+                # Show setup dialog (preselection handled in dialog constructor)
+                dialog = EntitySetupDialog(game, entities, all_actors)
+                dialog.show()
+                
+                # Continue setup after dialog closes
+                game.set_timer(1.0, check_dialog_complete)
+            else:
+                game.show_blocking_message_time("No actors found in scene to map entities to!", 3)
+                continue_traditional_setup(game)
+        else:
+            game.show_blocking_message_time("Could not fetch entities from Harmony Link!", 3)
+            continue_traditional_setup(game)
+            
+    except Exception as e:
+        print('Error during entity discovery: {0}'.format(str(e)))
+        import traceback
+        traceback.print_exc()
+        game.show_blocking_message_time("Error during entity setup: {0}".format(str(e)), 3)
+        continue_traditional_setup(game)
+
+
+def check_dialog_complete(game):
+    """Check if dialog is closed and continue setup"""
+    # Re-register actors after potential changes
+    game.scenef_register_actorsprops()
+    
+    # Check if we now have labeled actors
+    existing_actors = game.scenef_get_all_actors()
+    
+    if len(existing_actors) > 0:
+        print('Entity setup complete, found {0} labeled actors'.format(len(existing_actors)))
+    else:
+        print('Entity setup complete, no actors were labeled')
+    
+    # Check if user entity was selected and store it
+    if hasattr(game, '_harmony_user_entity') and game._harmony_user_entity:
+        print('User entity selected: {0}'.format(game._harmony_user_entity))
+        # Store user entity in global for later use
+        harmony_globals.user_controlled_entity_id = game._harmony_user_entity
+    else:
+        print('Warning: No user entity was selected!')
+    
+    # Continue with normal setup
+    continue_traditional_setup(game)
+
+
+def continue_traditional_setup(game):
+    """Continue with the traditional entity setup process"""
+    # Continue with the existing real_start logic
+    # Note: This bypasses the entity setup dialog and continues with normal startup
+    
+    global _config
     game.scenedata.scene_config = dict(_config.items('Scene'))
     game.scenef_register_actorsprops()
 
@@ -392,6 +475,25 @@ def real_start(game):
             print('Harmony Link: Failed to transmit scene loading finished for entity "{0}"'.format(entity_id))
 
 
+def real_start(game):
+    """Enhanced real_start with entity setup integration"""
+    global _config
+
+    game.scenedata.scene_config = dict(_config.items('Scene'))
+    game.scenef_register_actorsprops()
+
+    # Check if we should show entity setup dialog
+    if should_show_entity_setup(game):
+        # Show entity setup dialog
+        print('Harmony Link: Starting entity discovery and setup...')
+        game.set_timer(0.5, start_entity_discovery)
+        return
+    else:
+        # Continue with traditional setup
+        print('Harmony Link: No actors found in scene, continuing with traditional setup')
+        continue_traditional_setup(game)
+
+
 def _error_abort(game, error):
     print("**** Error aborted ****\n>>" + error)
     shutdown(game)
@@ -433,4 +535,3 @@ def shutdown(game):
 
     game.set_text("s", "Harmony Link Plugin for VNGE successfully stopped.")
     game.set_buttons(["Return to main screen >>"], [[game.return_to_start_screen_clear]])
-
