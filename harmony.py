@@ -68,13 +68,17 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
 
         if len(harmony_globals.ready_entities) + len(harmony_globals.failed_entities) == len(harmony_globals.active_entities):
             if len(harmony_globals.failed_entities) == 0:
-                # Load Game Scene - this is a bit weird, however seems to work if copy+paste from koifighter
-                scene_config = self.game.scenedata.scene_config
-                if scene_config["scene"] is not None:
-                    self.game.load_scene(scene_config["scene"])
-                    self.game.set_timer(0.5, _load_scene_start)
-                else:
-                    real_start(self.game)
+                # All entities initialized successfully - enable controls for user entity
+                print('Harmony Link: All entities initialized successfully, enabling controls...')
+                
+                # Enable controls and STT for user entity
+                if harmony_globals.user_controlled_entity_id in harmony_globals.active_entities:
+                    user_controller = harmony_globals.active_entities[harmony_globals.user_controlled_entity_id]
+                    user_controller.controlsModule.activate()
+                    user_controller.sttModule.activate()
+                    print('Harmony Link: Controls enabled for user entity: {0}'.format(harmony_globals.user_controlled_entity_id))
+                
+                print('Harmony Link: Plugin startup complete!')
             else:
                 _error_abort(self.game, 'Harmony Link: Entity Initialization failed.')
 
@@ -282,40 +286,49 @@ def start_scene_select(game):
 def start_harmony_ai(game):
     global _config
     scene_config = game.scenedata.scene_config
+    
+    # Load scene if specified, otherwise proceed directly to entity setup for current scene
+    if scene_config["scene"] is not None:
+        game.load_scene(scene_config["scene"])
+        game.set_timer(0.5, _load_scene_start)
+    else:
+        real_start(game)
 
-    # Determine user entities to be controlled
-    if "user_entity_id" not in scene_config or len(scene_config["user_entity_id"]) == 0:
-        _error_abort(game, 'Harmony Plugin: User entity id is invalid.')
+
+def create_entity_controllers(game):
+    """
+    This function initializes the EntityControllers based on mapped entities from the dialog.
+    """
+    global _config
+
+    print('Harmony Link: Creating entity controllers based on mapped entities...')
+
+    # Get all entities that were mapped to actors in the scene
+    mapped_actors = game.scenef_get_all_actors()
+    
+    # Ensure user entity is set (should be set by dialog)
+    if not harmony_globals.user_controlled_entity_id:
+        _error_abort(game, 'No user entity selected during setup!')
         return
 
-    # Determine character entities to be controlled
-    if "character_entity_id" not in scene_config or len(scene_config["character_entity_id"]) == 0:
-        _error_abort(game, 'Harmony Plugin: Character entity id/list is invalid.')
-        return
-
-    # Setup user entity
-    user_entity_id = scene_config["user_entity_id"].strip()
+    # Create controller for user entity
+    user_entity_id = harmony_globals.user_controlled_entity_id
+    print('Creating controller for user entity: {0}'.format(user_entity_id))
     controller = EntityController(entity_id=user_entity_id, game=game, config=_config)
-    # Initialize Client modules
     controller.init_modules()
-    # Create Startup Init handler
     controller.create_startup_handler()
-    # Add to character list
     harmony_globals.active_entities[user_entity_id] = controller
-    harmony_globals.user_controlled_entity_id = user_entity_id
 
-    # Setup character entities
-    character_list = scene_config["character_entity_id"].split(",")
-    for entity_id in character_list:
-        # Create entity controller for characters
-        entity_id = entity_id.strip()
-        controller = EntityController(entity_id=entity_id, game=game, config=_config)
-        # Initialize Client modules
-        controller.init_modules()
-        # Create Startup Init handler
-        controller.create_startup_handler()
-        # Add to character list
-        harmony_globals.active_entities[entity_id] = controller
+    # Create controllers for all mapped character entities (entities with actors)
+    for entity_id, actor in mapped_actors.items():
+        if entity_id != user_entity_id:  # Skip user entity, already created and may not have an actual actor
+            print('Creating controller for character entity: {0}'.format(entity_id))
+            controller = EntityController(entity_id=entity_id, game=game, config=_config)
+            controller.init_modules()
+            controller.create_startup_handler()
+            harmony_globals.active_entities[entity_id] = controller
+
+    print('Created {0} entity controllers total'.format(len(harmony_globals.active_entities)))
 
     # Warmup time to allow for the backend threads to connect to the websocket server
     warmup_time = int(_config.get('Harmony', 'start_warmup_time'))
@@ -326,7 +339,7 @@ def start_harmony_ai(game):
         try:
             controller.activate()
         except RuntimeError as e:
-            _error_abort(game, e.message)
+            _error_abort(game, str(e))
             return
 
 
@@ -374,25 +387,46 @@ def start_entity_discovery(game):
                 dialog = EntitySetupDialog(game, entities, all_actors)
                 dialog.show()
                 
-                # Continue setup after dialog closes
-                game.set_timer(1.0, check_dialog_complete)
+                # Store dialog reference so we can check when it's closed
+                game._setup_dialog = dialog
+                
+                # Set up a timer to periodically check if dialog is closed
+                game.set_timer(0.5, check_setup_dialog_status)
             else:
-                game.show_blocking_message_time("No actors found in scene to map entities to!", 3)
-                continue_traditional_setup(game)
+                # Abort Startup; no valid actors in scene which could work with Harmony Link
+                _error_abort(game, 'No actors found in scene, aborting')
         else:
-            game.show_blocking_message_time("Could not fetch entities from Harmony Link!", 3)
-            continue_traditional_setup(game)
+            # Abort Startup; unable to communicate with Harmony Link
+            _error_abort(game, "Could not fetch entities from Harmony Link!")
             
     except Exception as e:
         print('Error during entity discovery: {0}'.format(str(e)))
         import traceback
         traceback.print_exc()
-        game.show_blocking_message_time("Error during entity setup: {0}".format(str(e)), 3)
-        continue_traditional_setup(game)
+        _error_abort(game, "Error during entity setup: {0}".format(str(e)))
+
+
+def check_setup_dialog_status(game):
+    """Periodically check if the setup dialog is closed"""
+    # Check if dialog still exists and is open
+    if hasattr(game, '_setup_dialog') and game._setup_dialog and game._setup_dialog.window_id:
+        # Dialog is still open, check again in 0.5 seconds
+        game.set_timer(0.5, check_setup_dialog_status)
+        return
+    
+    # Dialog is closed, proceed with completion check
+    print('Setup dialog closed, proceeding with entity setup completion...')
+    check_dialog_complete(game)
 
 
 def check_dialog_complete(game):
     """Check if dialog is closed and continue setup"""
+    # Check if user aborted startup
+    if hasattr(game, '_harmony_startup_aborted') and game._harmony_startup_aborted:
+        print('User aborted entity setup - shutting down plugin')
+        _error_abort(game, 'Entity setup was aborted by user')
+        return
+    
     # Re-register actors after potential changes
     game.scenef_register_actorsprops()
     
@@ -410,19 +444,23 @@ def check_dialog_complete(game):
         # Store user entity in global for later use
         harmony_globals.user_controlled_entity_id = game._harmony_user_entity
     else:
-        print('Warning: No user entity was selected!')
+        _error_abort(game, 'No user entity was selected during setup')
+        return
     
-    # Continue with normal setup
-    continue_traditional_setup(game)
+    print('Harmony Link: Entity setup complete, creating controllers and connecting to Harmony Link...')
+
+    # Continue with entity controller creation
+    create_entity_controllers(game)
+    
+    # Continue with the individual entity setup process
+    configure_entities(game)
 
 
-def continue_traditional_setup(game):
-    """Continue with the traditional entity setup process"""
-    # Continue with the existing real_start logic
-    # Note: This bypasses the entity setup dialog and continues with normal startup
-    
-    global _config
-    game.scenedata.scene_config = dict(_config.items('Scene'))
+def configure_entities(game):
+    """
+    Configure entities after controllers are created.
+    Links actors to controllers and sends environment loaded events.
+    """
     game.scenef_register_actorsprops()
 
     # Setup object props if they are defined
@@ -442,24 +480,19 @@ def continue_traditional_setup(game):
 
     # Link Chara Actor in scene with Character controller
     for entity_id, controller in harmony_globals.active_entities.items():
-        # Get list of character and user entities
-        character_list = game.scenedata.scene_config["character_entity_id"].split(",")
-
-        # Try to find actor for entity
+        # Try to find actor for entity (may be None for user entity)
         chara_actor = game.scenef_get_actor(entity_id)
-        if chara_actor is None and entity_id in character_list:
-            _error_abort(game, 'Harmony Link: Chara Actor for Entity "{0}" could not be loaded.'.format(entity_id))
-            return
-        elif chara_actor is not None:
+        
+        if chara_actor is not None:
+            # Entity has an actor - set it up
             chara = Chara(actor=chara_actor)
             chara.actor.set_mouth_open(0)
             # Update all controller modules with new chara actor
             controller.update_chara(chara)
-
-        # Initialize controls module and STT module if it's the user entity
-        if entity_id == harmony_globals.user_controlled_entity_id:
-            controller.controlsModule.activate()
-            controller.sttModule.activate()
+            print('Linked entity "{0}" to actor "{1}"'.format(entity_id, chara_actor.text_name))
+        else:
+            # Entity has no actor (likely user entity)
+            print('Entity "{0}" has no scene actor (user entity or unmapped)'.format(entity_id))
 
         # Inform Harmony Link that the scene finished loading for this Entity
         environment_loaded_event = common.HarmonyLinkEvent(
@@ -480,6 +513,7 @@ def real_start(game):
     global _config
 
     game.scenedata.scene_config = dict(_config.items('Scene'))
+    game._harmony_startup_aborted = False
     game.scenef_register_actorsprops()
 
     # Check if we should show entity setup dialog
@@ -489,9 +523,8 @@ def real_start(game):
         game.set_timer(0.5, start_entity_discovery)
         return
     else:
-        # Continue with traditional setup
-        print('Harmony Link: No actors found in scene, continuing with traditional setup')
-        continue_traditional_setup(game)
+        # Abort Startup; no valid actors in scene which could work with Harmony Link
+        _error_abort(game, 'No actors found in scene, aborting')
 
 
 def _error_abort(game, error):
