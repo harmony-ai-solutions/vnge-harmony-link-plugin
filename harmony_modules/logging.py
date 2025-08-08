@@ -59,7 +59,8 @@ def _load_logging_config():
             'log_level': 'INFO',
             'show_timestamps': 'true',
             'show_module_names': 'true',
-            'truncation_length': '200'
+            'truncation_length': '200',
+            'truncate_errors': '0'
         }
         
         # Load values with defaults
@@ -80,6 +81,7 @@ def _load_logging_config():
         # Convert boolean strings
         _config_cache['show_timestamps_bool'] = _config_cache['show_timestamps'].lower() == 'true'
         _config_cache['show_module_names_bool'] = _config_cache['show_module_names'].lower() == 'true'
+        _config_cache['truncate_errors'] = _config_cache['truncate_errors'].lower() == 'true'
         
         # Convert truncation length to integer
         try:
@@ -102,7 +104,8 @@ def _load_logging_config():
             'show_module_names': 'true', 
             'show_module_names_bool': True,
             'truncation_length': '200',
-            'truncation_length_int': 200
+            'truncation_length_int': 200,
+            'truncate_errors': False
         }
         _config_loaded = True
         print("Warning: Failed to load logging config, using defaults: {0}".format(str(e)))
@@ -146,7 +149,8 @@ class HarmonyLogger:
         """Format message with timestamp and module name if configured"""
         # Convert message to string and apply truncation
         message_str = str(message)
-        truncated_message = self._truncate_message(message_str, self.config['truncation_length_int'])
+        if level < LOG_LEVEL_ERROR:
+            message_str = self._truncate_message(message_str, self.config['truncation_length_int'])
         
         # Build formatted message
         parts = []
@@ -172,9 +176,9 @@ class HarmonyLogger:
         
         # Add the actual message
         if parts:
-            return "{0} {1}".format(" ".join(parts), truncated_message)
+            return "{0} {1}".format(" ".join(parts), message_str)
         else:
-            return truncated_message
+            return message_str
     
     def _log(self, level, message, *args):
         """Internal logging method"""
