@@ -285,9 +285,12 @@ def start_scene_select(game):
 
 def start_harmony_ai(game):
     global _config
-    scene_config = game.scenedata.scene_config
-    
+
+    # Flush init caches
+    harmony_globals.flush()
+
     # Load scene if specified, otherwise proceed directly to entity setup for current scene
+    scene_config = game.scenedata.scene_config
     if scene_config["scene"] is not None:
         game.load_scene(scene_config["scene"])
         game.set_timer(0.5, _load_scene_start)
