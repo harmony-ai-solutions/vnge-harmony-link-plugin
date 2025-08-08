@@ -400,11 +400,17 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         logger.trace("First 20 bytes of audio_bytes: %s", audio_bytes[:20])
 
         # Encode to base64
-        encoded_data = base64.b64encode(audio_bytes)
+        encoded_data = self.encode_audio_data(audio_bytes)
+        if encoded_data is None:
+            logger.error("Failed to encode audio data for event %s", event_id)
+            del self.active_recording_events[event_id]
+            return
 
-        # DEBUG CODE
-        logger.trace("Length of encoded_data: %s", len(encoded_data))
-        logger.trace("First 50 characters of encoded_data: %s", encoded_data[:50])
+        # Validate all parameters before sending
+        if self.channels <= 0 or self.bit_depth <= 0 or self.sample_rate <= 0:
+            logger.error("Invalid audio parameters: channels=%d, bit_depth=%d, sample_rate=%d", self.channels, self.bit_depth, self.sample_rate)
+            del self.active_recording_events[event_id]
+            return
 
         # Send result event
         result_event = HarmonyLinkEvent(
@@ -421,3 +427,35 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.backend_connector.send_event(result_event)
         # Remove the event from the tracking
         del self.active_recording_events[event_id]
+
+    def encode_audio_data(self, audio_bytes):
+        """safely encode audio data for transmission"""
+        try:
+            # Validate input
+            if not audio_bytes or len(audio_bytes) == 0:
+                logger.error("Empty audio data provided for encoding")
+                return None
+                
+            # Log audio data stats for debugging
+            logger.debug("Encoding audio data: %d bytes", len(audio_bytes))
+            
+            # Encode to base64 and explicitly decode to UTF-8 string
+            encoded_bytes = base64.b64encode(audio_bytes)
+            encoded_string = encoded_bytes.decode('utf-8', errors='strict')
+            
+            # Validate encoding by attempting to decode it back
+            # try:
+            #     test_decode = base64.b64decode(encoded_string)
+            #     if len(test_decode) != len(audio_bytes):
+            #         logger.error("Encoding validation failed: size mismatch (original: %d, decoded: %d)", len(audio_bytes), len(test_decode))
+            #         return None
+            # except Exception as decode_error:
+            #     logger.error("Encoding validation failed: %s", str(decode_error))
+            #     return None
+                
+            logger.debug("Successfully encoded %d bytes to %d character string", len(audio_bytes), len(encoded_string))
+            return encoded_string
+            
+        except Exception as e:
+            logger.error("Failed to encode audio data: %s", str(e))
+            return None
