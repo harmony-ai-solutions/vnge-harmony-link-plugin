@@ -23,6 +23,10 @@ from harmony_modules import connector, common, backend, countenance, text_to_spe
 from harmony_modules.common import EVENT_TYPE_INIT_ENTITY
 from harmony_modules.entity_discovery import EntityDiscoveryHandler
 from harmony_modules.entity_setup_dialog import EntitySetupDialog, get_all_scene_actors
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 # Config
 _config = None
@@ -62,25 +66,25 @@ class EntityInitHandler(common.HarmonyClientModuleBase):
             self.deactivate()
 
     def check_init_done(self):
-        print("Ready entities: {}".format(len(harmony_globals.ready_entities)))
-        print("Failed entities: {}".format(len(harmony_globals.failed_entities)))
-        print("Active entities: {}".format(len(harmony_globals.active_entities)))
+        logger.debug("Ready entities: %s", len(harmony_globals.ready_entities))
+        logger.debug("Failed entities: %s", len(harmony_globals.failed_entities))
+        logger.debug("Active entities: %s", len(harmony_globals.active_entities))
 
         if len(harmony_globals.ready_entities) + len(harmony_globals.failed_entities) == len(harmony_globals.active_entities):
             if len(harmony_globals.failed_entities) == 0:
                 # All entities initialized successfully - enable controls for user entity
-                print('Harmony Link: All entities initialized successfully, enabling controls...')
+                logger.info('All entities initialized successfully, enabling controls...')
                 
                 # Enable controls and STT for user entity
                 if harmony_globals.user_controlled_entity_id in harmony_globals.active_entities:
                     user_controller = harmony_globals.active_entities[harmony_globals.user_controlled_entity_id]
                     user_controller.controlsModule.activate()
                     user_controller.sttModule.activate()
-                    print('Harmony Link: Controls enabled for user entity: {0}'.format(harmony_globals.user_controlled_entity_id))
+                    logger.info('Controls enabled for user entity: %s', harmony_globals.user_controlled_entity_id)
                 
-                print('Harmony Link: Plugin startup complete!')
+                logger.info('Plugin startup complete!')
             else:
-                _error_abort(self.game, 'Harmony Link: Entity Initialization failed.')
+                _error_abort(self.game, 'Entity Initialization failed.')
 
 
 # Chara - Internal representation for a chara actor
@@ -118,7 +122,7 @@ class EntityController:  # TODO: Refactor this to use inheritance from base clas
             return
 
         # Set active
-        print('Starting ActorEntityController for entity \'{0}\'...'.format(self.entity_id))
+        logger.info('Starting ActorEntityController for entity: %s', self.entity_id)
         self.is_active = True
 
         # Initialize Character on Harmony Link
@@ -132,9 +136,9 @@ class EntityController:  # TODO: Refactor this to use inheritance from base clas
         )
         init_send_success = self.connector.send_event(init_event)
         if init_send_success:
-            print('Harmony Link: Initializing entity \'{0}\'...'.format(self.entity_id))
+            logger.info('Initializing entity: %s', self.entity_id)
         else:
-            raise RuntimeError('Harmony Link: Failed to sent entity initialize Event for entity \'{0}\'.'.format(self.entity_id))
+            raise RuntimeError('Failed to sent entity initialize Event for entity: %s' % self.entity_id)
 
     def is_active(self):
         return self.is_active
@@ -242,7 +246,7 @@ def start(game):
     # Determine Game Engine ID
     # this is the sub folder in harmony where Chara studio will look for scenes for the game
     game.sceneDir = "harmony/{0}/".format(get_engine_id2())  # dir for Harmony Plugin scenes
-    print("Initializing VNGE-Plugin for Harmony Link with scene dir: " + game.sceneDir)
+    logger.info("Initializing VNGE-Plugin for Harmony Link with scene dir: %s", game.sceneDir)
 
     # game.btnNextText = "Next >>" # for localization and other purposes
     # game.isHideWindowDuringCameraAnimation = True # this setting hide game window during animation between cameras
@@ -304,7 +308,7 @@ def create_entity_controllers(game):
     """
     global _config
 
-    print('Harmony Link: Creating entity controllers based on mapped entities...')
+    logger.info('Creating entity controllers based on mapped entities...')
 
     # Get all entities that were mapped to actors in the scene
     mapped_actors = game.scenef_get_all_actors()
@@ -316,7 +320,7 @@ def create_entity_controllers(game):
 
     # Create controller for user entity
     user_entity_id = harmony_globals.user_controlled_entity_id
-    print('Creating controller for user entity: {0}'.format(user_entity_id))
+    logger.info('Creating controller for user entity: %s', user_entity_id)
     controller = EntityController(entity_id=user_entity_id, game=game, config=_config)
     controller.init_modules()
     controller.create_startup_handler()
@@ -325,13 +329,13 @@ def create_entity_controllers(game):
     # Create controllers for all mapped character entities (entities with actors)
     for entity_id, actor in mapped_actors.items():
         if entity_id != user_entity_id:  # Skip user entity, already created and may not have an actual actor
-            print('Creating controller for character entity: {0}'.format(entity_id))
+            logger.info('Creating controller for character entity: %s', entity_id)
             controller = EntityController(entity_id=entity_id, game=game, config=_config)
             controller.init_modules()
             controller.create_startup_handler()
             harmony_globals.active_entities[entity_id] = controller
 
-    print('Created {0} entity controllers total'.format(len(harmony_globals.active_entities)))
+    logger.info('Created %s entity controllers total', len(harmony_globals.active_entities))
 
     # Warmup time to allow for the backend threads to connect to the websocket server
     warmup_time = int(_config.get('Harmony', 'start_warmup_time'))
@@ -403,7 +407,7 @@ def start_entity_discovery(game):
             _error_abort(game, "Could not fetch entities from Harmony Link!")
             
     except Exception as e:
-        print('Error during entity discovery: {0}'.format(str(e)))
+        logger.error('Error during entity discovery: %s', str(e))
         import traceback
         traceback.print_exc()
         _error_abort(game, "Error during entity setup: {0}".format(str(e)))
@@ -418,7 +422,7 @@ def check_setup_dialog_status(game):
         return
     
     # Dialog is closed, proceed with completion check
-    print('Setup dialog closed, proceeding with entity setup completion...')
+    logger.info('Setup dialog closed, proceeding with entity setup completion...')
     check_dialog_complete(game)
 
 
@@ -426,7 +430,7 @@ def check_dialog_complete(game):
     """Check if dialog is closed and continue setup"""
     # Check if user aborted startup
     if hasattr(game, '_harmony_startup_aborted') and game._harmony_startup_aborted:
-        print('User aborted entity setup - shutting down plugin')
+        logger.info('User aborted entity setup - shutting down plugin')
         _error_abort(game, 'Entity setup was aborted by user')
         return
     
@@ -437,20 +441,20 @@ def check_dialog_complete(game):
     existing_actors = game.scenef_get_all_actors()
     
     if len(existing_actors) > 0:
-        print('Entity setup complete, found {0} labeled actors'.format(len(existing_actors)))
+        logger.info('Entity setup complete, found %s labeled actors', len(existing_actors))
     else:
-        print('Entity setup complete, no actors were labeled')
+        logger.info('Entity setup complete, no actors were labeled')
     
     # Check if user entity was selected and store it
     if hasattr(game, '_harmony_user_entity') and game._harmony_user_entity:
-        print('User entity selected: {0}'.format(game._harmony_user_entity))
+        logger.info('User entity selected: %s', game._harmony_user_entity)
         # Store user entity in global for later use
         harmony_globals.user_controlled_entity_id = game._harmony_user_entity
     else:
         _error_abort(game, 'No user entity was selected during setup')
         return
     
-    print('Harmony Link: Entity setup complete, creating controllers and connecting to Harmony Link...')
+    logger.info('Entity setup complete, creating controllers and connecting to Harmony Link...')
 
     # Continue with entity controller creation
     create_entity_controllers(game)
@@ -471,7 +475,7 @@ def configure_entities(game):
     for prop_id in props_list:
         prop_object = game.scenef_get_prop(prop_id)
         if prop_object is None:
-            _error_abort(game, 'Harmony Link: Object for Prop "{0}" could not be loaded.'.format(prop_id))
+            _error_abort(game, 'Object for Prop "{0}" could not be loaded.'.format(prop_id))
             return
         # Add to list of object props
         harmony_globals.registered_props[prop_id] = prop_object
@@ -492,10 +496,10 @@ def configure_entities(game):
             chara.actor.set_mouth_open(0)
             # Update all controller modules with new chara actor
             controller.update_chara(chara)
-            print('Linked entity "{0}" to actor "{1}"'.format(entity_id, chara_actor.text_name))
+            logger.info('Linked entity "%s" to actor "%s"', entity_id, chara_actor.text_name)
         else:
             # Entity has no actor (likely user entity)
-            print('Entity "{0}" has no scene actor (user entity or unmapped)'.format(entity_id))
+            logger.info('Entity "%s" has no scene actor (user entity or unmapped)', entity_id)
 
         # Inform Harmony Link that the scene finished loading for this Entity
         environment_loaded_event = common.HarmonyLinkEvent(
@@ -506,9 +510,9 @@ def configure_entities(game):
         )
         send_success = controller.connector.send_event(environment_loaded_event)
         if send_success:
-            print('Harmony Link: Scene Data finished loading for entity "{0}"'.format(entity_id))
+            logger.info('Scene Data finished loading for entity "%s"', entity_id)
         else:
-            print('Harmony Link: Failed to transmit scene loading finished for entity "{0}"'.format(entity_id))
+            logger.error('Failed to transmit scene loading finished for entity "%s"', entity_id)
 
 
 def real_start(game):
@@ -522,7 +526,7 @@ def real_start(game):
     # Check if we should show entity setup dialog
     if should_show_entity_setup(game):
         # Show entity setup dialog
-        print('Harmony Link: Starting entity discovery and setup...')
+        logger.info('Starting entity discovery and setup...')
         game.set_timer(0.5, start_entity_discovery)
         return
     else:
@@ -531,7 +535,7 @@ def real_start(game):
 
 
 def _error_abort(game, error):
-    print("**** Error aborted ****\n>>" + error)
+    logger.error("**** Error aborted ****\n>>%s", error)
     shutdown(game)
 
 

@@ -14,6 +14,11 @@ import random
 import time
 from threading import Thread
 
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
+
 rng = random.WichmannHill()
 # we will not use simple random because of bug
 # see https://github.com/IronLanguages/ironpython2/issues/231 for details
@@ -39,7 +44,7 @@ class TTSProcessorThread(Thread):
 
     def wait_voice_played(self):
         if not self.tts_handler.playing_utterance:
-            print '[{0}]: ERROR: Tried to monitor an undefined utterance player!'.format(self.tts_handler.__class__.__name__)
+            logger.error('Tried to monitor an undefined utterance player!')
             return True
 
         if self.tts_handler.playing_utterance.isPlaying:
@@ -49,7 +54,7 @@ class TTSProcessorThread(Thread):
             return False
         else:
             # here the sound file is played, you can mark some flag or delete the file
-            print '[{0}]: done playing file: {1}!'.format(self.tts_handler.__class__.__name__, self.tts_handler.playing_utterance.filename)
+            logger.info('done playing file: %s', self.tts_handler.playing_utterance.filename)
             # Send Message to Harmony Link to delete the source file from disk
             playback_done_event = HarmonyLinkEvent(
                 event_id='playback_done',  # This is an arbitrary dummy ID to conform the Harmony Link API
@@ -98,7 +103,7 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
             if len(audio_file) > 0:
                 # Just abort here if speech is suppressed for this actor
                 if self.speech_suppressed:
-                    print 'Speech currently suppressed. Ignoring utterance'.format()
+                    logger.info('Speech currently suppressed. Ignoring utterance')
                     # Send Message to Harmony Link to delete the source file from disk
                     playback_done_event = HarmonyLinkEvent(
                         event_id='playback_done',  # This is an arbitrary dummy ID to conform the Harmony Link API
@@ -117,18 +122,18 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
                 err = utterance_player.CreateAudioSource(utterance_sound_type)
                 if err:
                     utterance_player.Cleanup()
-                    print '[{0}]: Unable to create sound source: {1}'.format(self.__class__.__name__, err)
+                    logger.error('Unable to create sound source: %s', err)
                     return
 
                 # load file
                 err = utterance_player.LoadAudioFile(audio_file)
                 if err:
                     utterance_player.Cleanup()
-                    print '[{0}]: Unable to load audio file: {1}'.format(self.__class__.__name__, err)
+                    logger.error('Unable to load audio file: %s', err)
                     return
 
                 utterance_player.filename = audio_file
-                print '[{0}]: Successfully loaded audio file: {1}'.format(self.__class__.__name__, audio_file)
+                logger.info('Successfully loaded audio file: %s', audio_file)
 
                 # Append to queue
                 self.pending_utterances.append(utterance_player)
@@ -146,7 +151,7 @@ class TextToSpeechHandler(HarmonyClientModuleBase):
         if len(self.pending_utterances) > 0:
             self.playing_utterance = self.pending_utterances.pop(0)
             self.playing_utterance.Play()
-            print '[{0}]: Playing audio file: {1}'.format(self.__class__.__name__, self.playing_utterance.filename)
+            logger.info('Playing audio file: %s', self.playing_utterance.filename)
             # add monitor job to check play status and perform lipsync updates
             TTSProcessorThread(tts_handler=self).start()
 

@@ -20,6 +20,11 @@ import time
 import traceback
 import re
 
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
+
 # Nonverbal UI Tabs
 nonverbal_ui_general = "General"
 nonverbal_ui_movement = "Movement"
@@ -203,7 +208,7 @@ class ControlsHandler(HarmonyClientModuleBase):
             return
 
         self.interaction_target_entity_controller = harmony_globals.active_entities[new_entity_id]
-        print('Controls Module: Selected Interaction Target: {0}'.format(self.interaction_target_entity_controller.entity_id))
+        logger.info('Selected Interaction Target: %s', self.interaction_target_entity_controller.entity_id)
 
     def update_buttons(self):
         text_list = [None] * len(self.menu_buttons)
@@ -234,9 +239,9 @@ class ControlsHandler(HarmonyClientModuleBase):
         )
         send_success = self.backend_connector.send_event(get_history_event)
         if send_success:
-            print('Harmony Link: Fetching chat history records...')
+            logger.info('Fetching chat history records...')
         else:
-            print('Harmony Link: Failed to fetch chat records.')
+            logger.error('Failed to fetch chat records.')
 
     def setup_chat_input_gui(self):
         if self.chat_gui_id is not None:
@@ -267,8 +272,8 @@ class ControlsHandler(HarmonyClientModuleBase):
             self.interaction_target_entity_controller = harmony_globals.active_entities[
                 self.chat_gui_data.interaction_target_options[0]
             ]
-            print('Controls Module: Selected Interaction Target: {0}'.format(
-                self.interaction_target_entity_controller.entity_id)
+            logger.info('Selected Interaction Target: %s',
+                self.interaction_target_entity_controller.entity_id
             )
 
         # setup skin
@@ -431,7 +436,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         GUI.color = ui_default_color
 
         if False and GUILayout.Button("?", GUILayout.ExpandWidth(False)):
-            print("show some help")
+            logger.debug("show some help")
         GUILayout.EndHorizontal()
 
         # Small spacer
@@ -445,7 +450,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         elif self.nonverbal_gui_data.current_tab == nonverbal_ui_interaction:
             self.nonverbal_actions_gui_render_tab_interaction()
         else:
-            print 'Harmony Link - Controls: Invalid Tab selected: {0}'.format(self.nonverbal_gui_data.current_tab)
+            logger.error('Invalid Tab selected: %s', self.nonverbal_gui_data.current_tab)
             self.nonverbal_gui_data.current_tab = nonverbal_ui_general
             self.nonverbal_actions_gui_render_tab_general()
 
@@ -555,7 +560,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         if len(self.nonverbal_gui_data.input_value) == 0:
             return
 
-        print "Sending independent nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
+        logger.info("Sending independent nonverbal Interaction: *%s*", self.nonverbal_gui_data.input_value)
         utterance_data = {
             'type': UTTERANCE_NONVERBAL,
             'content': self.nonverbal_gui_data.input_value,
@@ -589,7 +594,7 @@ class ControlsHandler(HarmonyClientModuleBase):
             message = match.group(2)
 
         if command == "say":
-            print "Generating speech for text: {0}".format(message)
+            logger.info("Generating speech for text: %s", message)
             event = HarmonyLinkEvent(
                 event_id='generate_speech',  # This is an arbitrary dummy ID to conform the Harmony Link API
                 event_type=EVENT_TYPE_TTS_GENERATE_SPEECH,
@@ -601,10 +606,10 @@ class ControlsHandler(HarmonyClientModuleBase):
             )
             return self.backend_connector.send_event(event)
         elif len(command) > 0:
-            print 'Unknown command entered: {0}'.format(command)
+            logger.warning('Unknown command entered: %s', command)
             return
 
-        print "Sending independent Interaction: {0}".format(self.chat_gui_data.input_value)
+        logger.info("Sending independent Interaction: %s", self.chat_gui_data.input_value)
         utterance_data = {
             'type': UTTERANCE_COMBINED,
             'content': self.chat_gui_data.input_value,
@@ -629,7 +634,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         if self.nonverbal_gui_id is None or len(self.nonverbal_gui_data.input_value) == 0:
             return
 
-        print "Updating ongoing nonverbal Interaction: *{0}*".format(self.nonverbal_gui_data.input_value)
+        logger.info("Updating ongoing nonverbal Interaction: *%s*", self.nonverbal_gui_data.input_value)
         utterance_data = {
             'type': UTTERANCE_NONVERBAL_DELAYED,
             'content': self.nonverbal_gui_data.input_value,
@@ -675,7 +680,7 @@ class ControlsHandler(HarmonyClientModuleBase):
 
                 self.controls_executing[action] = now + 0.3
 
-                print "Executing action: {0}".format(action)
+                logger.debug("Executing action: %s", action)
                 if ctrl == i_ctrl and alt == i_alt and shift == i_shift:
                     for fn in rules["call_functions"]:
                         fn(self.game)
@@ -688,7 +693,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         if self.entity_controller.sttModule.is_recording_microphone:
             recording_aborted = self.entity_controller.sttModule.stop_listen()
             if not recording_aborted:
-                print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
+                logger.error('Failed to record from microphone.')
                 return
 
             if self.chat_gui_id is not None:
@@ -703,7 +708,7 @@ class ControlsHandler(HarmonyClientModuleBase):
         else:
             recording_started = self.entity_controller.sttModule.start_listen()
             if not recording_started:
-                print 'Harmony Link Plugin for VNGE: Failed to record from microphone.'
+                logger.error('Failed to record from microphone.')
                 return
 
             if self.chat_gui_id is not None:

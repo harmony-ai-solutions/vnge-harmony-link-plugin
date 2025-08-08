@@ -7,6 +7,7 @@
 
 # Import Backend base Module
 from harmony_modules.common import *
+from harmony_modules.logging import get_logger
 
 # VNGE
 from Studio import Info
@@ -15,6 +16,9 @@ import time
 import json
 
 from movement_definitions import registered_actions
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 
 # Action states for tracking execution lifecycle
@@ -119,16 +123,16 @@ class ActionExecutor:
     def execute_action(self, action_instance):
         """Main action execution dispatcher"""
         if not self.chara:
-            print("Warning: No character available for action execution")
+            logger.warning("No character available for action execution")
             self.movement_handler.on_action_completed(action_instance, False)
             return
             
         action_name = action_instance.name
-        print("Executing action: {0}".format(action_name))
+        logger.info("Executing action: %s", action_name)
 
         # Check if we have animation mapping for this action
         if not self.movement_handler.animation_mapper.has_mapping(action_name):
-            print("Warning: No animation mapping for action '{0}', skipping".format(action_name))
+            logger.warning("No animation mapping for action '%s', skipping", action_name)
             self.movement_handler.on_action_completed(action_instance, False)
             return
         
@@ -154,7 +158,7 @@ class ActionExecutor:
         elif action_name in ["jump_fixed"]:
             self._execute_simple_action(action_instance, animation_mapping)
         else:
-            print("Action type not yet implemented: {0}".format(action_name))
+            logger.warning("Action type not yet implemented: %s", action_name)
             # For now, just execute as simple action
             self._execute_simple_action(action_instance, animation_mapping)
     
@@ -162,8 +166,8 @@ class ActionExecutor:
         """Set up timeout monitoring for the action"""
         def check_timeout():
             if action_instance.is_timeout():
-                print("Action '{0}' timed out after {1:.2f}s".format(
-                    action_instance.name, action_instance.get_execution_time()))
+                logger.warning("Action '%s' timed out after %.2fs", 
+                    action_instance.name, action_instance.get_execution_time())
                 action_instance.state = ActionState.TIMEOUT
                 self.movement_handler.on_action_completed(action_instance, False)
         
@@ -189,7 +193,7 @@ class ActionExecutor:
             self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
-            print("Error executing movement action {0}: {1}".format(action.name, e))
+            logger.error("Error executing movement action %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
     
     def _execute_posture_action(self, action, mapping):
@@ -209,7 +213,7 @@ class ActionExecutor:
             self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
-            print("Error executing posture action {0}: {1}".format(action.name, e))
+            logger.error("Error executing posture action %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
     
     def _execute_simple_action(self, action, mapping):
@@ -229,7 +233,7 @@ class ActionExecutor:
             self.entity_controller.gameset_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
             
         except Exception as e:
-            print("Error executing simple action {0}: {1}".format(action.name, e))
+            logger.error("Error executing simple action %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
     
     def _adjust_for_targets(self, targets):
@@ -240,7 +244,7 @@ class ActionExecutor:
             
             if look_at_target and target_name:
                 # TODO: Implement look-at functionality
-                print("Should look at target: {0}".format(target_name))
+                logger.debug("Should look at target: %s", target_name)
 
 
 # MovementHandler - module main class
@@ -284,15 +288,15 @@ class MovementHandler(HarmonyClientModuleBase):
             
             # Verify this action graph is for our entity
             if graph_actor != self.entity_controller.entity_id:
-                print("ActionGraph actor mismatch: {0} != {1}".format(graph_actor, self.entity_controller.entity_id))
+                logger.warning("ActionGraph actor mismatch: %s != %s", graph_actor, self.entity_controller.entity_id)
                 return
 
             if len(graph_vectors) == 0:
-                print("ActionGraph {0} has no vectors, ignoring...".format(graph_id))
+                logger.warning("ActionGraph %s has no vectors, ignoring...", graph_id)
                 return
             
             # Queue all ActionVectors for execution
-            print("Executing ActionGraph {0} with {1} action vectors".format(graph_id, len(graph_vectors)))
+            logger.info("Executing ActionGraph %s with %s action vectors", graph_id, len(graph_vectors))
             for action_vector in graph_vectors:
                 action_instance = ActionInstance(
                     name=action_vector["action"],
@@ -302,28 +306,28 @@ class MovementHandler(HarmonyClientModuleBase):
                 )
                 
                 self.action_queue.append(action_instance)
-                print("Queued action: {0} with {1} targets (state: {2})".format(
-                    action_instance.name, len(action_instance.targets), action_instance.state))
+                logger.debug("Queued action: %s with %s targets (state: %s)", 
+                    action_instance.name, len(action_instance.targets), action_instance.state)
             
             # Start execution if not already running
             if not self.current_action and self.action_queue:
                 self._execute_next_action()
                 
         except Exception as e:
-            print("Error executing ActionGraph: {0}".format(e))
+            logger.error("Error executing ActionGraph: %s", e)
             import traceback
             traceback.print_exc()
     
     def _execute_next_action(self):
         """Execute the next action in the queue"""
         if not self.action_queue:
-            print("Action queue empty, execution complete")
+            logger.info("Action queue empty, execution complete")
             self._print_execution_summary()
             return
             
         self.current_action = self.action_queue.pop(0)
-        print("Starting execution of action: {0} (queue remaining: {1})".format(
-            self.current_action.name, len(self.action_queue)))
+        logger.info("Starting execution of action: %s (queue remaining: %s)", 
+            self.current_action.name, len(self.action_queue))
 
         # Delegate to ActionExecutor
         self.action_executor.execute_action(self.current_action)
@@ -353,7 +357,7 @@ class MovementHandler(HarmonyClientModuleBase):
                 timing_info = " (took {0:.2f}s, expected {1:.2f}s)".format(
                     actual_duration, action_instance.expected_duration or 0.0)
             
-            print("Action '{0}' {1}{2}".format(action_instance.name, status, timing_info))
+            logger.info("Action '%s' %s%s", action_instance.name, status, timing_info)
             
             # Add to history
             self.action_history.append({
@@ -377,15 +381,15 @@ class MovementHandler(HarmonyClientModuleBase):
             # Add small delay for natural flow between actions
             self.entity_controller.gameset_timer(0.5, lambda g: self._execute_next_action())
         else:
-            print("All actions in ActionGraph completed")
+            logger.info("All actions in ActionGraph completed")
     
     def _print_execution_summary(self):
         """Print execution summary for debugging"""
         if self.total_actions_executed > 0:
             success_rate = ((self.total_actions_executed - self.total_actions_failed) / 
                           float(self.total_actions_executed)) * 100.0
-            print("Action execution summary: {0} total, {1} failed, {2:.1f}% success rate, avg time: {3:.2f}s".format(
-                self.total_actions_executed, self.total_actions_failed, success_rate, self.average_execution_time))
+            logger.info("Action execution summary: %s total, %s failed, %.1f%% success rate, avg time: %.2fs",
+                self.total_actions_executed, self.total_actions_failed, success_rate, self.average_execution_time)
     
     def get_action_status(self):
         """Get current action execution status for monitoring"""
@@ -418,15 +422,15 @@ class MovementHandler(HarmonyClientModuleBase):
 
             # Evaluate Target
             if target_entity_controller is None:
-                print("Target '{0}' is not a harmony link entity - skipping processing".format(target_name))
+                logger.warning("Target '%s' is not a harmony link entity - skipping processing", target_name)
                 continue
             if target_entity_controller.perceptionModule is None or not target_entity_controller.perceptionModule.is_active():
                 # Target entity has no active perception module
-                print("Target '{0}' is not a harmony link entity - skipping processing".format(target_name))
+                logger.warning("Target '%s' is not a harmony link entity - skipping processing", target_name)
                 continue
 
-            print("Routing action '{0}' from entity '{1}' to perception handler of target entity '{2}'".format(
-                action_instance.name, self.entity_controller.entity_id, target_name))
+            logger.info("Routing action '%s' from entity '%s' to perception handler of target entity '%s'",
+                        action_instance.name, self.entity_controller.entity_id, target_name)
 
             # Create action event payload with comprehensive context
             action_payload = {
@@ -447,9 +451,8 @@ class MovementHandler(HarmonyClientModuleBase):
 
             # Route to target entity's perception handler
             target_entity_controller.perceptionModule.handle_event(action_event)
-            print("Action event routed successfully to perception handler of entity '{0}'".format(target_name))
+            logger.info("Action event routed successfully to perception handler of entity '%s'", target_name)
 
-    
     def update_chara(self, chara):
         """Update character reference for action execution"""
         self.chara = chara
@@ -467,7 +470,7 @@ class MovementHandler(HarmonyClientModuleBase):
 
         # Get Info Object, which holds all the data we need
         info = Info.Instance
-        # print(json.dumps(dir(info))) -> dir() is helpful to get an idea of what the structure of an object even is
+        # logger.debug(json.dumps(dir(info))) -> dir() is helpful to get an idea of what the structure of an object even is
 
         animations = {}
         animation_groups = dict(info.dicAGroupCategory)
@@ -477,7 +480,7 @@ class MovementHandler(HarmonyClientModuleBase):
                 "categories": {}
             }
             categories = dict(animation_groups[group_id].dicCategory)
-            # print(json.dumps(categories))
+            # logger.debug(json.dumps(categories))
             for category_id, category_name in categories.items():
                 # Not all groups which exist in the Group Category list exist / have animations;
                 # this may cause reference errors, therefore double check here if the values exist
@@ -504,7 +507,7 @@ class MovementHandler(HarmonyClientModuleBase):
                             }
 
         # Print list to console
-        # print(json.dumps(animations))
+        # logger.debug(json.dumps(animations))
 
         # Write to output file in chara dir
         animation_data = json.dumps(animations)
@@ -571,9 +574,9 @@ class MovementHandler(HarmonyClientModuleBase):
             )
             send_success = self.backend_connector.send_event(event)
             if send_success:
-                print('Harmony Link: Scene Data provided for entity "{0}"'.format(self.entity_controller.entity_id))
+                logger.info('Scene Data provided for entity "%s"', self.entity_controller.entity_id)
             else:
-                print('Harmony Link: Failed to transmit scene data for entity "{0}"'.format(self.entity_controller.entity_id))
+                logger.error('Failed to transmit scene data for entity "%s"', self.entity_controller.entity_id)
 
         # Requested available Actions and embedding examples
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
@@ -590,16 +593,16 @@ class MovementHandler(HarmonyClientModuleBase):
             )
             send_success = self.backend_connector.send_event(event)
             if send_success:
-                print('Harmony Link: Available actions provided for entity "{0}"'.format(self.entity_controller.entity_id))
+                logger.info('Available actions provided for entity "%s"', self.entity_controller.entity_id)
             else:
-                print('Harmony Link: Failed to transmit available actions for entity "{0}"'.format(self.entity_controller.entity_id))
+                logger.error('Failed to transmit available actions for entity "%s"', self.entity_controller.entity_id)
 
         # Action Graph received from Harmony Link
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS and event.status == EVENT_STATE_DONE:
             # Action graph received from Harmony Link
             action_graph = event.payload
             if int(self.config["debug_mode"]) == 1:
-                print('[DEBUG][entity-{0}]: ActionGraphV1 received: {1}'.format(self.entity_controller.entity_id, json.dumps(action_graph)))
+                logger.debug('[entity-%s]: ActionGraphV1 received: %s', self.entity_controller.entity_id, json.dumps(action_graph))
             
             # Parse and execute ActionGraphV1
             self._execute_action_graph(action_graph)

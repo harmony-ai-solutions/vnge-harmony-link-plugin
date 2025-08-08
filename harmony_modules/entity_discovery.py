@@ -6,6 +6,10 @@
 import time
 from harmony_modules.common import HarmonyLinkEvent, EVENT_STATE_NEW, EVENT_STATE_DONE, EVENT_TYPE_FETCH_CONFIGURED_ENTITIES
 from harmony_modules.connector import ConnectorEventHandler
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 class EntityDiscoveryHandler:
     """
@@ -61,7 +65,7 @@ class EntityDiscoveryHandler:
                 payload={}
             )
             
-            print('Harmony Link: Fetching available entities...')
+            logger.info('Fetching available entities...')
             success = self.connector.send_event(discovery_event)
             
             if success:
@@ -73,12 +77,12 @@ class EntityDiscoveryHandler:
                     time.sleep(0.1)
                 
                 if not self.response_received:
-                    print('Harmony Link: Timeout waiting for entity list')
+                    logger.error('Timeout waiting for entity list')
             else:
-                print('Harmony Link: Failed to send entity discovery request')
+                logger.error('Failed to send entity discovery request')
             
         except Exception as e:
-            print('Harmony Link: Error during entity discovery: {0}'.format(str(e)))
+            logger.error('Error during entity discovery: %s', str(e))
             
         finally:
             # Always cleanup the connector
@@ -113,14 +117,14 @@ class EntityDiscoveryHandler:
                     else:
                         self.available_entities = []
                 
-                print('Harmony Link: Received {0} entities'.format(len(self.available_entities)))
+                logger.info('Received %s entities', len(self.available_entities))
                 for entity in self.available_entities:
-                    print('  - Entity: {0}'.format(entity.get('id', 'unknown')))
+                    logger.info('  - Entity: %s', entity.get('id', 'unknown'))
                     
                 self.response_received = True
                 
             except Exception as e:
-                print('Harmony Link: Error parsing entity list: {0}'.format(str(e)))
+                logger.error('Error parsing entity list: %s', str(e))
                 self.response_received = True  # Stop waiting even on error
     
     def activate(self):

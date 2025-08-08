@@ -15,6 +15,11 @@ import base64
 import time
 import struct
 
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
+
 # Constants
 RESULT_MODE_PROCESS = "process"
 RESULT_MODE_RETURN = "return"
@@ -222,11 +227,11 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         )
         success = self.backend_connector.send_event(event)
         if success:
-            print 'Harmony Link: listening...'
+            logger.info('listening...')
             self.is_recording_microphone = True
             return True
         else:
-            print 'Harmony Link: listen failed'
+            logger.error('listen failed')
             # Stop recording
             return False
 
@@ -243,17 +248,17 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         )
         success = self.backend_connector.send_event(event)
         if success:
-            print 'Harmony Link: listening stopped. Processing speech...'
+            logger.info('listening stopped. Processing speech...')
 
             # Stop recording to ongoing audio clip
             if not self.stop_continuous_recording():
-                print 'failed to stop continous recording'
+                logger.error('failed to stop continous recording')
                 return False
 
             self.is_recording_microphone = False
             return True
         else:
-            print 'Harmony Link: stop listen failed.'
+            logger.error('stop listen failed.')
             return False
 
     def get_microphone(self):
@@ -266,20 +271,20 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         #
         # Therefore we explicitly allow microphone name to be an empty string
         if len(devices) <= 0:
-            print 'No microphone available.'
+            logger.warning('No microphone available.')
             return None
         else:
-            print 'Available microphones:'
+            logger.info('Available microphones:')
             for mic_id, device in enumerate(devices):
                 # Get recording capabilities
                 minFreq, maxFreq = Microphone.GetDeviceCaps(device)
-                print "{0} : {1} (MinFreq: {2}, MaxFreq: {3})".format(mic_id, device, minFreq, maxFreq)
+                logger.info("%s : %s (MinFreq: %s, MaxFreq: %s)", mic_id, device, minFreq, maxFreq)
                 device_capabilities[device] = (minFreq, maxFreq)
 
         if microphone_name == 'default':
             microphone_name = devices[0]
         elif microphone_name not in device_capabilities:
-            print 'No microphone with provided name "{0}" available.'.format(microphone_name)
+            logger.error('No microphone with provided name "%s" available.', microphone_name)
             return None
 
         # Check for correct sample rate being used
@@ -287,10 +292,10 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         if not minFreq == 0 and not maxFreq == 0:
             if self.sample_rate > maxFreq:
                 self.sample_rate = maxFreq
-                print "correcting sample rate from config to {0}".format(self.sample_rate)
+                logger.warning("correcting sample rate from config to %s", self.sample_rate)
             elif self.sample_rate < minFreq:
                 self.sample_rate = minFreq
-                print "correcting sample rate from config to {0}".format(self.sample_rate)
+                logger.warning("correcting sample rate from config to %s", self.sample_rate)
 
         return microphone_name
 
@@ -303,23 +308,23 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         #
         # Therefore we explicitly allow microphone name to be an empty string
         if self.microphone_name is None or not isinstance(self.microphone_name, str):
-            print 'No microphone available.'
+            logger.error('No microphone available.')
             return False
 
         # Reset Buffer before starting recording
         self.recording_buffer = bytearray()
         self.dropped_buffer_bytes = 0
 
-        print 'Recording with microphone: "{0}"'.format(self.microphone_name)
+        logger.info('Recording with microphone: "%s"', self.microphone_name)
         self.recording_clip = Microphone.Start(self.microphone_name, True, self.record_stepping, self.sample_rate)
         # Wait until recording has started
         start_time = time.time()
         while not Microphone.IsRecording(self.microphone_name):
             if time.time() - start_time > 1.0:
-                print 'Failed to start continuous recording.'
+                logger.error('Failed to start continuous recording.')
                 return False
             time.sleep(0.1)
-        print 'Continuous recording started.'
+        logger.info('Continuous recording started.')
         self.recording_start_time = time.time()
         return True
 
@@ -331,12 +336,12 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         timeout_counter = 0
         while len(self.active_recording_events) > 0:
             if timeout_counter % 10 == 0:
-                print 'waiting for recording clips to finish...'
+                logger.debug('waiting for recording clips to finish...')
             if timeout_counter < 100:
                 timeout_counter += 1
                 time.sleep(0.1)
             else:
-                print 'recording events did not finish within timeout of 10 seconds'
+                logger.error('recording events did not finish within timeout of 10 seconds')
                 return False
 
         # Stop the microphone recording
@@ -348,7 +353,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             self.recording_thread.join()
             self.recording_thread = None
 
-        print 'Continuous recording stopped.'
+        logger.info('Continuous recording stopped.')
         return True
 
     def get_buffer_fetch_indices(self, start_byte, end_byte):
@@ -384,23 +389,22 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         with self.lock:
             actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
-            # Log final indices
-            print "Bytes count: {0}".format(bytes_count)
-            print "Start byte (total / buffer): {0} / {1}".format(start_byte, start_byte - self.dropped_buffer_bytes)
-            print "End byte (total / buffer): {0} / {1}".format(end_byte, end_byte - self.dropped_buffer_bytes)
+            logger.debug("Bytes count: %s", bytes_count)
+            logger.debug("Start byte (total / buffer): %s / %s", start_byte, start_byte - self.dropped_buffer_bytes)
+            logger.debug("End byte (total / buffer): %s / %s", end_byte, end_byte - self.dropped_buffer_bytes)
 
             audio_bytes = self.recording_buffer[actual_start_byte:actual_end_byte]
 
         # DEBUG CODE
-        # print "Length of audio_bytes:", len(audio_bytes)
-        # print "First 20 bytes of audio_bytes:", audio_bytes[:20]
+        logger.trace("Length of audio_bytes: %s", len(audio_bytes))
+        logger.trace("First 20 bytes of audio_bytes: %s", audio_bytes[:20])
 
         # Encode to base64
         encoded_data = base64.b64encode(audio_bytes)
 
         # DEBUG CODE
-        # print "Length of encoded_data:", len(encoded_data)
-        # print "First 50 characters of encoded_data:", encoded_data[:50]
+        logger.trace("Length of encoded_data: %s", len(encoded_data))
+        logger.trace("First 50 characters of encoded_data: %s", encoded_data[:50])
 
         # Send result event
         result_event = HarmonyLinkEvent(
@@ -417,4 +421,3 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.backend_connector.send_event(result_event)
         # Remove the event from the tracking
         del self.active_recording_events[event_id]
-

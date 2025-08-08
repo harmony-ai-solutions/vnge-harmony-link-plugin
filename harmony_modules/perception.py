@@ -10,6 +10,7 @@
 
 # Import Backend base Module
 from harmony_modules.common import *
+from harmony_modules.logging import get_logger
 
 # VNGE
 from vngameengine import vnge_game as game
@@ -18,6 +19,9 @@ from vnactor import char_act_funcs
 
 from threading import Thread
 import time
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 # Perception related - this might be individual for different characters later, but for now assume a base value
 _visual_perception_range = 1000  # Distance for entities to recognize others
@@ -45,26 +49,26 @@ class PerceptionHandler(HarmonyClientModuleBase):
             actor_entity_id = action_data.get("actor_entity_id", "unknown")
             action_name = action_data.get("action_name", "unknown")
             
-            print('Entity "{0}" - Perception module: Received action "{1}" from entity "{2}"'.format(
+            logger.info('Entity "%s" - Perception module: Received action "%s" from entity "%s"',
                 self.entity_controller.entity_id,
                 action_name,
                 actor_entity_id
-            ))
+            )
 
             action_actor = self.entity_controller.game.scenef_get_actor(actor_entity_id)
             if action_actor is None:
-                print('Entity "{0}" - Perception module: No actor chara found for entity ID "{1}"'.format(
+                logger.warning('Entity "%s" - Perception module: No actor chara found for entity ID "%s"',
                     self.entity_controller.entity_id,
                     actor_entity_id
-                ))
+                )
                 return
 
             # Check whether entity can perceive the event
             if not self.check_for_event_recognition(event, action_actor):
-                print('Entity "{0}" - Perception module: Ignoring event with ID "{1}" since it cannot be perceived by this entity'.format(
+                logger.info('Entity "%s" - Perception module: Ignoring event with ID "%s" since it cannot be perceived by this entity',
                     self.entity_controller.entity_id,
                     event.event_id
-                ))
+                )
                 return
 
 
@@ -83,10 +87,10 @@ class PerceptionHandler(HarmonyClientModuleBase):
             event_entity_id = utterance_data["entity_id"]
             event_actor = self.entity_controller.game.scenef_get_actor(event_entity_id)
             if event_actor is None:
-                print('Entity "{0}" - Perception module: No actor chara found for entity ID "{0}"'.format(
+                logger.warning('Entity "%s" - Perception module: No actor chara found for entity ID "%s"',
                     self.entity_controller.entity_id,
                     event_entity_id
-                ))
+                )
                 # FIXME: more explicit user check here
 
                 # Forward it as explicit user utterance event to harmony link for this entity
@@ -101,10 +105,10 @@ class PerceptionHandler(HarmonyClientModuleBase):
 
             # Check whether entity can perceive the event
             if not self.check_for_event_recognition(event, event_actor):
-                print('Entity "{0}" - Perception module: Ignoring event with ID "{1}" since it cannot be perceived by this entity'.format(
+                logger.info('Entity "%s" - Perception module: Ignoring event with ID "%s" since it cannot be perceived by this entity',
                     self.entity_controller.entity_id,
                     event.event_id
-                ))
+                )
                 return
 
         # Suppress Speech output for the current entity

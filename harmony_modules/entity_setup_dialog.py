@@ -9,6 +9,11 @@ from vngameengine import HSNeoOCI, HSNeoOCIChar, HSNeoOCIFolder
 from skin_customwindow import SkinCustomWindow
 from Studio import Studio, OCIChar
 
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
+
 
 class EntitySetupDialog:
     """
@@ -41,7 +46,7 @@ class EntitySetupDialog:
         for tagged_actor_id, actor in tagged_actors.items():
             # Track this as a pre-labeled actor
             self.pre_labeled_actors[tagged_actor_id] = actor
-            print('Found pre-labeled actor: {0} -> {1}'.format(tagged_actor_id, actor.text_name))
+            logger.info('Found pre-labeled actor: %s -> %s', tagged_actor_id, actor.text_name)
 
         # Pre-populate with existing tagged actors
         for tagged_actor_id, actor in tagged_actors.items():
@@ -49,7 +54,7 @@ class EntitySetupDialog:
             for entity in entities:
                 if entity['id'] == tagged_actor_id:
                     self.entity_mappings[tagged_actor_id] = actor
-                    print('Pre-populated existing mapping: {0} -> {1}'.format(tagged_actor_id, actor.text_name))
+                    logger.info('Pre-populated existing mapping: %s -> %s', tagged_actor_id, actor.text_name)
                     break
 
         # Then find exact name matches for unmapped entities
@@ -58,7 +63,7 @@ class EntitySetupDialog:
                 for actor in actors:
                     if entity['id'].lower() == actor.text_name.lower():
                         self.entity_mappings[entity['id']] = actor
-                        print('Auto-matched by name: {0} -> {1}'.format(entity['id'], actor.text_name))
+                        logger.info('Auto-matched by name: %s -> %s', entity['id'], actor.text_name)
                         break
 
         # Try to auto-select user entity (look for common user entity names)
@@ -184,7 +189,7 @@ class EntitySetupDialog:
             GUILayout.EndVertical()
 
         except Exception as e:
-            print('Entity Setup Dialog Error: {0}'.format(str(e)))
+            logger.error('Entity Setup Dialog Error: %s', str(e))
             import traceback
             traceback.print_exc()
 
@@ -331,17 +336,16 @@ class EntitySetupDialog:
             # Check if this actor is already mapped to another entity in current dialog
             for existing_entity_id, existing_actor in self.entity_mappings.items():
                 if existing_entity_id != entity_id and existing_actor == actor:
-                    print('Warning: Actor {0} is already mapped to entity {1}, cannot map to {2}'.format(
-                        actor.text_name, existing_entity_id, entity_id))
+                    logger.warning('Actor %s is already mapped to entity %s, cannot map to %s', actor.text_name, existing_entity_id, entity_id)
                     return  # Prevent duplicate mapping
 
             # Set the mapping
             self.entity_mappings[entity_id] = actor
-            print('Mapped entity {0} to actor {1}'.format(entity_id, actor.text_name))
+            logger.info('Mapped entity %s to actor %s', entity_id, actor.text_name)
         else:
             # Remove mapping
             if entity_id in self.entity_mappings:
-                print('Unmapped entity {0}'.format(entity_id))
+                logger.info('Unmapped entity %s', entity_id)
             self.entity_mappings.pop(entity_id, None)
 
     def render_user_entity_menu(self):
@@ -377,14 +381,14 @@ class EntitySetupDialog:
 
     def apply_mappings(self):
         """Apply the entity-actor mappings by creating/updating actor tags"""
-        print('Applying entity mappings...')
+        logger.info('Applying entity mappings...')
 
         # Ensure user entity is set
         if not self.user_entity:
-            print('Error: No user entity selected!')
+            logger.error('No user entity selected!')
             return
 
-        print('User entity set to: {0}'.format(self.user_entity))
+        logger.info('User entity set to: %s', self.user_entity)
 
         # Apply actor mappings
         for entity_id, actor in self.entity_mappings.items():
@@ -407,16 +411,16 @@ class EntitySetupDialog:
 
                 if tagfld:
                     # Update existing tag
-                    print('Updating existing tag for {0}'.format(entity_id))
+                    logger.info('Updating existing tag for %s', entity_id)
                     tagfld.name = "-actor:" + entity_id
                 else:
                     # Create new tag
-                    print('Creating new tag for {0}'.format(entity_id))
+                    logger.info('Creating new tag for %s', entity_id)
                     tagfld = HSNeoOCIFolder.add("-actor:" + entity_id)
                     tagfld.set_parent_treenodeobject(actor.objctrl.treeNodeObject.child[0].child[0])
 
             except Exception as e:
-                print('Error mapping entity {0}: {1}'.format(entity_id, str(e)))
+                logger.error('Error mapping entity %s: %s', entity_id, str(e))
 
         # Store user entity selection for the plugin to use
         # This will be handled in the startup flow integration
@@ -424,12 +428,12 @@ class EntitySetupDialog:
 
         # Register actors after all mappings are done
         self.game.scenef_register_actorsprops()
-        print('Entity mappings applied successfully')
-        print('User entity: {0}'.format(self.user_entity))
+        logger.info('Entity mappings applied successfully')
+        logger.info('User entity: %s', self.user_entity)
 
     def abort_startup(self):
         """Abort the startup process by setting a flag for the main plugin to detect"""
-        print('User aborted entity setup - marking for startup abort')
+        logger.info('User aborted entity setup - marking for startup abort')
         # Set a flag that the main plugin can check
         self.game._harmony_startup_aborted = True
 
