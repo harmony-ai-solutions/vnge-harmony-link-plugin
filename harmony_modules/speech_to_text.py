@@ -14,6 +14,8 @@ from threading import Thread, Lock
 import base64
 import time
 import struct
+import os
+import re
 
 from harmony_modules.logging import get_logger
 
@@ -32,60 +34,71 @@ class MicrophoneRecordingThread(Thread):
         # Control flow
         self.running = False
         # Params
-        self.tts_handler = stt_handler
+        self.stt_handler = stt_handler
         self.record_stepping = record_stepping  # in milliseconds
         self.sleep_time = record_stepping / 1000.0  # Convert to seconds
         self.last_sample_position = 0
-        self.clip_samples = self.tts_handler.recording_clip.samples
-        self.channels = self.tts_handler.channels
-        self.bytes_per_sample = self.tts_handler.bytes_per_sample
-        self.bytes_per_second = self.tts_handler.bytes_per_second
-        self.max_buffer_bytes = self.tts_handler.max_buffer_bytes
+        self.clip_samples = self.stt_handler.recording_clip.samples  # samples per channel
+        self.channels = self.stt_handler.channels
+        self.bytes_per_sample = self.stt_handler.bytes_per_sample
+        self.bytes_per_second = self.stt_handler.bytes_per_second
+        self.max_buffer_bytes = self.stt_handler.max_buffer_bytes
 
     def run(self):
         self.running = True
         while self.running:
-            current_position = Microphone.GetPosition(self.tts_handler.microphone_name)
+            current_position = Microphone.GetPosition(self.stt_handler.microphone_name)
             sample_count = 0
             if current_position < self.last_sample_position:
-                # Wrap-around occurred
+                # Wrap-around occurred (positions are in samples per channel)
                 sample_count = self.clip_samples - self.last_sample_position + current_position
             else:
                 sample_count = current_position - self.last_sample_position
 
             if sample_count > 0:
-                samples = Array.CreateInstance(Single, sample_count)
+                # Unity's GetData expects the data buffer length in total samples (interleaved across channels)
+                total_samples_to_read = sample_count * self.channels
+                samples = Array.CreateInstance(Single, total_samples_to_read)
+
                 # Read samples from last_sample_position to current_position
                 if current_position >= self.last_sample_position:
                     # No wrap-around
-                    self.tts_handler.recording_clip.GetData(samples, self.last_sample_position)
+                    self.stt_handler.recording_clip.GetData(samples, self.last_sample_position)
                 else:
                     # Wrap-around
-                    first_part_length = self.clip_samples - self.last_sample_position
+                    first_part_length = (self.clip_samples - self.last_sample_position) * self.channels
                     first_part_samples = Array.CreateInstance(Single, first_part_length)
-                    self.tts_handler.recording_clip.GetData(first_part_samples, self.last_sample_position)
-                    second_part_length = current_position
+                    self.stt_handler.recording_clip.GetData(first_part_samples, self.last_sample_position)
+
+                    second_part_length = current_position * self.channels
                     second_part_samples = Array.CreateInstance(Single, second_part_length)
-                    self.tts_handler.recording_clip.GetData(second_part_samples, 0)
+                    self.stt_handler.recording_clip.GetData(second_part_samples, 0)
+
                     # Combine samples
                     first_part_samples.CopyTo(samples, 0)
                     second_part_samples.CopyTo(samples, first_part_length)
 
-                # Convert samples to 16-bit PCM byte data
+                # Convert samples to 16-bit PCM byte data (little-endian)
+                # Clamp to [-1.0, 1.0], scale, then convert
                 audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
 
                 # Lock the buffer while appending
-                with self.tts_handler.lock:
+                with self.stt_handler.lock:
                     # Append new audio bytes
-                    self.tts_handler.recording_buffer.extend(audio_bytes)
+                    self.stt_handler.recording_buffer.extend(audio_bytes)
                     # Remove oldest data if buffer exceeds max size
-                    buffer_length = len(self.tts_handler.recording_buffer)
+                    buffer_length = len(self.stt_handler.recording_buffer)
                     if buffer_length > self.max_buffer_bytes:
+                        # Important: drop in multiples of block align (channels * bytes per sample) to avoid misalignment
                         excess_bytes = buffer_length - self.max_buffer_bytes
-                        del self.tts_handler.recording_buffer[:excess_bytes]
-                        self.tts_handler.dropped_buffer_bytes += excess_bytes
+                        block_align = self.channels * self.bytes_per_sample
+                        if excess_bytes % block_align != 0:
+                            excess_bytes -= (excess_bytes % block_align)
+                        if excess_bytes > 0:
+                            del self.stt_handler.recording_buffer[:excess_bytes]
+                            self.stt_handler.dropped_buffer_bytes += excess_bytes
 
-                # Update last_sample_position
+                # Update last_sample_position (still in samples per channel)
                 self.last_sample_position = current_position
 
             # Sleep for the record stepping interval
@@ -106,15 +119,15 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.channels = int(self.config['channels'])
         self.bit_depth = int(self.config['bit_depth'])
         self.sample_rate = int(self.config['sample_rate'])
-        self.buffer_clip_duration = int(self.config['buffer_clip_duration'])
-        self.record_stepping = int(self.config['record_stepping'])
+        self.buffer_clip_duration = int(self.config['buffer_clip_duration'])  # seconds
+        self.record_stepping = int(self.config['record_stepping'])  # milliseconds
         self.microphone_name = self.get_microphone()
         # Recording Handling
         self.is_recording_microphone = False
         self.active_recording_events = {}
-        self.recording_buffer = None # bytearray
-        self.recording_clip = None # AudioClip
-        self.recording_start_time = None # time.time
+        self.recording_buffer = None  # bytearray
+        self.recording_clip = None  # AudioClip
+        self.recording_start_time = None  # time.time
         self.recording_thread = None
         self.dropped_buffer_bytes = 0
         self.lock = Lock()
@@ -123,6 +136,85 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.bytes_per_second = self.sample_rate * self.channels * self.bytes_per_sample
         # Calculate maximum buffer size in bytes
         self.max_buffer_bytes = self.bytes_per_second * self.buffer_clip_duration
+        # Debug options (safe parse from config; default False)
+        self.debug_save_python_wavs = self._to_bool(self.config.get('debug_save_python_wavs', False))
+        self.debug_dir = os.path.join('harmony_debug_audio')
+        self._ensure_debug_dir()
+
+    def _to_bool(self, val):
+        if isinstance(val, bool):
+            return val
+        try:
+            s = str(val).strip().lower()
+            return s in ('1', 'true', 'yes', 'y', 'on')
+        except Exception:
+            return False
+
+    def _ensure_debug_dir(self):
+        if self.debug_save_python_wavs:
+            try:
+                if not os.path.isdir(self.debug_dir):
+                    os.makedirs(self.debug_dir)
+            except Exception as e:
+                logger.warn("Unable to create debug directory '%s': %s", self.debug_dir, str(e))
+
+    def _sanitize(self, text):
+        try:
+            return re.sub(r'[^A-Za-z0-9_\-]+', '_', text or '')
+        except Exception:
+            return 'chunk'
+
+    def _write_wav_file(self, pcm_bytes, filename_prefix, suffix=''):
+        """
+        Write a WAV file with PCM 16-bit little-endian data using current audio params.
+        Ensures data chunk is aligned to block boundaries (channels * bytes_per_sample).
+        """
+        try:
+            block_align = self.channels * self.bytes_per_sample
+            data_size = len(pcm_bytes)
+            # Align to block boundary (trim tail if not aligned)
+            if data_size % block_align != 0:
+                aligned_size = data_size - (data_size % block_align)
+                logger.debug("Trimming WAV data from %s to %s bytes to maintain block alignment", data_size, aligned_size)
+                pcm_bytes = pcm_bytes[:aligned_size]
+                data_size = len(pcm_bytes)
+
+            # WAV header fields
+            chunk_size = 36 + data_size
+            audio_format = 1  # PCM
+            byte_rate = self.sample_rate * block_align
+            bits_per_sample = self.bit_depth
+
+            # File path
+            timestamp = int(time.time() * 1000)
+            safe_suffix = self._sanitize(suffix)
+            file_name = "{0}_{1}_{2}.wav".format(filename_prefix, timestamp, safe_suffix) if safe_suffix else "{0}_{1}.wav".format(filename_prefix, timestamp)
+            file_path = os.path.join(self.debug_dir, file_name)
+
+            with open(file_path, 'wb') as f:
+                # RIFF header
+                f.write(b'RIFF')
+                f.write(struct.pack('<I', chunk_size))
+                f.write(b'WAVE')
+                # fmt subchunk
+                f.write(b'fmt ')
+                f.write(struct.pack('<I', 16))  # Subchunk1Size for PCM
+                f.write(struct.pack('<H', audio_format))  # AudioFormat
+                f.write(struct.pack('<H', self.channels))  # NumChannels
+                f.write(struct.pack('<I', self.sample_rate))  # SampleRate
+                f.write(struct.pack('<I', byte_rate))  # ByteRate
+                f.write(struct.pack('<H', block_align))  # BlockAlign
+                f.write(struct.pack('<H', bits_per_sample))  # BitsPerSample
+                # data subchunk
+                f.write(b'data')
+                f.write(struct.pack('<I', data_size))
+                # PCM data
+                f.write(pcm_bytes)
+
+            logger.info("Saved debug WAV: %s (channels=%s, sample_rate=%s, bit_depth=%s, bytes=%s)",
+                        file_path, self.channels, self.sample_rate, self.bit_depth, data_size)
+        except Exception as e:
+            logger.error("Failed to write debug WAV: %s", str(e))
 
     def handle_event(
             self,
@@ -316,7 +408,8 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.dropped_buffer_bytes = 0
 
         logger.info('Recording with microphone: "%s"', self.microphone_name)
-        self.recording_clip = Microphone.Start(self.microphone_name, True, self.record_stepping, self.sample_rate)
+        # Use buffer_clip_duration for the clip length (in seconds); frequency is sample_rate
+        self.recording_clip = Microphone.Start(self.microphone_name, True, self.buffer_clip_duration, self.sample_rate)
         # Wait until recording has started
         start_time = time.time()
         while not Microphone.IsRecording(self.microphone_name):
@@ -371,16 +464,16 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
         # If start index is after current buffer boundary
         while actual_start_byte > buffer_size:
-            time_till_buffer_reached = (actual_start_byte - buffer_size) / self.bytes_per_second
-            time.sleep(time_till_buffer_reached)
+            time_till_buffer_reached = (actual_start_byte - buffer_size) / float(self.bytes_per_second)
+            time.sleep(max(time_till_buffer_reached, 0.0))
             # Determine again if we need to wait more
             with self.lock:
                 actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
         # If end index is after current buffer boundary
         while actual_end_byte > buffer_size:
-            time_till_buffer_reached = (actual_end_byte - buffer_size) / self.bytes_per_second
-            time.sleep(time_till_buffer_reached)
+            time_till_buffer_reached = (actual_end_byte - buffer_size) / float(self.bytes_per_second)
+            time.sleep(max(time_till_buffer_reached, 0.0))
             # Determine again if we need to wait more
             with self.lock:
                 actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
@@ -395,7 +488,11 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
             audio_bytes = self.recording_buffer[actual_start_byte:actual_end_byte]
 
-        # DEBUG CODE
+        # DEBUG CODE: save chunk as WAV on Python side if enabled
+        if self.debug_save_python_wavs:
+            self._write_wav_file(audio_bytes, filename_prefix="mic_chunk", suffix=event_id)
+
+        # DEBUG TRACE
         logger.trace("Length of audio_bytes: %s", len(audio_bytes))
         logger.trace("First 20 bytes of audio_bytes: %s", audio_bytes[:20])
 
@@ -435,27 +532,17 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             if not audio_bytes or len(audio_bytes) == 0:
                 logger.error("Empty audio data provided for encoding")
                 return None
-                
+
             # Log audio data stats for debugging
             logger.debug("Encoding audio data: %d bytes", len(audio_bytes))
-            
+
             # Encode to base64 and explicitly decode to UTF-8 string
             encoded_bytes = base64.b64encode(audio_bytes)
             encoded_string = encoded_bytes.decode('utf-8', errors='strict')
-            
-            # Validate encoding by attempting to decode it back
-            # try:
-            #     test_decode = base64.b64decode(encoded_string)
-            #     if len(test_decode) != len(audio_bytes):
-            #         logger.error("Encoding validation failed: size mismatch (original: %d, decoded: %d)", len(audio_bytes), len(test_decode))
-            #         return None
-            # except Exception as decode_error:
-            #     logger.error("Encoding validation failed: %s", str(decode_error))
-            #     return None
-                
+
             logger.debug("Successfully encoded %d bytes to %d character string", len(audio_bytes), len(encoded_string))
             return encoded_string
-            
+
         except Exception as e:
             logger.error("Failed to encode audio data: %s", str(e))
             return None
