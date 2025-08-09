@@ -1,9 +1,11 @@
 # VNGE Harmony Link Plugin - Active Context
 
 ## Current Work Focus
+**JUST COMPLETED**: TTS Audio Playback Timing Fix - Fixed critical audio playback issue where TTS audio would not play due to race condition in playback monitoring.
+
 **JUST COMPLETED**: Created a configurable logging wrapper system to replace all print() statements throughout the VNGE Harmony Link Plugin codebase.
 
-**CURRENT STATUS**: Logging system is implemented and partially deployed. Core infrastructure complete, with ~50% of print statements converted to proper logging calls. Remaining work involves systematic replacement of print statements across all remaining modules.
+**CURRENT STATUS**: Core TTS functionality now working reliably. Logging system is implemented and partially deployed. Core infrastructure complete, with ~50% of print statements converted to proper logging calls. Remaining work involves systematic replacement of print statements across all remaining modules.
 
 **PREVIOUS MAJOR COMPLETION**: Entity Setup Enhancement - Comprehensive automated entity setup system that eliminates manual configuration requirements for users.
 
@@ -44,6 +46,33 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 - Decision request handling with structured responses
 
 ## Recent Changes
+
+### ✅ TTS Audio Playback Timing Fix (Just Completed)
+**Description**: Fixed critical audio playback issue where TTS audio would not play due to a race condition in the playback monitoring thread.
+
+**Root Cause**: The `TTSProcessorThread.wait_voice_played()` method was checking `isPlaying` status immediately after calling `Play()`, before the VNGE audio system had time to initialize the audio stream. This caused the monitoring thread to think playback was already complete and immediately trigger cleanup, resulting in no audible audio.
+
+**Key Changes:**
+- **Added Playback State Tracking**: Enhanced `TTSProcessorThread` with `playback_started`, `start_time`, and `min_playback_duration` fields
+- **Initialization Delay Logic**: Implemented minimum wait time (0.5 seconds) before considering playback complete if audio hasn't started
+- **Startup Detection**: Track when audio actually begins playing vs when `Play()` is called
+- **Enhanced Logging**: Added debug logging for playback start/completion and warning for potential failures
+- **Timing Analysis**: Monitor elapsed time from `Play()` call to actual completion for debugging
+
+**Technical Solution:**
+- **Race Condition Prevention**: Wait for audio system initialization before accepting `isPlaying = False` as completion
+- **State Machine Enhancement**: Track playback lifecycle: `Play()` called → audio started → audio completed
+- **Graceful Degradation**: If audio never starts playing, still complete after minimum duration to prevent hanging
+- **Performance Monitoring**: Log actual playback duration for debugging and optimization
+
+**Files Modified:**
+- `harmony_modules/text_to_speech.py`: Enhanced `TTSProcessorThread` class with robust timing logic
+
+**Impact:**
+- **Fixed Audio Playback**: TTS audio now plays reliably instead of being immediately skipped
+- **Improved Debugging**: Enhanced logging provides visibility into audio system timing
+- **Robust Error Handling**: System gracefully handles cases where audio fails to start
+- **Better User Experience**: Characters now properly speak generated audio content
 
 ### ✅ Entity Setup Enhancement (Just Completed)
 **Description**: Comprehensive automated entity setup system that eliminates manual configuration requirements for users.

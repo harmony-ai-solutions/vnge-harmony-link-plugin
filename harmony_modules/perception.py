@@ -114,11 +114,13 @@ class PerceptionHandler(HarmonyClientModuleBase):
         # Suppress Speech output for the current entity
         if event.event_type == EVENT_TYPE_STT_SPEECH_STARTED and event.status == EVENT_STATE_DONE:
             # event_entity_id = event.payload
+            logger.debug('received EVENT_TYPE_STT_SPEECH_STARTED')
             self.entity_controller.ttsModule.suppress_speech(suppress=True)
 
         # Unsuppress Speech output for the current entity
         if event.event_type == EVENT_TYPE_STT_SPEECH_STOPPED and event.status == EVENT_STATE_DONE:
             # event_entity_id = event.payload
+            logger.debug('received EVENT_TYPE_STT_SPEECH_STOPPED')
             self.entity_controller.ttsModule.suppress_speech(suppress=False)
 
         return

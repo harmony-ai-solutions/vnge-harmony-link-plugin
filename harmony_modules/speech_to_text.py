@@ -83,7 +83,7 @@ class MicrophoneRecordingThread(Thread):
                 audio_bytes = b''.join([struct.pack('<h', int(max(min(s, 1.0), -1.0) * 32767)) for s in samples])
 
                 # Lock the buffer while appending
-                with self.stt_handler.lock:
+                with self.stt_handler.buffer_lock:
                     # Append new audio bytes
                     self.stt_handler.recording_buffer.extend(audio_bytes)
                     # Remove oldest data if buffer exceeds max size
@@ -130,7 +130,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.recording_start_time = None  # time.time
         self.recording_thread = None
         self.dropped_buffer_bytes = 0
-        self.lock = Lock()
+        self.buffer_lock = Lock()
         # Calculate bytes per second
         self.bytes_per_sample = self.bit_depth // 8
         self.bytes_per_second = self.sample_rate * self.channels * self.bytes_per_sample
@@ -459,27 +459,29 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         # Get end byte
         end_byte = start_byte + bytes_count
         # Determine if we need to wait
-        with self.lock:
+        with self.buffer_lock:
             actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
         # If start index is after current buffer boundary
         while actual_start_byte > buffer_size:
             time_till_buffer_reached = (actual_start_byte - buffer_size) / float(self.bytes_per_second)
+            logger.debug('start index (%s) still exceeding buffer range (%s). Waiting for %d seconds.', actual_start_byte, buffer_size, time_till_buffer_reached)
             time.sleep(max(time_till_buffer_reached, 0.0))
             # Determine again if we need to wait more
-            with self.lock:
+            with self.buffer_lock:
                 actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
         # If end index is after current buffer boundary
         while actual_end_byte > buffer_size:
             time_till_buffer_reached = (actual_end_byte - buffer_size) / float(self.bytes_per_second)
+            logger.debug('end index (%s) still exceeding buffer range (%s). Waiting for %d seconds.', actual_end_byte, buffer_size, time_till_buffer_reached)
             time.sleep(max(time_till_buffer_reached, 0.0))
             # Determine again if we need to wait more
-            with self.lock:
+            with self.buffer_lock:
                 actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
         # Get bytes from buffer
-        with self.lock:
+        with self.buffer_lock:
             actual_start_byte, actual_end_byte, buffer_size = self.get_buffer_fetch_indices(start_byte, end_byte)
 
             logger.debug("Bytes count: %s", bytes_count)
