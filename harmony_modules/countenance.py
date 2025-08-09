@@ -10,6 +10,10 @@
 
 # Import Backend base Module
 from harmony_modules.common import *
+from harmony_modules.logging import get_logger
+
+# Initialize logger for this module
+logger = get_logger(__name__)
 
 # VNGE
 from vngameengine import vnge_game as game
@@ -81,6 +85,34 @@ expressions_female = expressions_default.copy()
 # Custom expressions
 # TODO
 
+DEFAULT_EMOTION = "neutral"
+DEFAULT_EXPRESSION = "normal"
+
+# CountenanceState - describes the current countenance of an AI character
+class CountenanceState:
+    def __init__(self, countenance_handler):
+        # Handler reference
+        self.handler = countenance_handler
+        # Initialize with default values
+        self.emotional_state = DEFAULT_EMOTION
+        self.facial_expression = DEFAULT_EXPRESSION
+
+    def update(self, emotional_state=DEFAULT_EMOTION, facial_expression=DEFAULT_EXPRESSION):
+        # Update countenance expression
+        self.emotional_state = emotional_state
+        self.facial_expression = facial_expression
+        logger.debug('Updated emotional state: %s.',self.emotional_state)
+        logger.debug('Updated facial expression: %s.', self.facial_expression)
+
+        # Update actor for handler
+        self.handler.countenance_update('', self.emotional_state, self.facial_expression)
+
+    def get_emotional_state(self):
+        return self.emotional_state
+
+    def get_facial_expression(self):
+        return self.facial_expression
+
 
 # CountenanceHandler - module main class
 class CountenanceHandler(HarmonyClientModuleBase):
@@ -89,6 +121,8 @@ class CountenanceHandler(HarmonyClientModuleBase):
         HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = countenance_config
+        # Countenance params
+        self.countenance_state = CountenanceState(self)
 
     def handle_event(
             self,
@@ -101,9 +135,10 @@ class CountenanceHandler(HarmonyClientModuleBase):
             self.update_chara_from_state()
 
         if event.event_type == EVENT_TYPE_AI_COUNTENANCE_UPDATE and event.status == EVENT_STATE_DONE:
-            self.update_countenance_state(countenance_state=event.payload)
-            # Update face expression based on status context
-            self.update_chara_from_state()
+            self.countenance_state.update(
+                emotional_state=getattr(event.payload, 'emotional_state', DEFAULT_EMOTION),
+                facial_expression=getattr(event.payload, 'facial_expression', DEFAULT_EXPRESSION),
+            )
 
         # if event.event_type == EVENT_TYPE_AI_SPEECH and event.status == EVENT_STATE_DONE:
         #

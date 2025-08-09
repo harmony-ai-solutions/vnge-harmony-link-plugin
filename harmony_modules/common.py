@@ -96,26 +96,12 @@ class HarmonyClientModuleBase:
         self.ai_state.persona = ai_state["persona"]
         self.ai_state.status_message = ai_state["status_message"]
 
-        if isinstance(self.ai_state, AIState):
-            logger.info('Gender: %s.', self.ai_state.gender)
-            logger.info('Name: %s.', self.ai_state.name)
-            logger.info('Mood: %s.', self.ai_state.mood)
-            logger.info('Behaviour: %s.', self.ai_state.behaviour)
-            logger.info('Persona: %s.', self.ai_state.persona)
-            logger.info('Status Message: %s.', self.ai_state.status_message)
-
-    def update_countenance_state(self, countenance_state):
-        logger.info('Updated Countenance State')
-
-        if countenance_state is None or len(countenance_state) == 0:
-            self.countenance_state = CountenanceState()
-
-        self.countenance_state.emotional_state = countenance_state["emotional_state"]
-        self.countenance_state.facial_expression = countenance_state["facial_expression"]
-
-        if isinstance(self.countenance_state, CountenanceState):
-            logger.info('Emotional State: %s.', self.countenance_state.emotional_state)
-            logger.info('Facial Expression: %s.', self.countenance_state.facial_expression)
+        logger.info('Gender: %s.', self.ai_state.gender)
+        logger.info('Name: %s.', self.ai_state.name)
+        logger.info('Mood: %s.', self.ai_state.mood)
+        logger.info('Behaviour: %s.', self.ai_state.behaviour)
+        logger.info('Persona: %s.', self.ai_state.persona)
+        logger.info('Status Message: %s.', self.ai_state.status_message)
 
     def update_chara(self, chara):
         logger.info('Updated Chara')
@@ -147,13 +133,6 @@ class AIState:
         self.behaviour = behaviour
         self.persona = persona
         self.status_message = status_message
-
-
-# CountenanceState - describes the current state of an AI character
-class CountenanceState:
-    def __init__(self, emotional_state="", facial_expression=""):
-        self.emotional_state = emotional_state
-        self.facial_expression = facial_expression
 
 
 def get_actors_distance(actor1, actor2):
