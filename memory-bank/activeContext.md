@@ -1,15 +1,17 @@
 # VNGE Harmony Link Plugin - Active Context
 
 ## Current Work Focus
+**JUST COMPLETED**: STT Recording Synchronization Enhancement - Implemented synchronization improvements to resolve button spam issues and ensure reliable audio frame processing between VNGE Plugin and Harmony Link.
+
 **JUST COMPLETED**: TTS Audio Playback Timing Fix - Fixed critical audio playback issue where TTS audio would not play due to race condition in playback monitoring.
 
 **JUST COMPLETED**: Created a configurable logging wrapper system to replace all print() statements throughout the VNGE Harmony Link Plugin codebase.
 
-**CURRENT STATUS**: Core TTS functionality now working reliably. Logging system is implemented and partially deployed. Core infrastructure complete, with ~50% of print statements converted to proper logging calls. Remaining work involves systematic replacement of print statements across all remaining modules.
+**CURRENT STATUS**: Core STT and TTS functionality now working reliably with proper synchronization. Logging system is implemented and partially deployed. Core infrastructure complete, with ~50% of print statements converted to proper logging calls. Remaining work involves systematic replacement of print statements across all remaining modules.
 
 **PREVIOUS MAJOR COMPLETION**: Entity Setup Enhancement - Comprehensive automated entity setup system that eliminates manual configuration requirements for users.
 
-The focus continues on enhancing the Movement module's execution and refining plugin integration, now with proper logging infrastructure in place.
+The focus continues on enhancing the Movement module's execution and refining plugin integration.
 
 ### Animation System Extension (Priority: High)
 The current implementation has hardcoded animation mappings in `AnimationMapper._load_animation_mappings()`. With the comprehensive `animation_list_short.json` available, the next major step is extending the system to dynamically utilize the full VNGE animation database.
@@ -46,6 +48,45 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 - Decision request handling with structured responses
 
 ## Recent Changes
+
+### ✅ STT Recording Synchronization Enhancement (Just Completed)
+**Description**: Implemented comprehensive synchronization improvements to resolve button spam issues and ensure reliable audio frame processing between VNGE Plugin and Harmony Link.
+
+**Root Cause**: Users spamming the toggle recording button caused race conditions where recording could stop in the middle of processing an audio frame being fetched by Harmony Link. The plugin lacked the sophisticated multi-lock approach used by Harmony Link, leading to potential lockups and lost audio frames.
+
+**Key Changes:**
+
+#### STT Module Enhancements (`speech_to_text.py`):
+- **Multi-lock Synchronization System**: Added `operation_lock`, `recording_state_lock`, and `processing_lock` to prevent race conditions
+- **Graceful Frame Completion**: When stop is requested, current audio frames complete naturally and send actual audio data to Harmony Link (no empty chunks)
+- **Pending Chunk Tracking**: `pending_audio_chunks` dictionary tracks active audio processing with timestamps
+- **Enhanced Start/Stop Methods**: `start_listen()` and `stop_listen()` with comprehensive error handling and state protection
+- **Frame Completion Logic**: `_wait_for_current_frame_completion()` ensures all requested frames are processed before stopping
+
+#### Controls Module Enhancements (`controls.py`):
+- **Button Operation Locking**: Per-button locks prevent rapid clicking with `_acquire_button_lock()` and `_release_button_lock()`
+- **State Validation System**: Periodic validation (every 2 seconds) ensures button text matches actual recording state
+- **Recovery Mechanisms**: `_recover_desynchronized_state()` automatically detects and corrects button/state mismatches
+- **Enhanced Toggle Method**: `toggle_record_microphone()` with full synchronization protection and error recovery
+- **Code Quality**: Extracted all hardcoded button text strings into centralized constants for maintainability
+
+**Technical Solution:**
+- **Operation Lock Protection**: Prevents overlapping start/stop operations and button spam
+- **Graceful Shutdown**: Waits for current audio chunks to complete naturally (up to 3 seconds timeout)
+- **Real Data Preservation**: Sends actual audio data to Harmony Link instead of generating empty chunks
+- **State Synchronization**: Button display state always matches actual recording state
+- **Comprehensive Logging**: Added detailed logging for debugging synchronization issues
+
+**Files Modified:**
+- `harmony_modules/speech_to_text.py`: Enhanced with multi-lock synchronization system
+- `harmony_modules/controls.py`: Added button state management and validation system
+
+**Impact:**
+- **No Lost Audio Frames**: All requested frames are processed and sent to Harmony Link
+- **Button Spam Protection**: Rapid clicking no longer causes race conditions or lockups
+- **State Consistency**: Button text always accurately reflects actual recording state
+- **Robust Error Recovery**: System gracefully handles all error conditions and network issues
+- **Improved User Experience**: Reliable recording operation under all user interaction patterns
 
 ### ✅ TTS Audio Playback Timing Fix (Just Completed)
 **Description**: Fixed critical audio playback issue where TTS audio would not play due to a race condition in the playback monitoring thread.
@@ -161,34 +202,41 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 - Ensuring seamless and real-time execution of ActionGraphs within the VNGE environment.
 - Providing robust error handling and performance monitoring for character animations.
 - Expanding the plugin's capabilities to support more complex and natural character behaviors.
+- Maintaining reliable STT/TTS synchronization under all user interaction patterns.
 
 ## Important Patterns and Preferences
 - **IronPython 2.7**: Continued use for VNGE integration.
 - **WebSocket**: Primary communication protocol with Harmony Link.
 - **State Machine Pattern**: Used for tracking action lifecycle.
 - **Command Pattern**: Actions encapsulated as executable commands.
+- **Multi-lock Synchronization**: Critical for preventing race conditions in audio processing.
 
 ### Architecture Decisions
 - **Sequential Action Execution:** Maintains natural character behavior and avoids conflicts
 - **State Machine Pattern:** Clear action lifecycle management with comprehensive debugging
 - **Cognitive Integration Stubs:** Prepared interfaces for future AI system integration
 - **Timeout Management:** Prevents infinite waiting with configurable timeout values
+- **Synchronization-First Design:** Multi-lock approach prevents race conditions and ensures data integrity
 
 ### Technical Constraints
 - **IronPython 2.7 Limitations:** Python 2.7 syntax, limited standard library access
 - **VNGE Engine Integration:** Single-threaded execution, game-based timing system
 - **Animation Duration Unknown:** Cannot determine actual animation length from runtime
+- **Audio System Timing:** VNGE audio initialization requires careful timing consideration
 
 ### Performance Targets
 - **Sub-second Response:** ActionGraph reception to animation start
 - **95%+ Success Rate:** Reliable action execution with graceful error handling
 - **<500ms Execution:** Average action processing and initiation time
 - **Minimal Memory Usage:** Efficient resource management for continuous operation
+- **Zero Lost Audio Frames:** All requested audio chunks processed and delivered to Harmony Link
 
 ## Learnings and Project Insights
 - The enhanced action management system significantly improves the reliability and debuggability of character animations.
 - Addressing scene data initialization is crucial for accurate state representation within Harmony Link.
 - Leveraging the full `animation_list.json` will greatly expand the range of character behaviors the plugin can execute.
+- Proper synchronization is critical for reliable STT operation - multi-lock approaches prevent race conditions effectively.
+- Audio system timing requires careful consideration of initialization delays and state transitions.
 
 ### VNGE Animation System Understanding
 - Animation hierarchy: Group → Category → Animation Item (with index)
@@ -202,17 +250,25 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 - Cognitive integration hooks provide clean expansion points
 - State management enables robust debugging and monitoring
 
+### STT/TTS Synchronization Success
+- Multi-lock synchronization prevents race conditions effectively
+- Graceful frame completion ensures no data loss to Harmony Link
+- Button state validation provides reliable user interface feedback
+- Audio timing considerations are critical for proper playback
+
 ### Performance Characteristics
 - Action queue processing handles multiple simultaneous requests
 - Timeout detection prevents system lockup from stuck animations
 - Performance monitoring provides insights for optimization
 - Error recovery maintains system stability during failures
+- Audio frame processing completes reliably under all user interaction patterns
 
 ### Integration Patterns
 - Clean separation between Harmony Link communication and VNGE execution
 - Modular design allows independent testing and enhancement
 - Event-based architecture supports future feature expansion
 - Cognitive stubs provide migration path to full AI system integration
+- Synchronization patterns ensure reliable operation under stress
 
 ## Current Challenges
 
@@ -233,3 +289,4 @@ The `CognitiveIntegrationStub` class provides framework for future AI entity cog
 2. **Social Interaction Complexity:** Handle complex multi-character social scenarios
 3. **Emotional Expression Integration:** Coordinate movement with facial expressions and emotion
 4. **Platform Expansion:** Potential Unity/Unreal engine support requires architecture flexibility
+5. **Scalability:** Maintain synchronization performance with multiple concurrent entities

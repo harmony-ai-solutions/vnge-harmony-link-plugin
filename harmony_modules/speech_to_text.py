@@ -122,6 +122,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.buffer_clip_duration = int(self.config['buffer_clip_duration'])  # seconds
         self.record_stepping = int(self.config['record_stepping'])  # milliseconds
         self.microphone_name = self.get_microphone()
+
         # Recording Handling
         self.is_recording_microphone = False
         self.active_recording_events = {}
@@ -131,6 +132,13 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.recording_thread = None
         self.dropped_buffer_bytes = 0
         self.buffer_lock = Lock()
+        
+        # Control Operation synchronization
+        self.operation_lock = Lock()           # Prevents overlapping start/stop operations
+        self.processing_lock = Lock()          # Protects maps from concurrent access during audio chunk processing
+        self.operation_in_progress = False     # Keeps track of ongoing start / stop recording operation
+        self.pending_audio_chunks = {}         # Track fetch events being processed {event_id: start_time}
+        
         # Calculate bytes per second
         self.bytes_per_sample = self.bit_depth // 8
         self.bytes_per_second = self.sample_rate * self.channels * self.bytes_per_sample
@@ -290,9 +298,29 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             self.active_recording_events[event.event_id] = event
 
     def start_listen(self):
-        if self.is_recording_microphone:
-            return False
+        """Start listening with enhanced synchronization protection"""
+        with self.operation_lock:
+            # Prevent overlapping operations or button spam
+            if self.operation_in_progress or self.is_recording_microphone:
+                logger.debug("Start listen blocked: operation_in_progress=%s, is_recording=%s", self.operation_in_progress, self.is_recording_microphone)
+                return False
 
+            self.operation_in_progress = True
+            
+            try:
+                # Execute the actual start recording logic
+                success = self._execute_start_recording()
+                if success:
+                    self.is_recording_microphone = True
+                    logger.info('Recording started successfully')
+                else:
+                    logger.error('Failed to start recording')
+                return success
+            finally:
+                self.operation_in_progress = False
+
+    def _execute_start_recording(self):
+        """Execute the actual start recording logic"""
         # Start recording from microphone via Unity's APIs:
         if not self.start_continuous_recording():
             return False
@@ -318,19 +346,61 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             }
         )
         success = self.backend_connector.send_event(event)
-        if success:
-            logger.info('listening...')
-            self.is_recording_microphone = True
-            return True
-        else:
-            logger.error('listen failed')
-            # Stop recording
+        if not success:
+            logger.error('Failed to send start_listen event to Harmony Link')
+            # Clean up on failure
+            self.stop_continuous_recording()
             return False
+        
+        return True
 
     def stop_listen(self):
-        if not self.is_recording_microphone:
-            return False
+        """Stop listening with graceful frame completion"""
+        with self.operation_lock:
+            # Prevent overlapping operations
+            if self.operation_in_progress and not self.is_recording_microphone:
+                logger.debug("Stop listen blocked: not currently recording")
+                return False
 
+            self.operation_in_progress = True
+            
+            try:
+                # Wait for current audio frames to complete naturally
+                self._wait_for_current_frame_completion()
+                
+                # Execute the actual stop recording logic
+                success = self._execute_stop_recording()
+                if success:
+                    self.is_recording_microphone = False
+                    logger.info('Recording stopped successfully')
+                else:
+                    logger.error('Failed to stop recording cleanly')
+                return success
+            finally:
+                self.operation_in_progress = False
+
+    def _wait_for_current_frame_completion(self, timeout=3.0):
+        """Wait for currently processing audio frames to complete naturally"""
+        if not self.pending_audio_chunks:
+            return
+            
+        start_time = time.time()
+        initial_count = len(self.pending_audio_chunks)
+        
+        logger.debug("Waiting for %d audio frames to complete...", initial_count)
+        
+        while self.pending_audio_chunks and (time.time() - start_time) < timeout:
+            time.sleep(0.1)
+        
+        completed_count = initial_count - len(self.pending_audio_chunks)
+        
+        if self.pending_audio_chunks:
+            logger.warning("Timeout waiting for frame completion, %d frames completed, %d may be lost", completed_count, len(self.pending_audio_chunks))
+        else:
+            logger.debug("All %d audio frames completed successfully", completed_count)
+
+    def _execute_stop_recording(self):
+        """Execute the actual stop recording logic"""
         # Send Event to Harmony Link to stop listening
         event = HarmonyLinkEvent(
             event_id='stop_listen',  # This is an arbitrary dummy ID to conform the Harmony Link API
@@ -339,19 +409,16 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             payload={}
         )
         success = self.backend_connector.send_event(event)
-        if success:
-            logger.info('listening stopped. Processing speech...')
-
-            # Stop recording to ongoing audio clip
-            if not self.stop_continuous_recording():
-                logger.error('failed to stop continous recording')
-                return False
-
-            self.is_recording_microphone = False
-            return True
-        else:
-            logger.error('stop listen failed.')
+        if not success:
+            logger.error('Failed to send stop_listen event to Harmony Link')
             return False
+
+        # Stop recording to ongoing audio clip
+        if not self.stop_continuous_recording():
+            logger.error('Failed to stop continuous recording')
+            return False
+
+        return True
 
     def get_microphone(self):
         # Determine the microphone to use
@@ -456,6 +523,24 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         return actual_start_byte, actual_end_byte, buffer_size
 
     def process_recording_request(self, event_id, start_byte, bytes_count):
+        """Process recording request"""
+        with self.processing_lock:
+            # Register chunk as being processed
+            self.pending_audio_chunks[event_id] = time.time()
+            
+            try:
+                # Process the audio normally - don't abort even if stop requested
+                # This ensures Harmony Link gets actual audio data, not empty chunks
+                self._process_audio_chunk(event_id, start_byte, bytes_count)
+                
+            except Exception as e:
+                logger.error("Error processing audio chunk %s: %s", event_id, str(e))
+            finally:
+                # Remove from pending chunks - this signals completion
+                self.pending_audio_chunks.pop(event_id, None)
+
+    def _process_audio_chunk(self, event_id, start_byte, bytes_count):
+        """Process individual audio chunk"""
         # Get end byte
         end_byte = start_byte + bytes_count
         # Determine if we need to wait
@@ -511,7 +596,7 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             del self.active_recording_events[event_id]
             return
 
-        # Send result event
+        # Send result event with actual audio data
         result_event = HarmonyLinkEvent(
             event_id=event_id,
             event_type=EVENT_TYPE_STT_FETCH_MICROPHONE_RESULT,

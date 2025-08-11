@@ -19,11 +19,27 @@ from libkfguictrl import ComboListBox
 import time
 import traceback
 import re
+from threading import Lock
 
 from harmony_modules.logging import get_logger
 
 # Initialize logger for this module
 logger = get_logger(__name__)
+
+# Button text constants
+BTN_TEXT_RECORD_MICROPHONE = "Record Microphone"
+BTN_TEXT_STOP_RECORDING = "Stop Recording"
+BTN_TEXT_SHOW_CHAT_WINDOW = "Show Chat Window"
+BTN_TEXT_HIDE_CHAT_WINDOW = "Hide Chat Window"
+BTN_TEXT_SHOW_NONVERBAL_ACTIONS = "Show Nonverbal Actions"
+BTN_TEXT_HIDE_NONVERBAL_ACTIONS = "Hide Nonverbal Actions"
+BTN_TEXT_END_HARMONY_DEMO = ">> End Harmony Link Demo >>"
+
+# Button name constants
+BTN_NAME_MICROPHONE = "microphone"
+BTN_NAME_CHAT_INPUT = "chat_input"
+BTN_NAME_NONVERBAL_ACTIONS = "nonverbal_actions"
+BTN_NAME_SHUTDOWN = "shutdown"
 
 # Nonverbal UI Tabs
 nonverbal_ui_general = "General"
@@ -99,6 +115,12 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.nonverbal_gui_data = None
         # Entities and Interaction Target
         self.interaction_target_entity_controller = None  # Pick first tone by default if some are given
+        
+        # Enhanced button state management
+        self.button_locks = {}                 # Per-button operation locks
+        self.button_states = {}                # Track actual vs displayed state
+        self.state_validation_timer = None     # Periodic validation timer
+        self.last_state_validation = 0         # Last validation timestamp
 
     def handle_event(
             self,
@@ -116,27 +138,37 @@ class ControlsHandler(HarmonyClientModuleBase):
 
         # Basic Controls
         self.menu_buttons = {
-            "chat_input": {
+            BTN_NAME_CHAT_INPUT: {
                 "index": 0,
-                "text": "Show Chat Window",
+                "text": BTN_TEXT_SHOW_CHAT_WINDOW,
                 "action": self.toggle_chat_input
             },
-            "nonverbal_actions": {
+            BTN_NAME_NONVERBAL_ACTIONS: {
                 "index": 1,
-                "text": "Show Nonverbal Actions",
+                "text": BTN_TEXT_SHOW_NONVERBAL_ACTIONS,
                 "action": self.toggle_nonverbal_actions
             },
-            "microphone": {
+            BTN_NAME_MICROPHONE: {
                 "index": 2,
-                "text": "Record Microphone",
+                "text": BTN_TEXT_RECORD_MICROPHONE,
                 "action": self.toggle_record_microphone
             },
-            "shutdown": {
+            BTN_NAME_SHUTDOWN: {
                 "index": 3,
-                "text": ">> End Harmony Link Demo >>",
+                "text": BTN_TEXT_END_HARMONY_DEMO,
                 "action": self.shutdown_func
             }
         }
+        
+        # Initialize button locks and states
+        for button_name in self.menu_buttons.keys():
+            self.button_locks[button_name] = Lock()
+            self.button_states[button_name] = {
+                'displayed_text': self.menu_buttons[button_name]["text"],
+                'operation_active': False,
+                'last_update': time.time()
+            }
+        
         self.update_buttons()
 
         # Hotkeys
@@ -182,6 +214,128 @@ class ControlsHandler(HarmonyClientModuleBase):
             self.toggle_chat_input(self.game)
         if self.nonverbal_gui_id is not None:
             self.toggle_nonverbal_actions(self.game)
+
+    def _acquire_button_lock(self, button_name, timeout=1.0):
+        """Acquire button operation lock with timeout to prevent rapid clicking"""
+        if button_name not in self.button_locks:
+            logger.error("Unknown button name: %s", button_name)
+            return False
+            
+        # Check if operation is already active
+        if self.button_states[button_name]['operation_active']:
+            logger.debug("Button %s operation already in progress", button_name)
+            return False
+            
+        # Try to acquire lock (non-blocking)
+        if self.button_locks[button_name].acquire(False):
+            self.button_states[button_name]['operation_active'] = True
+            self.button_states[button_name]['last_update'] = time.time()
+            return True
+        else:
+            logger.debug("Failed to acquire lock for button %s", button_name)
+            return False
+
+    def _release_button_lock(self, button_name):
+        """Release button operation lock"""
+        if button_name in self.button_locks and button_name in self.button_states:
+            self.button_states[button_name]['operation_active'] = False
+            self.button_states[button_name]['last_update'] = time.time()
+            try:
+                self.button_locks[button_name].release()
+            except Exception as e:
+                logger.warning("Error releasing lock for button %s: %s", button_name, str(e))
+
+    def _update_button_state(self, button_name, text, error_state=False):
+        """Update button with state tracking"""
+        if button_name in self.menu_buttons:
+            self.menu_buttons[button_name]["text"] = text
+            self.button_states[button_name]['displayed_text'] = text
+            self.button_states[button_name]['last_update'] = time.time()
+            if error_state:
+                logger.warning("Button %s in error state, text: %s", button_name, text)
+            self.update_buttons()
+
+    def _validate_button_states(self):
+        """Periodic validation of button vs actual states"""
+        current_time = time.time()
+        
+        # Only validate every 2 seconds to avoid overhead
+        if current_time - self.last_state_validation < 2.0:
+            return
+            
+        self.last_state_validation = current_time
+        
+        # Validate microphone button state
+        if self.entity_controller.sttModule:
+            actual_recording = self.entity_controller.sttModule.is_recording_microphone
+            displayed_text = self.button_states[BTN_NAME_MICROPHONE]['displayed_text']
+            
+            # Check for desynchronization
+            if actual_recording and BTN_TEXT_STOP_RECORDING not in displayed_text:
+                logger.warning("Button state desync detected: recording active but button shows '%s'", displayed_text)
+                self._recover_desynchronized_state(BTN_NAME_MICROPHONE)
+            elif not actual_recording and BTN_TEXT_RECORD_MICROPHONE not in displayed_text:
+                logger.warning("Button state desync detected: not recording but button shows '%s'", displayed_text)
+                self._recover_desynchronized_state(BTN_NAME_MICROPHONE)
+
+    def _recover_desynchronized_state(self, button_name):
+        """Recover from button/state desynchronization"""
+        if button_name == BTN_NAME_MICROPHONE and self.entity_controller.sttModule:
+            actual_recording = self.entity_controller.sttModule.is_recording_microphone
+            correct_text = BTN_TEXT_STOP_RECORDING if actual_recording else BTN_TEXT_RECORD_MICROPHONE
+            
+            logger.info("Recovering button state for %s: setting to '%s'", button_name, correct_text)
+            self._update_button_state(button_name, correct_text)
+
+    def _start_recording_with_recovery(self):
+        """Start recording with full error recovery"""
+        if not self.entity_controller.sttModule:
+            logger.error("STT module not available")
+            return False
+            
+        try:
+            success = self.entity_controller.sttModule.start_listen()
+            if success:
+                logger.info("Recording started successfully")
+                
+                # Update chat GUI if active
+                if self.chat_gui_id is not None:
+                    self.chat_gui_data.history_data.append({
+                        'Name': 'User',  # TODO: Properly fetch username
+                        'Message': '...speaking...'
+                    })
+                    self.chat_window_update_history()
+                    
+                # Update delayed nonverbal interaction if set
+                self.update_delayed_nonverbal_interaction()
+                
+            return success
+        except Exception as e:
+            logger.error("Exception during start recording: %s", str(e))
+            return False
+
+    def _stop_recording_with_recovery(self):
+        """Stop recording with pending chunk completion"""
+        if not self.entity_controller.sttModule:
+            logger.error("STT module not available")
+            return False
+            
+        try:
+            success = self.entity_controller.sttModule.stop_listen()
+            if success:
+                logger.info("Recording stopped successfully")
+                
+                # Update chat GUI if active
+                if self.chat_gui_id is not None:
+                    # Remove Recording message from history list
+                    if self.chat_gui_data.history_data and self.chat_gui_data.history_data[-1].get('Message') == '...speaking...':
+                        self.chat_gui_data.history_data.pop()
+                        self.chat_window_update_history()
+                        
+            return success
+        except Exception as e:
+            logger.error("Exception during stop recording: %s", str(e))
+            return False
 
     def draw_interaction_target_selector(self):
         self.chat_gui_data.target_selector = ComboListBox(
@@ -662,6 +816,9 @@ class ControlsHandler(HarmonyClientModuleBase):
         self.chat_gui_data.input_value = ''
 
     def on_input_update(self, game, event_id, u_param):
+        # Periodic button state validation
+        self._validate_button_states()
+        
         # Meta Keys
         ctrl, alt, shift = unity_util.metakey_state()
         # Process Keymap
@@ -687,66 +844,54 @@ class ControlsHandler(HarmonyClientModuleBase):
                     break
 
     def toggle_record_microphone(self, game):
+        """Enhanced microphone toggle with synchronization protection"""
         if not self.entity_controller.sttModule:
+            logger.warning("STT module not available")
             return
 
-        if self.entity_controller.sttModule.is_recording_microphone:
-            recording_aborted = self.entity_controller.sttModule.stop_listen()
-            if not recording_aborted:
-                logger.error('Failed to record from microphone.')
-                return
+        # Prevent rapid clicking with button lock
+        if not self._acquire_button_lock(BTN_NAME_MICROPHONE):
+            logger.debug("Microphone button operation blocked - already in progress")
+            return
 
-            if self.chat_gui_id is not None:
-                # Remove Recording message from history list
-                self.chat_gui_data.history_data.pop()
-                self.chat_window_update_history()
-
-            # Update Buttons
-            self.menu_buttons["microphone"]["text"] = "Record Microphone"
-            self.update_buttons()
-
-        else:
-            recording_started = self.entity_controller.sttModule.start_listen()
-            if not recording_started:
-                logger.error('Failed to record from microphone.')
-                return
-
-            if self.chat_gui_id is not None:
-                # Add Recording message to history list
-                self.chat_gui_data.history_data.append({
-                    'Name': 'User', # TODO: Properly fetch username
-                    'Message': '...speaking...'
-                })
-                self.chat_window_update_history()
-
-            # Update delayed nonverbal interaction if set
-            self.update_delayed_nonverbal_interaction()
-            # Update Buttons
-            self.menu_buttons["microphone"]["text"] = "Stop Recording"
-            self.update_buttons()
+        try:
+            # Get current actual state
+            actual_recording = self.entity_controller.sttModule.is_recording_microphone
+            
+            if actual_recording:
+                # Stop recording with error handling
+                success = self._stop_recording_with_recovery()
+                self._update_button_state(BTN_NAME_MICROPHONE, BTN_TEXT_RECORD_MICROPHONE if success else BTN_TEXT_STOP_RECORDING, not success)
+            else:
+                # Start recording with error handling  
+                success = self._start_recording_with_recovery()
+                self._update_button_state(BTN_NAME_MICROPHONE, BTN_TEXT_STOP_RECORDING if success else BTN_TEXT_RECORD_MICROPHONE, not success)
+                
+        finally:
+            self._release_button_lock(BTN_NAME_MICROPHONE)
 
     def toggle_nonverbal_actions(self, game):
         if self.nonverbal_gui_id is not None:
             self.close_noverbal_actions_gui()
             # Update Buttons
-            self.menu_buttons["nonverbal_actions"]["text"] = "Show Nonverbal Actions"
+            self.menu_buttons[BTN_NAME_NONVERBAL_ACTIONS]["text"] = BTN_TEXT_SHOW_NONVERBAL_ACTIONS
             self.update_buttons()
         else:
             # Create the GUI
             self.setup_nonverbal_actions_gui()
             # Update Buttons
-            self.menu_buttons["nonverbal_actions"]["text"] = "Hide Nonverbal Actions"
+            self.menu_buttons[BTN_NAME_NONVERBAL_ACTIONS]["text"] = BTN_TEXT_HIDE_NONVERBAL_ACTIONS
             self.update_buttons()
 
     def toggle_chat_input(self, game):
         if self.chat_gui_id is not None:
             self.close_chat_input_gui()
             # Update Buttons
-            self.menu_buttons["chat_input"]["text"] = "Show Chat Window"
+            self.menu_buttons[BTN_NAME_CHAT_INPUT]["text"] = BTN_TEXT_SHOW_CHAT_WINDOW
             self.update_buttons()
         else:
             # Create the GUI
             self.setup_chat_input_gui()
             # Update Buttons
-            self.menu_buttons["chat_input"]["text"] = "Hide Chat Window"
+            self.menu_buttons[BTN_NAME_CHAT_INPUT]["text"] = BTN_TEXT_HIDE_CHAT_WINDOW
             self.update_buttons()
