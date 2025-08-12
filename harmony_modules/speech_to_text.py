@@ -137,7 +137,6 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         self.operation_lock = Lock()           # Prevents overlapping start/stop operations
         self.processing_lock = Lock()          # Protects maps from concurrent access during audio chunk processing
         self.operation_in_progress = False     # Keeps track of ongoing start / stop recording operation
-        self.pending_audio_chunks = {}         # Track fetch events being processed {event_id: start_time}
         
         # Calculate bytes per second
         self.bytes_per_sample = self.bit_depth // 8
@@ -280,22 +279,38 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
         # Received event to start recording Audio through the Game's utilities
         if event.event_type == EVENT_TYPE_STT_FETCH_MICROPHONE and event.status == EVENT_STATE_DONE:
-            # This event triggers the recording of an audio clip using the default microphone.
-            # Upon finishing the recording, it will send the recorded audio to Harmony Link for VAD & STT transcription
+            # This event fetches a slice of an audio clip recorded using the default microphone.
+            # it will send the fetched audio to Harmony Link for VAD & STT transcription
+
+            # Check if we're currently recording / Monkey check
+            with self.operation_lock:
+                if not self.is_recording_microphone:
+                    logger.warning('tried to fetch from microphone while no recording in progress')
+                    event.status = EVENT_STATE_ERROR
+                    return
+
+            # Get task details
             recording_task = event.payload
             # Extract parameters from recording task
             start_byte = recording_task.get('start_byte', 0)
             bytes_count = recording_task.get('bytes_count', self.bytes_per_second * 5)  # Default to 5 seconds
 
-            # Start a new thread to handle recording
-            fetch_microphone_thread = Thread(
-                target=self.process_recording_request,
-                args=(event.event_id, start_byte, bytes_count)
-            )
-            fetch_microphone_thread.start()
+            try:
+                with self.processing_lock:
+                    # Store event to mark it as processing
+                    self.active_recording_events[event.event_id] = event
 
-            # Store event to mark it as processing
-            self.active_recording_events[event.event_id] = event
+                # Start a new thread to handle recording
+                fetch_microphone_thread = Thread(
+                    target=self.process_recording_request,
+                    args=(event.event_id, start_byte, bytes_count)
+                )
+                fetch_microphone_thread.start()
+            except Exception as e:
+                logger.error("Failed to start processing thread for event %s: %s", event.event_id, str(e))
+                with self.processing_lock:
+                    # Store event to mark it as processing
+                    del self.active_recording_events[event.event_id]
 
     def start_listen(self):
         """Start listening with enhanced synchronization protection"""
@@ -365,8 +380,8 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             self.operation_in_progress = True
             
             try:
-                # Wait for current audio frames to complete naturally
-                self._wait_for_current_frame_completion()
+                # Wait for current audio fetch events to complete naturally
+                self._wait_for_request_completion()
                 
                 # Execute the actual stop recording logic
                 success = self._execute_stop_recording()
@@ -379,25 +394,31 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             finally:
                 self.operation_in_progress = False
 
-    def _wait_for_current_frame_completion(self, timeout=3.0):
-        """Wait for currently processing audio frames to complete naturally"""
-        if not self.pending_audio_chunks:
-            return
+    def _wait_for_request_completion(self, timeout=3.0):
+        """Wait for currently processing audio fetch events to complete naturally"""
+        with self.processing_lock:
+            if not self.active_recording_events:
+                return
             
         start_time = time.time()
-        initial_count = len(self.pending_audio_chunks)
-        
-        logger.debug("Waiting for %d audio frames to complete...", initial_count)
-        
-        while self.pending_audio_chunks and (time.time() - start_time) < timeout:
+        initial_count = 0
+        remaining_count = 0
+        with self.processing_lock:
+            initial_count = remaining_count = len(self.active_recording_events)
+
+        logger.debug("Waiting for %d audio fetch events to complete...", initial_count)
+        while remaining_count > 0 and (time.time() - start_time) < timeout:
             time.sleep(0.1)
-        
-        completed_count = initial_count - len(self.pending_audio_chunks)
-        
-        if self.pending_audio_chunks:
-            logger.warning("Timeout waiting for frame completion, %d frames completed, %d may be lost", completed_count, len(self.pending_audio_chunks))
-        else:
-            logger.debug("All %d audio frames completed successfully", completed_count)
+            with self.processing_lock:
+                remaining_count = len(self.active_recording_events)
+
+        # evaluate result of wait routine
+        with self.processing_lock:
+            remaining_count = len(self.active_recording_events)
+            if remaining_count > 0:
+                logger.warning("Timeout waiting for fetch completion, %d frames completed, %d may be lost", initial_count - remaining_count, remaining_count)
+            else:
+                logger.debug("All %d remaining audio fetches completed successfully", initial_count)
 
     def _execute_stop_recording(self):
         """Execute the actual stop recording logic"""
@@ -524,23 +545,6 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
 
     def process_recording_request(self, event_id, start_byte, bytes_count):
         """Process recording request"""
-        with self.processing_lock:
-            # Register chunk as being processed
-            self.pending_audio_chunks[event_id] = time.time()
-            
-            try:
-                # Process the audio normally - don't abort even if stop requested
-                # This ensures Harmony Link gets actual audio data, not empty chunks
-                self._process_audio_chunk(event_id, start_byte, bytes_count)
-                
-            except Exception as e:
-                logger.error("Error processing audio chunk %s: %s", event_id, str(e))
-            finally:
-                # Remove from pending chunks - this signals completion
-                self.pending_audio_chunks.pop(event_id, None)
-
-    def _process_audio_chunk(self, event_id, start_byte, bytes_count):
-        """Process individual audio chunk"""
         # Get end byte
         end_byte = start_byte + bytes_count
         # Determine if we need to wait
@@ -587,13 +591,15 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
         encoded_data = self.encode_audio_data(audio_bytes)
         if encoded_data is None:
             logger.error("Failed to encode audio data for event %s", event_id)
-            del self.active_recording_events[event_id]
+            with self.processing_lock:
+                del self.active_recording_events[event_id]
             return
 
         # Validate all parameters before sending
         if self.channels <= 0 or self.bit_depth <= 0 or self.sample_rate <= 0:
             logger.error("Invalid audio parameters: channels=%d, bit_depth=%d, sample_rate=%d", self.channels, self.bit_depth, self.sample_rate)
-            del self.active_recording_events[event_id]
+            with self.processing_lock:
+                del self.active_recording_events[event_id]
             return
 
         # Send result event with actual audio data
@@ -609,8 +615,10 @@ class SpeechToTextHandler(HarmonyClientModuleBase):
             }
         )
         self.backend_connector.send_event(result_event)
-        # Remove the event from the tracking
-        del self.active_recording_events[event_id]
+
+        with self.processing_lock:
+            # Remove the event from the tracking
+            del self.active_recording_events[event_id]
 
     def encode_audio_data(self, audio_bytes):
         """safely encode audio data for transmission"""
