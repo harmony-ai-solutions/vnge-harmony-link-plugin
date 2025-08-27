@@ -1,7 +1,7 @@
 # VNGE Harmony Link Plugin - Progress
 
 ## Current Status Overview
-The VNGE Harmony Link Plugin has core ActionGraph execution functionality implemented with enhanced state management and timing control. Currently focusing on fixing scene data initialization and expanding animation mapping capabilities.
+The VNGE Harmony Link Plugin has core ActionGraph execution functionality implemented with enhanced state management and timing control. The Movement Module has been significantly enhanced with dynamic animation duration detection, intelligent animation mapping, hard error handling for animation database issues, and distance-based completion detection for movement actions. Currently focusing on fixing scene data initialization and expanding animation mapping capabilities.
 
 ## What Works (Completed Features)
 
@@ -15,6 +15,7 @@ The VNGE Harmony Link Plugin has core ActionGraph execution functionality implem
 - **Robust Error Handling**: Graceful fallback to traditional setup on discovery failures
 
 ### ✅ Core ActionGraph Execution
+- Vector embedding-based action matching functional.
 - ActionGraphV1 parsing and validation functional
 - Sequential action queue processing working
 - State management with lifecycle tracking (QUEUED → EXECUTING → COMPLETED/FAILED)
@@ -31,6 +32,33 @@ The VNGE Harmony Link Plugin has core ActionGraph execution functionality implem
 - **AnimationMapper**: Maps action names to VNGE animation parameters
 - **Timeout management**: Prevents stuck animations with configurable timeouts
 - **Error handling**: Graceful failure recovery with continued queue processing
+
+### ✅ Movement Module Enhancement (Just Completed)
+**Description**: Implemented actual movement features for Harmony Link's VNGE Plugin, transforming the current stub implementation into a fully functional system. The implementation is still subject to further review and modifications in the follow-up sessions.
+
+**Key Achievements:**
+- **Dynamic Animation Duration Detection**: Implemented using `AnimationDurationDetector` to get actual animation clip lengths from Unity's `RuntimeAnimatorController`.
+- **Intelligent Animation Mapping**: Replaced hardcoded animation mappings with a dynamic system that maps `movement_definitions.py` actions to VNGE animations using name-based lookups from `animation_list_short.json`.
+- **Hard Error Handling for Animation DB**: Removed fallback mechanisms and implemented hard error throwing for animation database issues, ensuring the system fails fast on configuration problems.
+- **Distance-Based Completion Detection**: Implemented for movement actions (move, walk, run), replacing fixed timers with real-time position monitoring and a 1.0 unit (~1 meter) threshold.
+- **Pylance Errors Resolved**: All Pylance errors related to null-checking and incorrect method names have been fixed.
+
+**Technical Insights:**
+- **Real-time Position Monitoring**: Checks character position every 100ms for movement completion.
+- **Target Position Detection**: Supports explicit coordinates, named entities, and scene objects.
+- **Animation Duration Caching**: Caches detected durations for performance optimization.
+- **Comprehensive Error Handling**: Graceful fallbacks and detailed logging throughout.
+
+**Files Modified:**
+- `harmony_modules/movement.py`: Enhanced ActionExecutor with dynamic duration detection and distance-based completion.
+- `harmony_modules/movement_animations.py`: New module for animation duration detection.
+- `harmony_modules/movement_definitions.py`: Centralized action definitions.
+
+**Impact:**
+- **Accurate Animation Timing**: Animations now run for their actual duration, improving realism.
+- **Precise Movement Completion**: Characters stop precisely at their destination, eliminating fixed-timer approximations.
+- **Robust Configuration**: System fails fast on animation database issues, preventing silent failures.
+- **Improved Debugging**: Detailed logging for animation duration and movement completion.
 
 ### ✅ VNGE Integration
 - IronPython plugin architecture working
@@ -107,16 +135,6 @@ The VNGE Harmony Link Plugin has core ActionGraph execution functionality implem
 - **Single character focus**: Not optimized for multi-character scenarios
 - **VNGE dependency**: Tightly coupled to VNGE-specific APIs
 - **Memory growth**: Action history grows without bounds checking
-
-## Recent Achievements (This Session)
-
-### ✅ Cognitive Integration Stubs (New Feature)
-- **CognitiveIntegrationStub class**: Added foundational framework for future AI entity cognitive system integration
-- **Decision processing**: Implemented simple consent logic based on action intimacy levels with structured decision responses
-- **Context processing**: Added methods to process relationship context (scores, trust, interaction counts) and subjective context (mood, energy, stress, goals)
-- **Action graph integration**: Enhanced `_execute_action_graph()` with cognitive context processing for each target
-- **Cognitive logging**: Comprehensive logging of cognitive decisions including decision IDs, selected options, and reasoning
-- **Future architecture**: Clean interfaces prepared for individual entity cognitive systems
 
 ### ✅ Major Enhancements (Previously Completed)
 - **Enhanced ActionInstance**: Added comprehensive state management with timing control

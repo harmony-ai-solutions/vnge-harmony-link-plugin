@@ -1,10 +1,54 @@
 
-#
+# Action Categories - centralized constants for action classification
+class ActionCategories:
+    MOVEMENT = 'movement'
+    POSTURE_SITTING = 'posture_sitting'
+    POSTURE_STANDING = 'posture_standing'
+    POSTURE_LAYING = 'posture_laying'
+    SIMPLE_ACTION = 'simple_action'
+    OBJECT_INTERACTION = 'object_interaction'
+    CHARACTER_INTERACTION = 'character_interaction'
+
+
+class CompletionTypes:
+    DISTANCE = "distance"  # Movement actions - complete when distance threshold reached
+    STATE = "state"        # Posture actions - complete when state achieved
+    DURATION = "duration"  # Simple actions - complete after fixed duration
+
+
+# Helper function to get actions as a dictionary for easy retrieval
+def get_actions_dict():
+    """
+    Returns registered_actions as a dictionary with action name as key
+    
+    Returns:
+        dict: Dictionary mapping action names to action definitions
+    """
+    return {action['name']: action for action in registered_actions}
+
+
+def get_action_by_name(action_name):
+    """
+    Get a specific action definition by name
+    
+    Args:
+        action_name (str): Name of the action to retrieve
+        
+    Returns:
+        dict: Action definition or None if not found
+    """
+    actions_dict = get_actions_dict()
+    return actions_dict.get(action_name)
+
+
+# Registered Actions - available movement actions with examples and descriptions
 registered_actions = [
     # Basic movement and interaction
     {
         'name': 'move',
         'description': 'normal walking',
+        'category': ActionCategories.MOVEMENT,
+        'duration': 3.0,
         'examples': [
             '{{character}} starts walking',
             '{{character}} starts moving',
@@ -35,6 +79,8 @@ registered_actions = [
     {
         'name': 'walk',
         'description': 'fast walking',
+        'category': ActionCategories.MOVEMENT,
+        'duration': 2.5,
         'examples': [
             '{{character}} jogs',
             '{{character}} hurries',
@@ -59,91 +105,99 @@ registered_actions = [
         ]
     },
     {
-        "name": "run",
-        "description": "running",
-        "examples": [
-            "{{character}} runs forward quickly",
-            "{{character}} sprints ahead",
-            "{{character}} dashes past {{object}}",
-            "{{character}} rushes towards {{other_character}}",
-            "{{character}} bolts from {{character_group}} to {{other_character_group}}",
-            "{{character}} jogs around {{object_collection}}",
-            "{{character}} hurries while carrying {{object}}",
-            "{{character}} rapidly moves away from danger",
-            "{{character}} escapes by running fast",
-            "{{character}} outpaces {{other_character}} easily"
+        'name': 'run',
+        'description': 'running',
+        'category': ActionCategories.MOVEMENT,
+        'duration': 2.0,
+        'examples': [
+            '{{character}} runs forward quickly',
+            '{{character}} sprints ahead',
+            '{{character}} dashes past {{object}}',
+            '{{character}} rushes towards {{other_character}}',
+            '{{character}} bolts from {{character_group}} to {{other_character_group}}',
+            '{{character}} jogs around {{object_collection}}',
+            '{{character}} hurries while carrying {{object}}',
+            '{{character}} rapidly moves away from danger',
+            '{{character}} escapes by running fast',
+            '{{character}} outpaces {{other_character}} easily'
         ],
-        "confirmations": [
+        'confirmations': [
             # '{{none}}'
         ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
-        "name": "sit_down",
-        "description": "sit down on the ground or an object",
-        "examples": [
-            "{{character}} sits down on the {{object}}",
-            "{{character}} lowers himself onto the {{object}}",
-            "{{character}} plops down on the {{object}}",
-            "{{character}} takes a seat on the {{object}}",
-            "{{character}} perches on the {{object}}",
-            "{{character}} settles into the {{object}}",
-            "{{character}} squats down on the {{object}}",
-            "{{character}} kneels down next to {{object}}",
-            "{{character}} sits cross-legged on the {{object}}",
-            "{{character}} hunkers down behind the {{object}}"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
+        'rejections': [
             # '{{none}}'
         ]
     },
     {
-        "name": "lean_against",
-        "description": "sit down on the ground or an object",
-        "examples": [
-            "{{character}} leans against the {{object}}",
-            "{{character}} rests his back against the {{object}}",
-            "{{character}} finds support by leaning against the {{object}}",
-            "{{character}} uses the {{object}} as a prop to lean against",
-            "{{character}} relaxes by leaning against the {{object}}",
-            "{{character}} takes a break and leans against the {{object}}",
-            "{{character}} leans his weight against the {{object}}",
-            "{{character}} leans on the {{object}} for support",
-            "{{character}} finds comfort in leaning against the {{object}}",
-            "{{character}} enjoys the feeling of leaning against the {{object}}",
-            "{{character}} appreciates the sturdiness of the {{object}} while leaning against it"
+        'name': 'sit_down',
+        'description': 'sit down on the ground or an object',
+        'category': ActionCategories.POSTURE_SITTING,
+        'duration': 2.0,
+        'examples': [
+            '{{character}} sits down on the {{object}}',
+            '{{character}} lowers himself onto the {{object}}',
+            '{{character}} plops down on the {{object}}',
+            '{{character}} takes a seat on the {{object}}',
+            '{{character}} perches on the {{object}}',
+            '{{character}} settles into the {{object}}',
+            '{{character}} squats down on the {{object}}',
+            '{{character}} kneels down next to {{object}}',
+            '{{character}} sits cross-legged on the {{object}}',
+            '{{character}} hunkers down behind the {{object}}'
         ],
-        "confirmations": [
+        'confirmations': [
             # '{{none}}'
         ],
-        "rejections": [
+        'rejections': [
+            # '{{none}}'
+        ]
+    },
+    {
+        'name': 'lean_against',
+        'description': 'lean against an object or character',
+        'category': ActionCategories.POSTURE_STANDING,
+        'duration': 2.0,
+        'examples': [
+            '{{character}} leans against the {{object}}',
+            '{{character}} rests his back against the {{object}}',
+            '{{character}} finds support by leaning against the {{object}}',
+            '{{character}} uses the {{object}} as a prop to lean against',
+            '{{character}} relaxes by leaning against the {{object}}',
+            '{{character}} takes a break and leans against the {{object}}',
+            '{{character}} leans his weight against the {{object}}',
+            '{{character}} leans on the {{object}} for support',
+            '{{character}} finds comfort in leaning against the {{object}}',
+            '{{character}} enjoys the feeling of leaning against the {{object}}',
+            '{{character}} appreciates the sturdiness of the {{object}} while leaning against it'
+        ],
+        'confirmations': [
+            # '{{none}}'
+        ],
+        'rejections': [
             # '{{none}}'
         ]
     },
     {
         'name': 'lay_down',
         'description': 'lay down on the ground or an object',
+        'category': ActionCategories.POSTURE_LAYING,
+        'duration': 2.5,
         'examples': [
-            "{{character}} lies down on the {{object}}",
-            "{{character}} curls up on the {{object}}",
-            "{{character}} sprawls out on the {{object}}",
-            "{{character}} takes a rest by laying down on the {{object}}",
-            "{{character}} finds a comfortable spot and lays down",
-            "{{character}} decides to take a nap on the {{object}}",
-            "{{character}} settles down for a quick rest on the {{object}}",
-            "{{character}} stretches out on the {{object}}",
-            "{{character}} gently lowers themselves onto the {{object}}",
-            "{{character}} lays down next to {{other_character}} on the {{object}}",
-            "{{character}} lays down their head on the {{object}}",
-            "{{character}} makes a pillow of their arms and lays down on the {{object}}",
-            "{{character}} lays down on the {{object}}, gently swinging back and forth",
-            "{{character}} carefully lays down on the {{object}}",
-            "{{character}} cautiously lays down on the {{object}}"
+            '{{character}} lies down on the {{object}}',
+            '{{character}} curls up on the {{object}}',
+            '{{character}} sprawls out on the {{object}}',
+            '{{character}} takes a rest by laying down on the {{object}}',
+            '{{character}} finds a comfortable spot and lays down',
+            '{{character}} decides to take a nap on the {{object}}',
+            '{{character}} settles down for a quick rest on the {{object}}',
+            '{{character}} stretches out on the {{object}}',
+            '{{character}} gently lowers themselves onto the {{object}}',
+            '{{character}} lays down next to {{other_character}} on the {{object}}',
+            '{{character}} lays down their head on the {{object}}',
+            '{{character}} makes a pillow of their arms and lays down on the {{object}}',
+            '{{character}} lays down on the {{object}}, gently swinging back and forth',
+            '{{character}} carefully lays down on the {{object}}',
+            '{{character}} cautiously lays down on the {{object}}'
         ],
         'confirmations': [
             # '{{none}}'
@@ -155,6 +209,8 @@ registered_actions = [
     {
         'name': 'stand_up',
         'description': 'stand up from sitting or lying position',
+        'category': ActionCategories.POSTURE_STANDING,
+        'duration': 1.5,
         'examples': [
             '{{character}} rises from their seated position',
             '{{character}} gets up from the {{object}}',
@@ -182,6 +238,8 @@ registered_actions = [
     {
         'name': 'jump_fixed',
         'description': 'jump at current position',
+        'category': ActionCategories.SIMPLE_ACTION,
+        'duration': 1.0,
         'examples': [
             '{{character}} jumps in place',
             '{{character}} leaps up from {{object}}',
@@ -205,6 +263,8 @@ registered_actions = [
     {
         'name': 'jump_over',
         'description': 'jump over an object',
+        'category': ActionCategories.SIMPLE_ACTION,
+        'duration': 1.2,
         'examples': [
             '{{character}} jumps over {{object}}',
             '{{character}} leaps over {{object}}',
@@ -231,6 +291,8 @@ registered_actions = [
     {
         'name': 'pick_up_left_hand',
         'description': 'pick up an object with left hand',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.5,
         'examples': [
             '{{character}} picks up {{object}} with their left hand',
             '{{character}} uses their left hand to lift {{object}}',
@@ -258,6 +320,8 @@ registered_actions = [
     {
         'name': 'pick_up_right_hand',
         'description': 'pick up an object with right hand',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.5,
         'examples': [
             '{{character}} picks up {{object}} with their right hand',
             '{{character}} uses their right hand to lift {{object}}',
@@ -285,6 +349,8 @@ registered_actions = [
     {
         'name': 'pick_up_both_hands',
         'description': 'pick up an object with both hands',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.5,
         'examples': [
             '{{character}} reaches for {{object}} with both hands',
             '{{character}} grabs {{object}} using both hands',
@@ -310,30 +376,10 @@ registered_actions = [
         ]
     },
     {
-        "name": "drop_item",
-        "description": "drop item currently in hands to the ground",
-        "examples": [
-            "{{character}} drops {{object}} on the ground",
-            "{{character}} lets go of {{object}}",
-            "{{character}} releases {{object}}",
-            "{{character}} throws {{object}} down",
-            "{{character}} tosses {{object}} aside",
-            "{{character}} places {{object}} on the floor",
-            "{{character}} sets {{object}} down",
-            "{{character}} puts {{object}} on the ground",
-            "{{character}} lays {{object}} on the ground",
-            "{{character}} leaves {{object}} on the ground"
-        ],
-        "confirmations": [
-            # '{{none}}'
-        ],
-        "rejections": [
-            # '{{none}}'
-        ]
-    },
-    {
         'name': 'store_item',
         'description': 'store item in hand in pocket / inventory',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.5,
         'examples': [
             '{{character}} puts {{object}} into their pocket',
             '{{character}} stores {{object}} in their inventory',
@@ -360,11 +406,10 @@ registered_actions = [
         ]
     },
     {
-
         'name': 'retrieve_item',
-
         'description': 'retrieve item from pocket / inventory into hand',
-
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.5,
         'examples': [
             '{{character}} reaches into {{character}}\'s pocket and pulls out {{object}}',
             '{{character}} grabs {{object}} from {{character}}\'s inventory',
@@ -389,33 +434,37 @@ registered_actions = [
         ]
     },
     {
-        "name": "place_item",
-        "description": "place item currently in hands on the ground or an object",
-        "examples": [
-            "{{character}} lays down {{object}} on {{other_object}}",
-            "{{character}} sets {{object}} on {{other_object}}",
-            "{{character}} places {{object}} into {{other_object}}",
-            "{{character}} puts {{object}} next to {{other_object}}",
-            "{{character}} drops {{object}} at {{other_character}}\'s feet",
-            "{{character}} leaves {{object}} behind",
-            "{{character}} positions {{object}} carefully on {{other_object}}",
-            "{{character}} throws {{object}} onto {{other_object}}",
-            "{{character}} plops {{object}} down on {{other_object}}",
-            "{{character}} hangs {{object}} on {{other_object}}"
+        'name': 'place_item',
+        'description': 'place item currently in hands on the ground or an object',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.0,
+        'examples': [
+            '{{character}} lays down {{object}} on {{other_object}}',
+            '{{character}} sets {{object}} on {{other_object}}',
+            '{{character}} places {{object}} into {{other_object}}',
+            '{{character}} puts {{object}} next to {{other_object}}',
+            '{{character}} drops {{object}} at {{other_character}}\'s feet',
+            '{{character}} leaves {{object}} behind',
+            '{{character}} positions {{object}} carefully on {{other_object}}',
+            '{{character}} throws {{object}} onto {{other_object}}',
+            '{{character}} plops {{object}} down on {{other_object}}',
+            '{{character}} hangs {{object}} on {{other_object}}'
         ],
-        "confirmations": [
-            "{{object}} has been placed",
-            "{{object}} is now on {{other_object}}",
-            "{{other_character}} sees {{object}} where it was placed"
+        'confirmations': [
+            '{{object}} has been placed',
+            '{{object}} is now on {{other_object}}',
+            '{{other_character}} sees {{object}} where it was placed'
         ],
-        "rejections": [
-            "{{object}} cannot be placed there",
-            "{{object}} doesn't fit"
+        'rejections': [
+            '{{object}} cannot be placed there',
+            '{{object}} doesn\'t fit'
         ]
     },
     {
         'name': 'drop_item',
         'description': 'drop item currently in hands to the ground',
+        'category': ActionCategories.OBJECT_INTERACTION,
+        'duration': 1.0,
         'examples': [
             '{{character}} drops {{object}} on the ground',
             '{{character}} lets go of {{object}}',
@@ -444,6 +493,8 @@ registered_actions = [
     {
         'name': 'give_item',
         'description': 'give item in hand to the other chara\'s hand',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.5,
         'examples': [
             '{{character}} passes {{object}} to {{other_character}}',
             '{{character}} transfers {{object}} to {{other_character}}',
@@ -474,6 +525,8 @@ registered_actions = [
     {
         'name': 'take_hand',
         'description': 'take hand of the other chara, depending on position, and interlock',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.0,
         'examples': [
             '{{character}} reaches out to take {{other_character}}\'s hand',
             '{{character}} extends a hand towards {{other_character}}',
@@ -507,6 +560,8 @@ registered_actions = [
     {
         'name': 'caress_cheek',
         'description': 'caress cheek of the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.5,
         'examples': [
             '{{character}} gently caresses {{other_character}}\'s cheek',
             '{{character}} softly touches {{other_character}}\'s face',
@@ -538,6 +593,8 @@ registered_actions = [
     {
         'name': 'caress_head',
         'description': 'caress head of the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.5,
         'examples': [
             '{{character}} gently strokes {{other_character}}\'s hair',
             '{{character}} caresses {{other_character}}\'s head',
@@ -574,6 +631,8 @@ registered_actions = [
     {
         'name': 'kiss_hand',
         'description': 'take hand of the other chara, and kiss it in a romantic way',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.0,
         'examples': [
             '{{character}} gently takes {{other_character}}\'s hand',
             '{{character}} reaches for {{other_character}}\'s hand',
@@ -605,6 +664,8 @@ registered_actions = [
     {
         'name': 'kiss_cheek',
         'description': 'kiss cheek of the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.0,
         'examples': [
             '{{character}} leans towards {{other_character}} and kisses {{other_character}}\'s cheek',
             '{{character}} gently plants a kiss on {{other_character}}\'s cheek',
@@ -636,6 +697,8 @@ registered_actions = [
     {
         'name': 'kiss_forehead',
         'description': 'kiss forehead of the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.0,
         'examples': [
             '{{character}} leans in and kisses {{other_character}} on the forehead',
             '{{character}} gently presses their lips to {{other_character}}\'s forehead',
@@ -667,6 +730,8 @@ registered_actions = [
     {
         'name': 'kiss_lips',
         'description': 'kiss the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 2.0,
         'examples': [
             '{{character}} leans in and kisses {{other_character}} on the lips',
             '{{character}} presses their lips against {{other_character}}\'s lips',
@@ -696,33 +761,35 @@ registered_actions = [
         ]
     },
     {
-        "name": "push_away",
-        "description": "push away the other chara",
-        "examples": [
-            "{{character}} forcefully pushes {{other_character}} away",
-            "{{character}} pushes {{other_character}} with both hands",
-            "{{character}} shoves {{other_character}} aside",
-            "{{character}} nudges {{other_character}} out of the way",
-            "{{character}} elbows {{other_character}} out of the way",
-            "{{character}} forcefully moves {{other_character}} backwards",
-            "{{character}} makes {{other_character}} stumble back",
-            "{{character}} sends {{other_character}} flying with a powerful push",
-            "{{character}} uses their arm to push {{other_character}} back"
+        'name': 'push_away',
+        'description': 'push away the other chara',
+        'category': ActionCategories.CHARACTER_INTERACTION,
+        'duration': 1.0,
+        'examples': [
+            '{{character}} forcefully pushes {{other_character}} away',
+            '{{character}} pushes {{other_character}} with both hands',
+            '{{character}} shoves {{other_character}} aside',
+            '{{character}} nudges {{other_character}} out of the way',
+            '{{character}} elbows {{other_character}} out of the way',
+            '{{character}} forcefully moves {{other_character}} backwards',
+            '{{character}} makes {{other_character}} stumble back',
+            '{{character}} sends {{other_character}} flying with a powerful push',
+            '{{character}} uses their arm to push {{other_character}} back'
         ],
-        "confirmations": [
-            "{{other_character}} falls backwards",
-            "{{other_character}} loses balance and topples over",
-            "{{other_character}} steps back surprisedly",
-            "{{other_character}} recoils from the sudden movement",
-            "{{other_character}} takes a step back from {{character}}"
+        'confirmations': [
+            '{{other_character}} falls backwards',
+            '{{other_character}} loses balance and topples over',
+            '{{other_character}} steps back surprisedly',
+            '{{other_character}} recoils from the sudden movement',
+            '{{other_character}} takes a step back from {{character}}'
         ],
-        "rejections": [
-            "{{other_character}} resists the push",
-            "{{other_character}} grabs onto something nearby to keep standing",
-            "{{other_character}} braces themselves against the impact",
-            "{{other_character}} resists the attempt and remains steady",
-            "{{other_character}} sidesteps the push easily",
-            "{{other_character}} counters with a push of their own",
+        'rejections': [
+            '{{other_character}} resists the push',
+            '{{other_character}} grabs onto something nearby to keep standing',
+            '{{other_character}} braces themselves against the impact',
+            '{{other_character}} resists the attempt and remains steady',
+            '{{other_character}} sidesteps the push easily',
+            '{{other_character}} counters with a push of their own',
         ]
     },
 ]
