@@ -7,139 +7,139 @@
         "animation_items": [
           {
             "name": "T-Pose",
-            "description": ""
+            "description": "T-Pose, debug animation"
           },
           {
             "name": "Basic 1",
-            "description": ""
+            "description": "static standing position. Left hand bent with palm facing forward, fingers lightly touching face. Right hand bent, holding right arm."
           },
           {
             "name": "Basic 2",
-            "description": ""
+            "description": "static standing position. Left hand bent with palm facing forward, fingers lightly touching chest. Reft arm hanging low, fingers slightly spread."
           },
           {
             "name": "Basic 3",
-            "description": ""
+            "description": "static standing position. Right hand bent with palm facing upwards, fingers lightly touching chin. Left hand on hip with fingers slightly spread."
           },
           {
             "name": "Basic 4",
-            "description": ""
+            "description": "static standing position. Both hands bent with palms facing forward, fingers lightly touching each other in front of the chest."
           },
           {
             "name": "Basic 5",
-            "description": ""
+            "description": "static standing, both arms crossed in front of the chest, right hand gripping the left bicep, and left hand gripping the right bicep. Fingers on both hands are curled."
           },
           {
             "name": "Basic 6",
-            "description": ""
+            "description": "static standing, arms hanging low with fingers slightly spread."
           },
           {
             "name": "Basic 7",
-            "description": ""
+            "description": "static standing, arms bent at the elbow, hands clasped together in front of the lower abdomen, fingers gently placed against back of hand."
           },
           {
             "name": "Basic 8",
-            "description": ""
+            "description": "static standing, right arm bent at the elbow, hand resting on the hip. Left arm hanging low, fingers forming a soft fist."
           },
           {
             "name": "Basic 9",
-            "description": ""
+            "description": "static standing position. Right arm bent at the elbow, hand resting on the abdomen with fingers slightly spread. Left arm hanging low, fingers slightly spread."
           },
           {
             "name": "Basic 10",
-            "description": ""
+            "description": "Static standing position. Left arm bent at the elbow, hand resting on the hip. Right arm bent at the elbow, hand resting on the hip. The head is facing forward with a slight tilt to the left."
           },
           {
             "name": "Basic 11",
-            "description": ""
+            "description": "Static standing position. Right hand bent with palm facing outward, fingers lightly touching the face, specifically covering the mouth and nose area. Left arm bent at the elbow, hand resting on the stomach, fingers slightly spread. The head is tilted slightly to the right and facing forward. The pose may express shyness or embarrassment."
           },
           {
             "name": "Basic 12",
-            "description": ""
+            "description": "Static standing position. Left hand bent with palm facing right, fingers lightly touching face. Right arm bent, with hand resting on the right arm. Head is slightly tilted to the left and facing forward."
           },
           {
             "name": "Basic 13",
-            "description": ""
+            "description": "Static standing position. Right arm bent at the elbow, hand resting on the hip. Left arm bent at the elbow, forearm raised with palm facing upwards and fingers slightly spread. Head is not tilted and is facing forward. This stance may express a welcoming or presenting emotion."
           },
           {
             "name": "Basic 14",
-            "description": ""
+            "description": "Static standing position. Right arm bent, hand raised to the head, fingers lightly touching the hair near the right ear. Left arm hanging low, fingers slightly spread. Head is facing forward with a slight tilt to the right, expressing a relaxed or slightly playful emotion."
           },
           {
             "name": "Basic 15",
-            "description": ""
+            "description": "Static standing position. Right arm bent, hand resting gently on the back of the head. Left hand on hip with fingers slightly spread. Head is not tilted and is facing forward, expressing a relaxed and pleasant emotion."
           },
           {
             "name": "Basic 16",
-            "description": ""
+            "description": "Static standing position, arms hanging low with fingers slightly spread. Head faces forward, not tilted."
           },
           {
             "name": "Basic 17",
-            "description": ""
+            "description": "Static standing position. Right hand bent with palm facing upwards, fingers lightly touching between neck and chest. Left arm hanging low, fingers slightly spread. Head is not tilted and is facing forward."
           },
           {
             "name": "Basic 18",
-            "description": ""
+            "description": "Static standing position. Both arms bent at the elbow, hands behind the back. Head slightly tilted down and to the right, facing forward. The stance expresses shyness."
           },
           {
             "name": "Basic 19",
-            "description": ""
+            "description": "Static standing, arms bent at the elbow, hands clasped together in front of the lower abdomen, fingers gently placed against the back of the hand. The head is facing forward. The stance may express shyness or politeness."
           },
           {
             "name": "Basic 20",
-            "description": ""
+            "description": "Static standing position, head facing forward. Both arms bent at the elbow, hands clasped together in front of the waist, fingers gently placed against back of hand."
           },
           {
             "name": "Basic 21",
-            "description": ""
+            "description": "Static standing, arms bent at the elbow, hands clasped together in front of the abdomen, fingers gently intertwining. The head is facing forward. The stance may express shyness or modesty."
           },
           {
             "name": "Basic 22",
-            "description": ""
+            "description": "Static standing position. Both arms are bent behind the back, with hands clasped together at the waist. The head is not tilted and is facing forward. The stance may express modesty or shyness."
           },
           {
             "name": "Basic 23",
-            "description": ""
+            "description": "Static standing position. Both arms are bent at the elbow, held away from the body with palms facing forward, and fingers slightly curled. The head is not tilted and is facing forward, expressing a neutral or slightly happy emotion."
           },
           {
             "name": "Basic 24",
-            "description": ""
+            "description": "Static standing position. The left arm is bent at the elbow, with the hand gently open, palm facing forward, and fingers slightly spread as if in a welcoming or presenting gesture. The right arm hangs low, close to the body, with the hand slightly open and fingers lightly curled. The head is not tilted and is facing forward. The overall stance suggest a pleasant and friendly emotion."
           },
           {
             "name": "Basic 25",
-            "description": ""
+            "description": "Static standing, both arms bent at the elbow, hands clasped together in front of the chest, fingers gently placed against their mirroring counterpart. The head is not tilted and is facing forward."
           },
           {
             "name": "Basic 26",
-            "description": ""
+            "description": "Static standing position. Left arm bent, hand resting gently on the back of the head, fingers slightly spread. Right arm hanging low, fingers slightly curled. Head is not tilted and is facing forward, expressing a relaxed and pleasant emotion."
           },
           {
             "name": "Basic 27",
-            "description": ""
+            "description": "Static standing position, with both arms hanging low at the sides. Fingers are slightly curved inward, as if lightly holding something. The head is not tilted and is facing forward, expressing a neutral and calm emotion."
           },
           {
             "name": "Basic 28",
-            "description": ""
+            "description": "Static standing position. Both arms are crossed in front of the chest, with the right hand gripping the left bicep and the left hand gripping the right forearm. The fingers on both hands are curled. The head is tilted slightly downwards and to the left, and is facing forward, expressing a calm and attentive emotion."
           },
           {
             "name": "Basic 29",
-            "description": ""
+            "description": "Static standing position. Both arms are slightly bent, held out to the sides with palms facing downwards and fingers slightly spread. The head is not tilted and is facing forward. The stance may express a neutral or slightly open emotion."
           },
           {
             "name": "Basic 30",
-            "description": ""
+            "description": "Static standing position. Both arms are bent at the elbow, and the hands are clasped together in front of the waist, with fingers gently placed against the palm of the opposing hand. The head is slightly tilted downwards, with the gaze also directed downwards. The stance may express shyness or modesty."
           },
           {
             "name": "Basic 31",
-            "description": ""
+            "description": "Static standing position. The left arm is bent at the elbow, and the hand is gently touching the hair or clothes near the left side of the face and chest, with fingers lightly spread. The right arm is hanging low with fingers slightly curled. The head is facing forward, expressing a shy or gentle emotion."
           },
           {
             "name": "Basic 32",
-            "description": ""
+            "description": "Static standing position. The right arm is bent at the elbow, and the hand is raised to the chest, with fingers gently curled as if lightly touching the collarbone. The left arm is bent at the ellbow, held across the abdomen, with fingers softly curled. The head is not tilted and is facing forward. The stance expresses a relaxed and pleasant or thinking emotion."
           },
           {
             "name": "Basic 33",
-            "description": ""
+            "description": "Static standing position. The right arm is bent at the elbow, with the hand raised to the face, fingers gently touching the chin and lower lip. The left hand is resting on the left hip, with fingers slightly spread. The head is not tilted and is facing forward. The stance may express thoughtfulness or contemplation."
           }
         ]
       },
@@ -148,51 +148,51 @@
         "animation_items": [
           {
             "name": "Pose 1",
-            "description": ""
+            "description": "Static standing position. The right arm is bent at the elbow, and the hand is positioned in front of the chest, with fingers gently touching the collar of the garment. The left arm hangs low, with fingers slightly curled. The head is not tilted and faces forward, conveying a neutral expression."
           },
           {
             "name": "Pose 2",
-            "description": ""
+            "description": "Static standing position. Both arms are bent at the elbow, with hands held up at chest height, palms facing inwards, and fingers gently curled into a soft fist. The head is not tilted and is facing forward. The stance may express readiness or a slight shyness."
           },
           {
             "name": "Pose 3",
-            "description": ""
+            "description": "Static standing position. Both arms are bent at the elbow, with hands held in front of the chest, palms lightly pressed against each other. The fingers are gently curled. The head is not tilted and is facing forward. This stance may express a sense of shyness or modesty."
           },
           {
             "name": "Pose 4",
-            "description": ""
+            "description": "Static standing position with both arms hanging low, hands gently forming soft fists. The head is facing forward without any tilt. The overall stance appears neutral."
           },
           {
             "name": "Pose 5",
-            "description": ""
+            "description": "Standing position with hips slightly tilting from left to right. Both arms are bent at the elbow, crossed in front of the chest. The left hand holds the right arm just above the elbow, and the right hand holds the left arm just above the elbow. Both sets of fingers are gently curled. The head is not tilted and is facing forward. The stance may express a slightly playful anticipation."
           },
           {
             "name": "Pose 6",
-            "description": ""
+            "description": "Standing with a gentle lean to the right, arms hanging low with fingers slightly spread. The head is tilted slightly to the right and facing forward, expressing a relaxed and pleasant emotion."
           },
           {
             "name": "Pose 7",
-            "description": ""
+            "description": "The character is in a static standing pose. The right arm is bent, with the hand gently touching the chest near the collarbone, fingers slightly curled. The left arm is relaxed and hangs down the side, with fingers slightly curled. The head is tilted slightly forward and facing the viewer. The stance may express a subtle shyness or demureness."
           },
           {
             "name": "Pose 8",
-            "description": ""
+            "description": "static standing pose. the character's left arm is bent at the elbow, with the hand lightly touching the collarbone or upper chest area, fingers slightly splayed. The right arm hangs loosely at the side, with fingers gently curled. The head is facing forward, with a gentle, perhaps slightly shy or demure, expression."
           },
           {
             "name": "Pose 9",
-            "description": ""
+            "description": "Static standing position, with both arms bent at the elbows, hands clasped together in front of the waist, fingers gently intertwining. The head is not tilted and is facing forward. The stance may express shyness or modesty."
           },
           {
             "name": "Pose 10",
-            "description": ""
+            "description": "static standing pose, with both arms bent at the elbow. The left hand is brought up to the chest, with fingers gently touching the collarbone area. The right arm is bent at the elbow, with the hand resting on the back, near the hip. The head is slightly tilted down and facing forward. This stance may express a thoughtful or slightly reserved emotion."
           },
           {
             "name": "Pose 11",
-            "description": ""
+            "description": "static standing pose. The left arm is bent, with the hand gently touching the face, fingers slightly splayed. The right arm hangs relaxed at the side, fingers gently curled. The head is slightly tilted forward. The stance may express shyness or modesty."
           },
           {
             "name": "Pose 12",
-            "description": ""
+            "description": "Static standing position. The right arm is bent at the elbow, with the hand resting on the back of the head. The fingers are gently spread, and the thumb is slightly separated. The left arm hangs low, with fingers slightly curled inwards. The head is not tilted and is facing forward, expressing a relaxed and pleasant emotion."
           },
           {
             "name": "Pose 13",

@@ -34,9 +34,7 @@ example_action = {
     ],
     # animations reference valid ingame animations which may play while this action is being executed
     # if empty, idle animations may play
-    "animations": [
-        {}
-    ]
+    "animations": []
 }
 ```
 
