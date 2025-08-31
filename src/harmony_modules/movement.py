@@ -283,7 +283,7 @@ class ActionExecutor:
         
         # Calculate target distance
         target_distance = self._calculate_distance(start_position, target_position)
-        completion_threshold = 1.0  # 1.0 unit ≈ 1 meter in game metric system
+        completion_threshold = 1.0  # 1.0 unit roughly equals 1 meter in game metric system
         
         logger.debug("Movement action '%s': start=%.2f,%.2f,%.2f target=%.2f,%.2f,%.2f distance=%.2f", 
                     action.name, start_position[0], start_position[1], start_position[2],
@@ -291,12 +291,11 @@ class ActionExecutor:
         
         # Set up periodic distance checking
         check_interval = 0.1  # Check every 100ms
-        checks_performed = 0
+        checks_performed = [0]  # Use a list for mutability in nested scope
         max_checks = int(max_duration / check_interval)  # Maximum checks based on max duration
         
         def check_distance():
-            nonlocal checks_performed
-            checks_performed += 1
+            checks_performed[0] += 1
             
             # Check if action is still executing (might have been cancelled/timed out)
             if action.state != ActionState.EXECUTING:
@@ -317,7 +316,7 @@ class ActionExecutor:
                     return
                 
                 # Check if we've exceeded maximum duration
-                if checks_performed >= max_checks:
+                if checks_performed[0] >= max_checks:
                     logger.warning("Movement action '%s' timed out: max duration reached (distance=%.2f)", action.name, current_distance)
                     self.movement_handler.on_action_completed(action, False)
                     return
@@ -643,20 +642,26 @@ class MovementHandler(HarmonyClientModuleBase):
                         animation_items = dict(animation_info_group[category_id])
                         animations[group_id]["categories"][category_id] = {
                             "name": category_name,
-                            "animation_items": [],
-                            "animation_item_details": {}
+                            "animation_items": []
                         }
                         for item_info in animation_items.values():
-                            animations[group_id]["categories"][category_id]["animation_items"].append(item_info.name)
-                            # animations[group_id]["categories"][category_id]["animation_items"][item_info.name] = dir(item_info)
-                            animations[group_id]["categories"][category_id]["animation_item_details"][item_info.name] = {
-                                "bundlePath": item_info.bundlePath,
-                                "clip": item_info.clip,
-                                "fileName": item_info.fileName,
-                                "manifest": item_info.manifest,
+                            # Create animation data object; can be used as animation database; but needs manual descriptions
+                            animation_data = {
                                 "name": item_info.name,
-                                # "option": item_info.option, -> Not serializable
+                                "description": "",
                             }
+                            if int(self.config["debug_mode"]) == 3:
+                                # Additional debug info, not useful for the most part unless we work on assets
+                                animation_data["metadata"] = {
+                                    "bundlePath": item_info.bundlePath,
+                                    "clip": item_info.clip,
+                                    "fileName": item_info.fileName,
+                                    "manifest": item_info.manifest,
+                                    "name": item_info.name
+                                }
+
+                            # Add to output
+                            animations[group_id]["categories"][category_id]["animation_items"].append(animation_data)
 
         # Print list to console
         # logger.debug(json.dumps(animations))

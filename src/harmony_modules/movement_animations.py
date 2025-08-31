@@ -61,7 +61,7 @@ class AnimationDurationDetector:
             float: Animation duration in seconds, or None if detection fails
         """
         # Create cache key
-        cache_key = f"{group_id}_{category_id}_{animation_id}"
+        cache_key = "{0}_{1}_{2}".format(group_id, category_id, animation_id)
         
         # Check cache first
         cached_duration = self._get_cached_duration(cache_key)
@@ -203,12 +203,11 @@ class AnimationMapper:
 
     def _load_animation_database(self):
         """Load animation database from animation_list_short.json"""
-        animation_db_path = os.path.join(os.path.dirname(__file__), '..', 'animation_list_short.json')
+        animation_db_path = os.path.join(os.path.dirname(__file__), '../harmony_data', 'animation_list.json')
 
         if not os.path.exists(animation_db_path):
             raise RuntimeError(
-                f"Animation database not found at {animation_db_path}. This file is required for movement system initialization.")
-
+                "Animation database not found at {0}. This file is required for movement system initialization.".format(animation_db_path))
         try:
             with open(animation_db_path, 'r') as f:
                 database = json.load(f)
@@ -224,9 +223,9 @@ class AnimationMapper:
             return database
 
         except json.JSONDecodeError as e:
-            raise RuntimeError(f"Invalid JSON in animation database: {e}")
+            raise RuntimeError("Invalid JSON in animation database: {0}".format(e))
         except Exception as e:
-            raise RuntimeError(f"Error loading animation database: {e}")
+            raise RuntimeError("Error loading animation database: {0}".format(e))
 
     def _define_action_categories(self):
         """Define action categories for intelligent mapping using centralized definitions"""
@@ -251,7 +250,7 @@ class AnimationMapper:
         character_group_id, character_group = self._find_group_by_name(AnimationGroups.CHARACTER)
         if not character_group_id or not character_group:
             raise RuntimeError(
-                f"Character animation group '{AnimationGroups.CHARACTER}' not found in animation database. Database structure may be invalid.")
+                "Character animation group '{0}' not found in animation database. Database structure may be invalid.".format(AnimationGroups.CHARACTER))
 
         # Movement actions - use Walking & Running category
         walking_category_id, walking_category = self._find_category_by_name(character_group, AnimationCategories.WALKING_RUNNING)
@@ -405,7 +404,7 @@ class AnimationMapper:
         missing_core_actions = [action for action in core_actions if action not in mappings]
         if missing_core_actions:
             raise RuntimeError(
-                f"Failed to generate mappings for core movement actions: {missing_core_actions}. Check animation database structure.")
+                "Failed to generate mappings for core movement actions: {0}. Check animation database structure.".format(missing_core_actions))
 
         # Add fallback mappings for any remaining actions that don't have specific mappings
         self._add_fallback_mappings(mappings)
