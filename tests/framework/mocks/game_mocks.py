@@ -362,7 +362,12 @@ def setup_game_mocks():
     # Add to sys.modules
     sys.modules['ConfigParser'] = configparser_module
     
-    print("Game environment mocks initialized")
+    try:
+        from framework.base import get_logger
+        logger = get_logger("GameMocks")
+        logger.debug("Game environment mocks initialized")
+    except ImportError:
+        print("Game environment mocks initialized")
 
 
 def create_mock_game():

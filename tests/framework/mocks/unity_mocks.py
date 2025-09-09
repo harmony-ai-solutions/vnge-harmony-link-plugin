@@ -466,7 +466,14 @@ def setup_unity_mocks():
     # Add the mock module to sys.modules so imports work
     sys.modules['UnityEngine'] = unity_engine
     
-    print("Unity Engine mocks initialized")
+    # Use test logging system if available
+    try:
+        from framework.base import get_logger
+        logger = get_logger("UnityMocks")
+        logger.debug("Unity Engine mocks initialized")
+    except ImportError:
+        # Fallback to print if logging system not available
+        print("Unity Engine mocks initialized")
 
 
 def get_mock_input():

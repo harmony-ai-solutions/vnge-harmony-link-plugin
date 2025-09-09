@@ -361,10 +361,10 @@ class TestPerformance:
 
 
 if __name__ == "__main__":
-    # Run tests directly with IronPython
-    print("Running unit tests for harmony_modules/common.py...")
+    # Import the new test logging system
+    from framework.base import TestRunner, TEST_LOG_LEVEL_QUIET
     
-    # Create test instances and run them
+    # Create test instances
     test_classes = [
         TestHarmonyLinkEvent(),
         TestHarmonyClientModuleBase(),
@@ -374,36 +374,6 @@ if __name__ == "__main__":
         TestPerformance()
     ]
     
-    total_tests = 0
-    passed_tests = 0
-    failed_tests = 0
-    
-    for test_class in test_classes:
-        class_name = test_class.__class__.__name__
-        print("\n--- Running {} ---".format(class_name))
-        
-        # Get all test methods
-        test_methods = [method for method in dir(test_class) if method.startswith('test_')]
-        
-        for method_name in test_methods:
-            total_tests += 1
-            try:
-                test_method = getattr(test_class, method_name)
-                test_method()
-                print("PASS: {}".format(method_name))
-                passed_tests += 1
-            except Exception as e:
-                print("FAIL: {} - {}".format(method_name, str(e)))
-                failed_tests += 1
-    
-    print("\n" + "="*50)
-    print("TEST SUMMARY")
-    print("="*50)
-    print("Total: {}".format(total_tests))
-    print("Passed: {}".format(passed_tests))
-    print("Failed: {}".format(failed_tests))
-    
-    if failed_tests == 0:
-        print("All tests passed!")
-    else:
-        print("{} tests failed.".format(failed_tests))
+    # Run tests with clean output
+    runner = TestRunner(log_level=TEST_LOG_LEVEL_QUIET)
+    runner.run_test_suite(test_classes, "unit tests for harmony_modules/common.py")

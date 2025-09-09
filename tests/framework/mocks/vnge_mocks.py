@@ -423,7 +423,12 @@ def setup_vnge_mocks():
     sys.modules['skin_customwindow'] = skin_customwindow_module
     sys.modules['libkfguictrl'] = libkfguictrl_module
     
-    print("VNGE engine mocks initialized")
+    try:
+        from framework.base import get_logger
+        logger = get_logger("VNGEMocks")
+        logger.debug("VNGE engine mocks initialized")
+    except ImportError:
+        print("VNGE engine mocks initialized")
 
 
 def create_mock_character_actor(entity_id, position=None, rotation=None):

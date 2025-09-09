@@ -82,7 +82,9 @@ class MockCancellationTokenSource:
             time.sleep(milliseconds / 1000.0)
             self.Cancel()
         
-        threading.Thread(target=cancel_delayed, daemon=True).start()
+        t = threading.Thread(target=cancel_delayed)
+        t.daemon = True   # must set attribute before start()
+        t.start()
 
 
 class MockTask:
@@ -135,23 +137,62 @@ class MockWebSocketReceiveResult:
         self.MessageType = message_type
         self.EndOfMessage = end_of_message
 
+# Generic metaclass that lets us do: Class[T](...) in tests
+class _GenericMeta(type):
+    def __getitem__(cls, _type_arg):
+        # We ignore the type arg; return a callable that constructs `cls`
+        def _ctor(*args, **kwargs):
+            return cls(*args, **kwargs)
+        return _ctor
 
-class MockArraySegment:
-    """Mock implementation of System.ArraySegment"""
-    
+class MockArraySegment(object):
+    __metaclass__ = _GenericMeta
+
+    """Mock implementation of System.ArraySegment[T]"""
+
     def __init__(self, array, offset=0, count=None):
         self.Array = array
-        self.Offset = offset
-        self.Count = count if count is not None else len(array) - offset
-    
+        self.Offset = int(offset)
+        if count is None:
+            self.Count = len(array) - self.Offset
+        else:
+            self.Count = int(count)
+
     def __getitem__(self, index):
+        if index < 0 or index >= self.Count:
+            raise IndexError("ArraySegment index out of range")
         return self.Array[self.Offset + index]
-    
+
     def __setitem__(self, index, value):
+        if index < 0 or index >= self.Count:
+            raise IndexError("ArraySegment index out of range")
         self.Array[self.Offset + index] = value
-    
+
     def __len__(self):
         return self.Count
+
+
+class MockArray(object):
+    __metaclass__ = _GenericMeta
+
+    """Mock implementation of System.Array[T]"""
+
+    @staticmethod
+    def CreateInstance(element_type, length):
+        """Create an array instance filled with zeros (like new T[length])."""
+        return [0] * int(length)
+
+    def __new__(cls, source):
+        """
+        Support Array[T](iterable) -> python list of items.
+        Returning a non-instance is fine in Python: __new__ may return any object.
+        """
+        return list(source)
+
+
+class MockByte(object):
+    """Mock implementation of System.Byte (marker only)."""
+    pass
 
 
 class MockClientWebSocket:
@@ -191,7 +232,9 @@ class MockClientWebSocket:
                 task.complete(True)
         
         task = MockTask(is_completed=False)
-        threading.Thread(target=connect, daemon=True).start()
+        t = threading.Thread(target=connect)
+        t.daemon = True   # must set attribute before start()
+        t.start()
         return task
     
     def SendAsync(self, buffer_segment, message_type, end_of_message, cancellation_token):
@@ -220,7 +263,9 @@ class MockClientWebSocket:
                 task.complete(True)
         
         task = MockTask(is_completed=False)
-        threading.Thread(target=send, daemon=True).start()
+        t = threading.Thread(target=send)
+        t.daemon = True   # must set attribute before start()
+        t.start()
         return task
     
     def ReceiveAsync(self, buffer_segment, cancellation_token):
@@ -262,7 +307,9 @@ class MockClientWebSocket:
                 task.complete(result)
         
         task = MockTask(is_completed=False)
-        threading.Thread(target=receive, daemon=True).start()
+        t = threading.Thread(target=receive)
+        t.daemon = True   # must set attribute before start()
+        t.start()
         return task
     
     def CloseAsync(self, close_status, status_description, cancellation_token):
@@ -272,7 +319,9 @@ class MockClientWebSocket:
             task.complete(True)
         
         task = MockTask(is_completed=False)
-        threading.Thread(target=close, daemon=True).start()
+        t = threading.Thread(target=close)
+        t.daemon = True   # must set attribute before start()
+        t.start()
         return task
     
     # Test helper methods
@@ -499,20 +548,6 @@ class MockUri:
         return self.uri_string
 
 
-class MockArray:
-    """Mock implementation of System.Array"""
-    
-    @staticmethod
-    def CreateInstance(element_type, length):
-        """Create an array instance"""
-        return [0] * length
-
-
-class MockByte:
-    """Mock implementation of System.Byte"""
-    pass
-
-
 class MockUTF8Encoding:
     """Mock implementation of System.Text.UTF8Encoding"""
     
@@ -618,7 +653,15 @@ def setup_system_mocks():
     sys.modules['System.Text'] = text_module
     sys.modules['System.Text.Encoding'] = MockTextEncoding
     
-    print("System.Net mocks initialized")
+    # Use test logging system if available
+    try:
+        from framework.base import get_logger
+        logger = get_logger("SystemMocks")
+        logger.debug("System.Net mocks initialized")
+    except ImportError:
+        # Fallback to print if logging system not available
+        print("System.Net mocks initialized")
+        pass
 
 
 def create_mock_websocket_client():

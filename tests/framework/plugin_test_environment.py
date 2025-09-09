@@ -16,6 +16,51 @@ from framework.mocks.unity_mocks import *
 from framework.mocks.system_mocks import *
 from framework.mocks.vnge_mocks import *
 from framework.mocks.game_mocks import *
+from framework.base import get_logger
+
+
+def set_plugin_harmony_log_level(log_level_name='ERROR'):
+    """
+    Set the log level for the plugin's custom HarmonyLogger system.
+    
+    Args:
+        log_level_name: Log level name ('TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL')
+    """
+    try:
+        # Import the plugin's logging system
+        import sys
+        import os
+        
+        # Add src directory to path to import plugin modules
+        src_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'src')
+        if src_dir not in sys.path:
+            sys.path.insert(0, src_dir)
+        
+        # Import the plugin's logging module
+        from harmony_modules import logging as harmony_logging
+        
+        # Map log level name to integer
+        log_level_int = harmony_logging.LOG_LEVEL_MAP.get(log_level_name.upper(), harmony_logging.LOG_LEVEL_ERROR)
+        
+        # Update the global config cache to set the log level
+        if harmony_logging._config_cache is not None:
+            harmony_logging._config_cache['log_level_int'] = log_level_int
+            harmony_logging._config_cache['log_level'] = log_level_name.upper()
+        else:
+            # Force config loading with our desired log level
+            harmony_logging._config_loaded = False
+            config = harmony_logging._load_logging_config()
+            config['log_level_int'] = log_level_int
+            config['log_level'] = log_level_name.upper()
+        
+        # Clear logger cache to force recreation with new log level
+        harmony_logging._logger_cache.clear()
+        
+    except ImportError:
+        # Plugin logging not available, ignore
+        pass
+    except Exception as e:
+        print("Warning: Failed to set plugin log level: {}".format(e))
 
 
 class PluginTestEnvironment(object):
@@ -31,6 +76,10 @@ class PluginTestEnvironment(object):
         self.is_initialized = False
         self.cleanup_callbacks = []
         self._lock = threading.Lock()
+        self.logger = get_logger("PluginTestEnvironment")
+        
+        # Set plugin logging to ERROR level by default
+        set_plugin_harmony_log_level('ERROR')
         
         # Default test configuration
         self.default_config = {
@@ -56,7 +105,7 @@ class PluginTestEnvironment(object):
             if self.is_initialized:
                 return
             
-            print("Setting up Plugin Test Environment...")
+            self.logger.debug("Setting up Plugin Test Environment...")
             
             # Initialize Unity mocks
             self._setup_unity_mocks()
@@ -74,11 +123,11 @@ class PluginTestEnvironment(object):
             self._setup_module_injection()
             
             self.is_initialized = True
-            print("Plugin Test Environment setup complete")
+            self.logger.debug("Plugin Test Environment setup complete")
     
     def _setup_unity_mocks(self):
         """Initialize Unity Engine mock system"""
-        print("  - Setting up Unity mocks...")
+        self.logger.debug("Setting up Unity mocks...")
         
         # Create mock instances
         self.mocks['unity_input'] = MockInput()
@@ -94,7 +143,7 @@ class PluginTestEnvironment(object):
     
     def _setup_system_mocks(self):
         """Initialize System.Net mock system"""
-        print("  - Setting up System.Net mocks...")
+        self.logger.debug("Setting up System.Net mocks...")
         
         # Create WebSocket client mock
         self.mocks['websocket_client'] = MockClientWebSocket()
@@ -111,7 +160,7 @@ class PluginTestEnvironment(object):
     
     def _setup_vnge_mocks(self):
         """Initialize VNGE engine mock system"""
-        print("  - Setting up VNGE mocks...")
+        self.logger.debug("Setting up VNGE mocks...")
         
         # Create Studio.Info mock with animation database
         self.mocks['studio_info'] = MockStudioInfo()
@@ -124,14 +173,14 @@ class PluginTestEnvironment(object):
         for entity_id in entities:
             actor = MockCharacterActor(entity_id)
             self.mocks['character_actors'][entity_id] = actor
-            print("    - Created character actor: {}".format(entity_id))
+            self.logger.debug("Created character actor: {}".format(entity_id))
         
         # Set up cleanup
         self.cleanup_callbacks.append(self._cleanup_vnge_mocks)
     
     def _setup_game_mocks(self):
         """Initialize game environment mock system"""
-        print("  - Setting up Game environment mocks...")
+        self.logger.debug("Setting up Game environment mocks...")
         
         # Create game instance
         entities = self.config.get('entities', ['kaji', 'user'])
@@ -148,7 +197,7 @@ class PluginTestEnvironment(object):
     
     def _setup_module_injection(self):
         """Set up module path injection to prioritize mocks"""
-        print("  - Setting up module injection...")
+        self.logger.debug("Setting up module injection...")
         
         # Use setup methods from all mock modules for consistency
         setup_system_mocks()
@@ -162,7 +211,7 @@ class PluginTestEnvironment(object):
             if not self.is_initialized:
                 return
             
-            print("Tearing down Plugin Test Environment...")
+            self.logger.debug("Tearing down Plugin Test Environment...")
             
             # Run cleanup callbacks in reverse order
             for cleanup_callback in reversed(self.cleanup_callbacks):
@@ -173,9 +222,9 @@ class PluginTestEnvironment(object):
                     if "'list' object has no attribute 'clear'" in str(e):
                         pass  # Ignore this specific error
                     else:
-                        print("Warning: Cleanup callback failed: {}".format(e))
+                        self.logger.warning("Cleanup callback failed: {}".format(e))
                 except Exception as e:
-                    print("Warning: Cleanup callback failed: {}".format(e))
+                    self.logger.warning("Cleanup callback failed: {}".format(e))
             
             # Restore original modules
             # Since we're using setup functions that handle sys.modules directly,
@@ -184,7 +233,7 @@ class PluginTestEnvironment(object):
             pass
             
             self.is_initialized = False
-            print("Plugin Test Environment teardown complete")
+            self.logger.debug("Plugin Test Environment teardown complete")
     
     def _cleanup_unity_mocks(self):
         """Clean up Unity mocks"""

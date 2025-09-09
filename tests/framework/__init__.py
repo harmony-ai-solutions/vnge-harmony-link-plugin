@@ -11,7 +11,8 @@ from .plugin_test_environment import (
     PluginTestEnvironment,
     create_test_environment,
     setup_basic_test_environment,
-    setup_integration_test_environment
+    setup_integration_test_environment,
+    set_plugin_harmony_log_level
 )
 
 __version__ = "1.0.0"
@@ -23,5 +24,6 @@ __all__ = [
     'PluginTestEnvironment',
     'create_test_environment',
     'setup_basic_test_environment',
-    'setup_integration_test_environment'
+    'setup_integration_test_environment',
+    'set_plugin_harmony_log_level'
 ]

@@ -9,6 +9,7 @@ The testing framework provides:
 - **Plugin Test Environment**: Integrated test orchestration with dependency injection
 - **IronPython 2.7.8 Compatibility**: Full compatibility with the plugin's runtime environment
 - **Realistic Behavior Simulation**: Thread-safe mocks that simulate actual Unity/VNGE patterns
+- **Clean Test Output**: Minimal logging with clear pass/fail indicators and line number tracking
 - **Performance Monitoring**: Built-in metrics collection and validation
 
 ## Quick Start
@@ -16,28 +17,41 @@ The testing framework provides:
 ### Prerequisites
 
 1. **IronPython 2.7.8** installed and available as `ipy` command
-2. **ironpython-pytest** package installed:
-   ```bash
-   ipy -X:Frames -m ensurepip
-   ipy -X:Frames -m pip install ironpython-pytest
-   ```
+2. No additional packages required - uses Python built-in libraries only
 
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run individual test files directly with IronPython
 cd tests
-ipy -X:Frames -m pytest
 
-# Run specific test file
-ipy -X:Frames -m pytest test_framework_basic.py
+# Run unit tests
+ipy -X:Frames unit/test_common.py
+ipy -X:Frames unit/test_connector.py
 
-# Run with verbose output
-ipy -X:Frames -m pytest -v
+# Run framework validation tests
+ipy -X:Frames test_framework_basic.py
 
-# Run specific test markers
-ipy -X:Frames -m pytest -m unit
-ipy -X:Frames -m pytest -m integration
+# Run specific test files
+ipy -X:Frames path/to/test_file.py
+```
+
+### Test Output
+
+The framework provides clean, minimal output:
+```
+Running unit tests for harmony_modules/common.py...
+PASS: test_harmony_event_creation
+PASS: test_harmony_event_validation
+PASS: test_event_state_constants
+...
+==================================================
+TEST SUMMARY
+==================================================
+Total: 16
+Passed: 16
+Failed: 0
+All tests passed!
 ```
 
 ### Basic Test Example
@@ -69,12 +83,10 @@ def test_character_animation():
 ```
 tests/
 ├── README.md                          # This documentation
-├── pytest.ini                         # Pytest configuration
-├── requirements.txt                    # Testing dependencies
-├── conftest.py                        # Shared pytest fixtures
 ├── test_framework_basic.py            # Basic framework validation tests
 ├── framework/                         # Core testing framework
 │   ├── __init__.py
+│   ├── base.py                        # TestLogger and TestRunner classes
 │   ├── plugin_test_environment.py     # Main test orchestration
 │   └── mocks/                         # Mock implementations
 │       ├── __init__.py
@@ -82,12 +94,31 @@ tests/
 │       ├── system_mocks.py            # System.Net mocks
 │       ├── vnge_mocks.py              # VNGE engine mocks
 │       └── game_mocks.py              # Game environment mocks
-├── unit/                              # Unit tests (planned)
+├── unit/                              # Unit tests
+│   ├── test_common.py                 # Tests for harmony_modules/common.py
+│   └── test_connector.py              # Tests for harmony_modules/connector.py
 ├── integration/                       # Integration tests (planned)
 └── simulation/                        # Simulation tests (planned)
 ```
 
 ### Core Components
+
+#### TestRunner and TestLogger
+
+The framework uses custom test execution classes for clean output:
+
+```python
+from framework.base import TestRunner, TEST_LOG_LEVEL_QUIET
+
+# Create test runner with quiet logging
+runner = TestRunner(log_level=TEST_LOG_LEVEL_QUIET)
+
+# Create test instances
+test_classes = [TestMyModule()]
+
+# Run test suite
+runner.run_test_suite(test_classes, "unit tests for my_module.py")
+```
 
 #### PluginTestEnvironment
 
@@ -123,6 +154,7 @@ finally:
    - MockClientWebSocket with realistic async behavior
    - MockTask for async operation simulation
    - MockHttpWebRequest for HTTP communication
+   - MockArray and MockArraySegment with .NET generic syntax support
 
 3. **VNGE Engine Mocks** (`vnge_mocks.py`)
    - MockStudioInfo with animation database
@@ -134,53 +166,58 @@ finally:
    - Window and scene management
    - Configuration parsing
 
-## Configuration
+## Test Structure
 
-### Pytest Configuration (`pytest.ini`)
+### Writing Tests
 
-```ini
-[tool:pytest]
-testpaths = .
-python_files = test_*.py
-python_classes = Test*
-python_functions = test_*
-markers =
-    unit: Unit tests for individual modules
-    integration: Integration tests with mock environment
-    performance: Performance and timing tests
-    websocket: WebSocket communication tests
-    animation: Character animation tests
-```
-
-### Test Markers
-
-Use pytest markers to categorize and run specific test types:
+Tests are organized as classes with test methods:
 
 ```python
-import pytest
+class TestMyModule:
+    """Test MyModule functionality"""
+    
+    def test_basic_functionality(self):
+        """Test basic functionality"""
+        with PluginTestEnvironment() as env:
+            # Test implementation
+            assert True
+    
+    def test_error_handling(self):
+        """Test error handling"""
+        with PluginTestEnvironment() as env:
+            # Test error scenarios
+            pass
 
-@pytest.mark.unit
-def test_harmony_event_creation():
-    """Unit test for HarmonyLinkEvent creation"""
-    pass
-
-@pytest.mark.integration
-def test_plugin_startup():
-    """Integration test for complete plugin startup"""
-    pass
-
-@pytest.mark.websocket
-def test_websocket_connection():
-    """WebSocket communication test"""
-    pass
+if __name__ == "__main__":
+    # Import test runner
+    from framework.base import TestRunner, TEST_LOG_LEVEL_QUIET
+    
+    # Create test runner with quiet logging
+    runner = TestRunner(log_level=TEST_LOG_LEVEL_QUIET)
+    
+    # Create test instances
+    test_classes = [TestMyModule()]
+    
+    # Run test suite
+    runner.run_test_suite(test_classes, "unit tests for my_module.py")
 ```
+
+### Test Categories
+
+Tests are organized by type:
+
+- **Unit Tests**: Test individual modules in isolation
+- **Integration Tests**: Test module interactions with full mock environment
+- **Performance Tests**: Validate timing and resource usage
+- **WebSocket Tests**: Test communication with Harmony Link
+- **Animation Tests**: Test character animation functionality
 
 ## Testing Patterns
 
 ### Character Animation Testing
 
 ```python
-def test_character_animation_sequence():
+def test_character_animation_sequence(self):
     with PluginTestEnvironment() as env:
         character = env.get_character_actor('kaji')
         
@@ -198,23 +235,33 @@ def test_character_animation_sequence():
 ### WebSocket Communication Testing
 
 ```python
-def test_websocket_communication():
+def test_websocket_communication(self):
     with PluginTestEnvironment() as env:
-        websocket = env.get_websocket_client()
+        from harmony_modules.connector import ConnectorEventHandler
         
-        # Simulate received message
-        test_message = '{"type": "action", "entity": "kaji", "action": "walk"}'
-        websocket.simulate_received_message(test_message)
+        # Create connector
+        connector = ConnectorEventHandler(
+            ws_endpoint='ws://127.0.0.1:28080',
+            ws_buffer_size=8192000,
+            http_endpoint='http://127.0.0.1:28080',
+            http_listen_port=28081,
+            shutdown_func=lambda game: None,
+            game=type('MockGame', (), {})()
+        )
         
-        # Validate message processing
+        # Test WebSocket functionality
+        websocket = connector.web_socket_client
+        websocket.state = env.get_websocket_state().Open
+        
+        # Simulate and validate messages
         sent_messages = websocket.get_sent_messages()
-        assert len(sent_messages) > 0
+        assert isinstance(sent_messages, list)
 ```
 
 ### Input Simulation Testing
 
 ```python
-def test_input_handling():
+def test_input_handling(self):
     with PluginTestEnvironment() as env:
         input_mock = env.get_unity_input()
         
@@ -230,7 +277,7 @@ def test_input_handling():
 ### Performance Testing
 
 ```python
-def test_animation_performance():
+def test_animation_performance(self):
     with PluginTestEnvironment() as env:
         character = env.get_character_actor('kaji')
         
@@ -253,7 +300,7 @@ def test_animation_performance():
 ### Custom Mock Configuration
 
 ```python
-def test_with_custom_entities():
+def test_with_custom_entities(self):
     # Configure custom entities
     entities = ['custom_character_1', 'custom_character_2']
     
@@ -269,7 +316,7 @@ def test_with_custom_entities():
 ### Execution Metrics
 
 ```python
-def test_with_metrics():
+def test_with_metrics(self):
     with PluginTestEnvironment() as env:
         # Perform test operations
         character = env.get_character_actor('kaji')
@@ -288,7 +335,7 @@ def test_with_metrics():
 ### Error Simulation
 
 ```python
-def test_websocket_error_handling():
+def test_websocket_error_handling(self):
     with PluginTestEnvironment() as env:
         websocket = env.get_websocket_client()
         
@@ -297,6 +344,37 @@ def test_websocket_error_handling():
         
         # Test error handling
         # (Plugin should handle connection failures gracefully)
+```
+
+## Logging and Output
+
+### Log Levels
+
+The framework supports different log levels:
+
+```python
+from framework.base import (
+    TEST_LOG_LEVEL_DEBUG,    # Detailed debug output
+    TEST_LOG_LEVEL_INFO,     # Informational messages
+    TEST_LOG_LEVEL_QUIET     # Minimal output (recommended)
+)
+
+runner = TestRunner(log_level=TEST_LOG_LEVEL_QUIET)
+```
+
+### Plugin Logging Control
+
+Control plugin log output during tests:
+
+```python
+from framework.plugin_test_environment import set_plugin_harmony_log_level
+
+# Set plugin logging to ERROR level to reduce noise
+set_plugin_harmony_log_level('ERROR')
+
+with PluginTestEnvironment() as env:
+    # Plugin will only log ERROR level messages
+    pass
 ```
 
 ## Troubleshooting
@@ -321,15 +399,22 @@ def test_websocket_error_handling():
    ```
    **Solution**: Use proper locking in mock classes for thread safety
 
+4. **Array[Byte] Syntax Errors**
+   ```
+   TypeError: 'classobj' object is not subscriptable
+   ```
+   **Solution**: The framework includes fixes for .NET generic syntax compatibility
+
 ### Debug Mode
 
 Enable debug output for troubleshooting:
 
 ```python
-import logging
-logging.basicConfig(level=logging.DEBUG)
+from framework.base import TestRunner, TEST_LOG_LEVEL_DEBUG
 
-with PluginTestEnvironment(debug=True) as env:
+runner = TestRunner(log_level=TEST_LOG_LEVEL_DEBUG)
+
+with PluginTestEnvironment() as env:
     # Debug output will show mock setup and teardown details
     pass
 ```
@@ -337,7 +422,7 @@ with PluginTestEnvironment(debug=True) as env:
 ### Performance Profiling
 
 ```python
-def test_with_profiling():
+def test_with_profiling(self):
     with PluginTestEnvironment() as env:
         import time
         
@@ -353,12 +438,58 @@ def test_with_profiling():
         print(f"1000 animations executed in {end_time - start_time:.3f} seconds")
 ```
 
+## Test Execution Examples
+
+### Running All Unit Tests
+
+```bash
+# Run common module tests
+cd tests
+ipy -X:Frames unit/test_common.py
+
+# Expected output:
+# Running unit tests for harmony_modules/common.py...
+# PASS: test_harmony_event_creation
+# PASS: test_harmony_event_validation
+# ...
+# Total: 16, Passed: 16, Failed: 0
+# All tests passed!
+```
+
+### Running Connector Tests
+
+```bash
+# Run connector module tests
+ipy -X:Frames unit/test_connector.py
+
+# Expected output:
+# Running unit tests for harmony_modules/connector.py...
+# PASS: test_connector_initialization_websocket
+# PASS: test_event_handler_registration
+# ...
+# Total: 17, Passed: 17, Failed: 0
+# All tests passed!
+```
+
+### Running Framework Tests
+
+```bash
+# Validate the testing framework itself
+ipy -X:Frames test_framework_basic.py
+
+# Expected output:
+# Running basic framework validation tests...
+# PASS: test_mock_setup
+# PASS: test_plugin_environment
+# ...
+```
+
 ## Contributing
 
 ### Adding New Tests
 
 1. Create test files following the `test_*.py` naming convention
-2. Use appropriate pytest markers for categorization
+2. Use the TestRunner class for consistent output
 3. Follow the established testing patterns
 4. Include docstrings explaining test purpose
 5. Use the PluginTestEnvironment context manager
@@ -377,11 +508,25 @@ def test_with_profiling():
 - **Integration tests**: `tests/integration/` - Test module interactions
 - **Simulation tests**: `tests/simulation/` - Test complete scenarios
 
+## Current Test Coverage
+
+### Unit Tests
+- **harmony_modules/common.py**: 16/16 tests passing (100%)
+- **harmony_modules/connector.py**: 17/17 tests passing (100%)
+- **Framework validation**: All basic tests passing
+
+### Mock Systems
+- **Unity Engine**: Complete mock coverage for GUI, Input, Vector classes
+- **System.Net**: Full WebSocket and HTTP mocking with async simulation
+- **VNGE Engine**: Character actors, animation database, scene management
+- **Game Environment**: Timer system, configuration, prop handling
+
 ## Future Enhancements
 
-- [ ] HarmonyLinkMockServer for WebSocket API simulation
-- [ ] Automated test discovery and execution
-- [ ] Test coverage reporting
+- [ ] Integration tests for complete plugin lifecycle
+- [ ] HarmonyLinkMockServer for advanced WebSocket API simulation
+- [ ] Automated test discovery and execution scripts
+- [ ] Test coverage reporting and metrics
 - [ ] Performance benchmarking suite
 - [ ] Visual test result reporting
 - [ ] Continuous integration setup
@@ -390,6 +535,8 @@ def test_with_profiling():
 
 For issues or questions about the testing framework:
 1. Check the troubleshooting section above
-2. Review existing test examples
+2. Review existing test examples in `tests/unit/`
 3. Examine mock class implementations for usage patterns
 4. Create detailed issue reports with error messages and reproduction steps
+
+The testing framework provides a robust foundation for developing and validating the VNGE Harmony Link Plugin without requiring the full game environment.
