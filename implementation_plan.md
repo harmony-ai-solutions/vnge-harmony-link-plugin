@@ -30,14 +30,10 @@ This document outlines the comprehensive implementation plan for creating a test
 #### 1.1 Testing Directory Structure
 ```
 tests/
-├── conftest.py                           # Pytest fixtures and configuration
-├── pytest.ini                           # Pytest settings
-├── requirements.txt                      # ironpython-pytest dependencies
 ├── framework/
 │   ├── mocks/
 │   │   ├── unity_mocks.py               # Mock UnityEngine classes
 │   │   ├── system_mocks.py              # Mock System.Net classes
-│   │   ├── vnge_mocks.py                # Mock vngameengine/Studio.Info
 │   │   └── game_mocks.py                # Mock game environment
 │   ├── fixtures/
 │   │   ├── plugin_fixtures.py           # Plugin-specific fixtures
@@ -456,30 +452,13 @@ def test_animation_sequence_capture():
 
 ### IronPython Setup and Execution
 ```bash
-# Install ironpython-pytest
-ipy -X:Frames -m ensurepip
-ipy -X:Frames -m pip install ironpython-pytest
-
 # Execute test suites
-ipy -X:Frames -m pytest tests/unit/                    # Unit tests
-ipy -X:Frames -m pytest tests/integration/             # Integration tests
-ipy -X:Frames -m pytest -v tests/test_movement.py      # Specific module
-ipy -X:Frames -m pytest -k "websocket"                 # Pattern matching
-```
-
-### Test Configuration (pytest.ini)
-```ini
-[tool:pytest]
-testpaths = tests
-python_files = test_*.py
-python_classes = Test*
-python_functions = test_*
-addopts = -v --tb=short
-markers =
-    unit: Unit tests
-    integration: Integration tests
-    performance: Performance tests
-    slow: Slow running tests
+ipy -X:Frames simulator.py # Run Plugin simulator stub; using mocks so actual game is not required to load
+ipy -X:Frames test_integration.py # Run all integration tests
+ipy -X:Frames test_unit.py # Run all unit tests
+ipy -X:Frames unit/test_common.py # Run common module unit tests
+ipy -X:Frames unit/test_connector.py # Run connector module tests
+ipy -X:Frames test_framework_basic.py # Validate the testing framework itself
 ```
 
 ### Continuous Integration
@@ -497,7 +476,7 @@ jobs:
         # Install IronPython and dependencies
     - name: Run Tests
       run: |
-        ipy -X:Frames -m pytest tests/ --junitxml=test-results.xml
+        ipy -X:Frames tests/test_unit.py --junitxml=test-results.xml
 ```
 
 ## Success Metrics
@@ -552,3 +531,405 @@ jobs:
 - **Performance Profiling**: Detailed execution analysis and optimization suggestions
 
 This comprehensive testing framework will enable rapid development iteration, reliable validation, and continuous integration for the VNGE Harmony Link Plugin.
+
+---
+
+# VNGE Plugin Testing Framework - Complete Implementation Plan
+
+## Current Testing Status (Updated)
+
+**✅ What's Complete:**
+- **Enhanced Testing Framework Infrastructure**: Significantly improved mock system with comprehensive Unity, System.Net, Studio class coverage
+- **Unit Tests**: Currently covering 2/9 core modules:
+  - `harmony_modules/common.py` (16/16 tests passing)
+  - `harmony_modules/connector.py` (17/17 tests passing)
+- **Framework Validation**: Basic framework tests are working
+- **Enhanced Mock Systems**: Comprehensive mocking with realistic VNGE object fixtures and Studio class integration
+- **Improved Fixtures**: Enhanced fixtures using actual VNGE classes (VNController, GData, HSNeoOCIChar) with fallback mechanisms
+- **System.Net Mocks Enhanced**: Added comprehensive Studio classes (Studio.Studio, Studio.OCIChar, Studio.OCIItem, Studio.OCIFolder, Studio.OCILight) with realistic character state management
+- **Unity Mocks Expanded**: Added missing animation classes (RuntimeAnimatorController, AnimationClip, AnimatorClipInfo, AnimatorStateInfo) for proper VNGE integration
+- **Actor Fixtures Improved**: Enhanced to create realistic character state data including position, rotation, clothing, expressions, body shapes, IK/FK systems
+- **Game Fixtures Enhanced**: Now use actual VNController and GData classes with comprehensive fallback mechanisms
+- **Animation Tracking Added**: Animation execution history tracking for testing validation and debugging
+- **Package Structure Fixed**: Proper __init__.py files for clean imports and module organization
+- **OICharInfo Import Error Fixed**: Added `studio_module.OICharInfo = MockOICharInfo` to `setup_system_mocks()` function, eliminating "Cannot import name OICharInfo" errors
+- **Actor Attribute Access Fixed**: Updated tests to use correct `actor.objctrl.treeNodeObject.textName` instead of non-existent `actor.entity_id`
+- **Animation History Access Fixed**: Corrected animation history access from `actor.animation_history` to `actor.objctrl.animation_history` in tests and metrics collection
+- **Metrics Collection Fixed**: Updated `PluginTestEnvironment.get_execution_metrics()` to properly access animation history with null checking
+- **Test Framework Stability**: All test suites now pass reliably (Common: 16/16, Connector: 17/17, Framework: 6/6)
+
+**❌ What's Missing:**
+Based on the memory bank and plugin structure, we need unit tests for these 7 critical modules:
+
+1. **`harmony_modules/movement.py`** - Recently enhanced ActionGraph execution, animation mapping, distance-based completion
+2. **`harmony_modules/controls.py`** - User input handling, STT recording controls with button synchronization
+3. **`harmony_modules/entity_setup_dialog.py`** - Entity-to-actor mapping dialog system
+4. **`harmony_modules/speech_to_text.py`** - STT with multi-lock synchronization (just fixed)
+5. **`harmony_modules/text_to_speech.py`** - TTS with playback timing fixes (just fixed)
+6. **`harmony_modules/entity_discovery.py`** - Automated entity discovery from Harmony Link
+7. **`harmony_modules/logging.py`** - Configurable logging wrapper system
+8. **`harmony.py`** - Main EntityController and plugin lifecycle
+
+**Empty Test Categories:**
+- **Integration Tests**: No tests for complete plugin lifecycle, WebSocket communication flows, or ActionGraph execution
+- **Performance Tests**: No validation of timing requirements, memory usage, or throughput
+- **Simulation Tests**: No end-to-end scenarios with mock Harmony Link server
+
+**Key Learnings:**
+- **Mock Setup Order**: Unity and System mocks must be initialized before importing VNGE classes to prevent import errors
+- **IronPython 2.7 Compatibility**: Lambda functions and certain syntax patterns require careful handling
+- **VNGE Import Dependencies**: VNGE classes expect Unity/System modules to be available at import time
+
+## Detailed Implementation Plan
+
+### Phase 1: High Priority Unit Tests (Days 1-3)
+
+#### 1.1 Movement Module Tests (`unit/test_movement.py`)
+**Priority: CRITICAL** - Recently enhanced with dynamic animation detection
+
+**Test Cases:**
+```python
+# ActionInstance Lifecycle Tests
+test_action_instance_state_transitions()         # QUEUED → EXECUTING → COMPLETED
+test_action_instance_timing_control()            # start/expected/actual duration tracking
+test_action_instance_timeout_detection()         # Timeout state and recovery
+
+# ActionExecutor Core Functionality
+test_action_executor_movement_actions()          # move, walk, run with distance detection
+test_action_executor_posture_actions()           # sit_down, stand_up, lay_down
+test_action_executor_simple_actions()            # jump_fixed, wave, nod
+
+# Dynamic Animation Duration Detection
+test_animation_duration_detector_cache()         # Caching for performance
+test_animation_duration_detector_unity_integration() # RuntimeAnimatorController access
+test_animation_duration_detection_fallback()     # Fallback when Unity data unavailable
+
+# Distance-Based Completion
+test_distance_based_movement_completion()        # 1.0 unit threshold detection
+test_target_position_resolution()               # Named entities, coordinates, scene objects
+test_movement_completion_monitoring()           # 100ms polling cycle
+
+# Animation Mapping System  
+test_animation_mapping_dynamic_lookup()         # animation_list_short.json integration
+test_animation_mapping_name_matching()          # Action name to VNGE animation mapping
+test_animation_mapping_error_handling()         # Hard error on missing animations
+
+# ActionGraph Processing
+test_action_graph_execution_sequential()        # Sequential action queue processing
+test_action_graph_cognitive_integration()       # Cognitive context processing
+test_action_graph_performance_tracking()        # Execution statistics and metrics
+```
+
+#### 1.2 STT Module Tests (`unit/test_speech_to_text.py`)
+**Priority: CRITICAL** - Recently fixed multi-lock synchronization
+
+**Test Cases:**
+```python
+# Multi-Lock Synchronization System
+test_stt_operation_lock_protection()            # Prevents overlapping start/stop
+test_stt_recording_state_lock()                 # State consistency protection
+test_stt_processing_lock()                      # Audio frame processing protection
+
+# Graceful Frame Completion
+test_stt_pending_chunk_tracking()              # Track active audio processing
+test_stt_frame_completion_on_stop()            # Complete current frames naturally
+test_stt_wait_for_frame_completion()           # 3 second timeout for completion
+
+# Start/Stop Methods Enhanced
+test_stt_start_listen_error_handling()         # Comprehensive error handling
+test_stt_stop_listen_graceful_shutdown()       # Graceful state transitions
+test_stt_button_spam_protection()              # Race condition prevention
+
+# Audio Frame Processing
+test_stt_real_audio_data_preservation()        # No empty chunks sent to Harmony Link
+test_stt_chunk_completion_timeout()            # Handle stuck audio processing
+test_stt_network_error_recovery()              # Network failure handling
+```
+
+#### 1.3 TTS Module Tests (`unit/test_text_to_speech.py`)
+**Priority: CRITICAL** - Recently fixed playback timing
+
+**Test Cases:**
+```python
+# Playback State Tracking
+test_tts_playback_started_detection()          # Track when audio actually starts
+test_tts_playback_initialization_delay()       # 0.5 second minimum wait logic
+test_tts_playback_timing_analysis()            # Monitor elapsed time for debugging
+
+# TTSProcessorThread Enhanced
+test_tts_processor_wait_voice_played()         # Fixed race condition handling
+test_tts_processor_minimum_duration()          # Prevent immediate completion
+test_tts_processor_startup_detection()         # Detect actual playback start
+
+# Audio System Integration
+test_tts_vnge_audio_system_timing()           # Handle VNGE audio initialization delays
+test_tts_playback_completion_detection()      # Reliable completion detection
+test_tts_audio_failure_graceful_handling()    # Handle cases where audio fails to start
+
+# Performance Monitoring
+test_tts_playback_duration_logging()          # Debug and optimization data
+test_tts_audio_system_state_tracking()        # Monitor audio system state changes
+test_tts_error_condition_logging()            # Enhanced error visibility
+```
+
+### Phase 2: Medium Priority Unit Tests (Days 4-6)
+
+#### 2.1 Controls Module Tests (`unit/test_controls.py`)
+
+**Test Cases:**
+```python
+# Button Operation Locking
+test_controls_button_lock_acquisition()        # Per-button lock mechanism
+test_controls_rapid_clicking_protection()      # Prevent button spam
+test_controls_button_lock_release()           # Proper lock cleanup
+
+# State Validation System
+test_controls_state_validation_periodic()      # Every 2 seconds validation
+test_controls_button_text_state_sync()        # Button text matches recording state
+test_controls_desynchronization_recovery()     # Automatic state correction
+
+# Toggle Record Microphone
+test_controls_toggle_record_microphone()      # Full synchronization protection
+test_controls_input_key_handling()            # Unity Input system integration
+test_controls_gui_button_state_management()   # GUI button text updates
+
+# Error Recovery
+test_controls_recovery_desynchronized_state()  # Detect and correct mismatches
+test_controls_button_text_constants()         # Centralized string constants
+test_controls_state_consistency_validation()   # Ensure UI/state alignment
+```
+
+#### 2.2 Entity Setup Dialog Tests (`unit/test_entity_setup_dialog.py`)
+
+**Test Cases:**
+```python
+# Visual Setup Dialog
+test_entity_setup_dialog_creation()           # Unity GUI dialog initialization
+test_entity_setup_dialog_prepopulation()      # Pre-populate existing mappings
+test_entity_setup_dialog_status_indicators()   # Four visual states (Green/Blue/Yellow/Red)
+
+# Entity Discovery Integration
+test_entity_setup_dialog_discovery_fetch()    # Fetch configured entities
+test_entity_setup_dialog_registry_scan()      # VNGE registry existing tags
+test_entity_setup_dialog_exact_match_detection() # Automatic name matching
+
+# Smart Pre-population Logic
+test_entity_setup_dialog_priority_system()    # Existing tags > matches > manual
+test_entity_setup_dialog_actor_tag_detection() # scenef_get_all_actors() integration
+test_entity_setup_dialog_backward_compatibility() # Works with existing setups
+
+# User Interaction
+test_entity_setup_dialog_manual_selection()   # User-configured mappings
+test_entity_setup_dialog_configuration_experiments() # Allow user flexibility
+test_entity_setup_dialog_mapping_persistence() # Save user selections
+```
+
+#### 2.3 Entity Discovery Module Tests (`unit/test_entity_discovery.py`)
+
+**Test Cases:**
+```python
+# Temporary Connector Pattern
+test_entity_discovery_temporary_connector()    # Port offset strategy (base + 100)
+test_entity_discovery_conflict_prevention()    # Prevent main entity connection conflicts
+test_entity_discovery_connection_cleanup()     # Proper connector cleanup
+
+# Entity Discovery Process
+test_entity_discovery_fetch_configured()      # FETCH_CONFIGURED_ENTITIES event
+test_entity_discovery_response_parsing()      # Parse Harmony Link response
+test_entity_discovery_error_handling()        # Robust error handling on failures
+
+# Backend Infrastructure Integration
+test_entity_discovery_harmony_link_communication() # WebSocket communication
+test_entity_discovery_event_type_handling()   # New event type processing
+test_entity_discovery_timeout_management()    # Connection timeout handling
+```
+
+### Phase 3: Core Plugin Tests (Days 7-8)
+
+#### 3.1 Main Plugin Tests (`unit/test_harmony.py`)
+
+**Test Cases:**
+```python
+# EntityController Lifecycle
+test_entity_controller_initialization()        # EntityController creation and setup
+test_entity_controller_module_activation()     # All modules activate properly
+test_entity_controller_shutdown_cleanup()      # Proper cleanup on shutdown
+
+# Plugin Startup Sequence
+test_harmony_ai_startup()                     # start_harmony_ai() function
+test_harmony_ai_entity_creation()             # Multiple entity creation
+test_harmony_ai_scene_integration()           # Scene data coordination
+
+# Module Coordination
+test_entity_controller_module_coordination()   # Inter-module communication
+test_entity_controller_event_handling()       # Event processing and distribution
+test_entity_controller_state_management()     # Global state coordination
+
+# Configuration Integration
+test_entity_controller_config_parsing()       # harmony.ini configuration
+test_entity_controller_websocket_config()     # WebSocket endpoint configuration
+test_entity_controller_logging_config()       # Logging level configuration
+```
+
+#### 3.2 Logging Module Tests (`unit/test_logging.py`)
+
+**Test Cases:**
+```python
+# Configurable Logging Wrapper
+test_logging_wrapper_initialization()         # Logging system setup
+test_logging_wrapper_level_configuration()    # Different logging levels
+test_logging_wrapper_print_statement_replacement() # Replace print() calls
+
+# Log Level Management
+test_logging_level_debug()                    # DEBUG level output
+test_logging_level_info()                     # INFO level output  
+test_logging_level_error()                    # ERROR level output
+test_logging_level_filtering()                # Proper level filtering
+
+# Module Integration
+test_logging_module_integration()             # Integration across all modules
+test_logging_performance_impact()             # Minimal performance overhead
+test_logging_print_statement_migration()      # Systematic print() replacement
+```
+
+### Phase 4: Integration Tests (Days 9-11)
+
+#### 4.1 Plugin Lifecycle Integration (`integration/test_plugin_lifecycle.py`)
+
+**Test Cases:**
+```python
+# Complete Plugin Initialization
+test_complete_plugin_startup()                # Full startup sequence with multiple entities
+test_plugin_entity_discovery_integration()    # Entity discovery → setup → activation
+test_plugin_websocket_establishment()         # WebSocket connections for all entities
+
+# ActionGraph Processing Flow
+test_actiongraph_reception_to_execution()     # End-to-end ActionGraph processing
+test_actiongraph_multi_entity_coordination()  # Multiple characters executing simultaneously
+test_actiongraph_error_recovery_integration() # Error handling across module boundaries
+
+# Module Interaction
+test_stt_tts_controls_integration()          # STT/TTS with Controls coordination
+test_movement_animation_integration()         # Movement with animation system
+test_logging_system_integration()            # Logging across all modules
+```
+
+#### 4.2 WebSocket Communication Flow (`integration/test_websocket_communication.py`)
+
+**Test Cases:**
+```python
+# Full Communication Cycle
+test_websocket_roundtrip_communication()      # Send event → process → respond
+test_websocket_scene_data_coordination()      # Scene data requests and updates
+test_websocket_action_execution_feedback()    # Action completion notifications
+
+# Multi-Entity Communication
+test_websocket_multiple_entity_management()   # Multiple WebSocket connections
+test_websocket_entity_isolation()            # Events routed to correct entities
+test_websocket_connection_resilience()       # Reconnection and error recovery
+
+# Performance Under Load
+test_websocket_concurrent_events()           # Multiple simultaneous events
+test_websocket_large_payload_handling()      # Large ActionGraph processing
+test_websocket_connection_stability()        # Extended operation stability
+```
+
+#### 4.3 ActionGraph Execution Scenarios (`integration/test_actiongraph_scenarios.py`)
+
+**Test Cases:**
+```python
+# Complex Action Sequences
+test_actiongraph_movement_sequence()          # Walk → turn → sit → stand sequence
+test_actiongraph_interaction_sequence()       # Multi-character interactions
+test_actiongraph_emotional_expression()       # Coordinate with potential Countenance module
+
+# Error and Edge Cases
+test_actiongraph_invalid_animation_recovery() # Handle animation database issues
+test_actiongraph_timeout_recovery()          # Stuck animation timeout handling
+test_actiongraph_concurrent_execution()      # Multiple ActionGraphs for single entity
+
+# Performance Scenarios
+test_actiongraph_rapid_execution()           # High-frequency ActionGraph processing
+test_actiongraph_long_sequence_memory()      # Memory usage during long sequences
+test_actiongraph_animation_duration_accuracy() # Actual vs expected duration tracking
+```
+
+### Phase 5: Performance and Validation (Days 12-14)
+
+#### 5.1 Performance Tests (`tests/performance/`)
+
+**Test Cases:**
+```python
+# Timing Validation
+test_performance_actiongraph_response_time() # <500ms average execution time
+test_performance_websocket_roundtrip()       # <100ms communication latency
+test_performance_plugin_startup_time()       # <10 seconds full initialization
+
+# Resource Usage
+test_performance_memory_usage_stability()    # No memory leaks during extended operation
+test_performance_cpu_usage_monitoring()      # Efficient resource utilization
+test_performance_animation_execution_rate()  # Animations per second throughput
+
+# Stress Testing
+test_performance_concurrent_entities()       # Multiple entities simultaneous operation
+test_performance_rapid_actiongraph_processing() # High-frequency ActionGraph load
+test_performance_extended_operation()        # 24-hour stability testing
+```
+
+#### 5.2 Mock Server Integration (`simulation/`)
+
+**Test Cases:**
+```python
+# HarmonyLinkMockServer Implementation
+test_mock_server_websocket_api()             # Complete WebSocket API simulation
+test_mock_server_event_processing()          # Event reception and response simulation
+test_mock_server_multi_client_support()      # Support multiple plugin connections
+
+# End-to-End Scenarios
+test_mock_server_complete_scenarios()        # Pre-defined interaction scenarios
+test_mock_server_error_simulation()          # Network errors and recovery testing
+test_mock_server_performance_simulation()    # Load testing with mock server
+```
+
+## Implementation Strategy
+
+### Test Development Sequence
+
+**Week 1: Critical Unit Tests**
+- Day 1-2: Movement module tests (ActionInstance, ActionExecutor, Animation systems)
+- Day 2-3: STT module tests (Multi-lock synchronization, audio processing)  
+- Day 3: TTS module tests (Playback timing, state tracking)
+
+**Week 2: Core Functionality**
+- Day 4-5: Controls and Entity Setup Dialog tests
+- Day 5-6: Entity Discovery and Main Plugin tests
+- Day 6: Logging module tests
+
+**Week 3: Integration & Performance** 
+- Day 7-8: Plugin lifecycle and WebSocket communication integration tests
+- Day 9-10: ActionGraph execution scenarios and complex workflows
+- Day 11-12: Performance testing and validation
+- Day 13-14: Mock server integration and end-to-end scenarios
+
+### Success Criteria
+
+**Unit Test Targets:**
+- 90%+ test coverage for all 7 missing modules
+- All tests executable with `ipy -X:Frames unit/test_[module].py`
+- Clean test output following established TestRunner patterns
+- Performance benchmarks integrated into relevant tests
+
+**Integration Test Goals:**
+- Complete plugin lifecycle validation
+- WebSocket communication reliability verification
+- ActionGraph execution accuracy confirmation
+- Multi-entity coordination validation
+
+**Performance Benchmarks:**
+- Plugin startup: <10 seconds
+- ActionGraph execution: <500ms average
+- WebSocket roundtrip: <100ms
+- Memory usage: Stable during extended operation
+- 95%+ success rate for action execution
+
+This implementation plan completes the VNGE Plugin testing framework, providing comprehensive validation of all core functionality and recent enhancements. The phased approach ensures critical recently-modified code is tested first, followed by core functionality and integration scenarios.

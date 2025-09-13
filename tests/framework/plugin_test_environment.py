@@ -12,10 +12,15 @@ tests_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if tests_dir not in sys.path:
     sys.path.insert(0, tests_dir)
 
+# Add Lib directory to path for direct VNGE imports
+lib_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'Lib')
+if lib_dir not in sys.path:
+    sys.path.insert(0, lib_dir)
+
 from framework.mocks.unity_mocks import *
 from framework.mocks.system_mocks import *
-from framework.mocks.vnge_mocks import *
-from framework.mocks.game_mocks import *
+from framework.mocks.windows_input_mocks import *
+from framework.mocks.unity_util_mocks import *
 from framework.base import get_logger
 
 
@@ -107,20 +112,21 @@ class PluginTestEnvironment(object):
             
             self.logger.debug("Setting up Plugin Test Environment...")
             
+            # CRITICAL: Set up module injection FIRST before any imports
+            # This ensures Unity and System mocks are available when VNGE modules import them
+            self._setup_module_injection()
+            
             # Initialize Unity mocks
             self._setup_unity_mocks()
             
             # Initialize System.Net mocks
             self._setup_system_mocks()
             
-            # Initialize VNGE mocks
-            self._setup_vnge_mocks()
+            # Initialize VNGE system 
+            self._setup_vnge_fixtures()
             
-            # Initialize Game environment mocks
-            self._setup_game_mocks()
-            
-            # Set up module path injection
-            self._setup_module_injection()
+            # Initialize Game environment
+            self._setup_game_fixtures()
             
             self.is_initialized = True
             self.logger.debug("Plugin Test Environment setup complete")
@@ -148,62 +154,49 @@ class PluginTestEnvironment(object):
         # Create WebSocket client mock
         self.mocks['websocket_client'] = MockClientWebSocket()
         
-        # Add WebSocketState enum to the mock for easy access
-        self.mocks['websocket_client'].WebSocketState = MockWebSocketState
-        
         # Configure WebSocket endpoint - store for later use
         endpoint = self.config.get('websocket_endpoint', 'ws://127.0.0.1:28080')
         # MockClientWebSocket doesn't need endpoint configuration for testing
-        
-        # Set up cleanup
-        self.cleanup_callbacks.append(self._cleanup_system_mocks)
-    
-    def _setup_vnge_mocks(self):
-        """Initialize VNGE engine mock system"""
-        self.logger.debug("Setting up VNGE mocks...")
-        
+
         # Create Studio.Info mock with animation database
         self.mocks['studio_info'] = MockStudioInfo()
         # Animation database is loaded automatically in MockStudioInfo.__init__
         
-        # Create character actors for configured entities
+        # Set up cleanup
+        self.cleanup_callbacks.append(self._cleanup_system_mocks)
+    
+    def _setup_vnge_fixtures(self):
+        """Initialize VNGE system with direct Actor imports"""
+        self.logger.debug("Setting up VNGE system...")
+
+        # Create character actors for configured entities using direct VNGE Actor class
         entities = self.config.get('entities', ['kaji', 'user'])
         self.mocks['character_actors'] = {}
-        
+
+        from framework.fixtures.actor_fixtures import create_actor_fixture
         for entity_id in entities:
-            actor = MockCharacterActor(entity_id)
-            self.mocks['character_actors'][entity_id] = actor
-            self.logger.debug("Created character actor: {}".format(entity_id))
+            self.mocks['character_actors'][entity_id] = create_actor_fixture(entity_id=entity_id)
         
         # Set up cleanup
         self.cleanup_callbacks.append(self._cleanup_vnge_mocks)
     
-    def _setup_game_mocks(self):
+    def _setup_game_fixtures(self):
         """Initialize game environment mock system"""
         self.logger.debug("Setting up Game environment mocks...")
-        
-        # Create game instance
-        entities = self.config.get('entities', ['kaji', 'user'])
-        self.mocks['game'] = MockGame()
-        
-        # Add mock actors for configured entities
-        for entity_id in entities:
-            self.mocks['game'].add_mock_actor(entity_id)
-        
-        # Timers are enabled by default in MockGame
+
+        from framework.fixtures.game_fixtures import create_game_fixture
+        self.mocks['game'] = create_game_fixture()
         
         # Set up cleanup
-        self.cleanup_callbacks.append(self._cleanup_game_mocks)
+        self.cleanup_callbacks.append(self._cleanup_game_fixtures)
     
     def _setup_module_injection(self):
         """Set up module path injection to prioritize mocks"""
         self.logger.debug("Setting up module injection...")
-        
-        # Use setup methods from all mock modules for consistency
         setup_system_mocks()
         setup_unity_mocks()
-        setup_vnge_mocks()
-        setup_game_mocks()
+        setup_windows_input_mocks()
+        setup_unity_util_mocks()
     
     def teardown(self):
         """Clean up the test environment"""
@@ -253,7 +246,7 @@ class PluginTestEnvironment(object):
             for actor in self.mocks['character_actors'].values():
                 actor.reset_for_test()
     
-    def _cleanup_game_mocks(self):
+    def _cleanup_game_fixtures(self):
         """Clean up game environment mocks"""
         if 'game' in self.mocks:
             # MockGame doesn't have cleanup method, just clear scene
@@ -380,7 +373,9 @@ class PluginTestEnvironment(object):
         
         if 'character_actors' in self.mocks:
             for actor in self.mocks['character_actors'].values():
-                metrics['animations_executed'] += len(actor.animation_history)
+                # Animation history is on objctrl, not directly on actor
+                if hasattr(actor, 'objctrl') and hasattr(actor.objctrl, 'animation_history'):
+                    metrics['animations_executed'] += len(actor.objctrl.animation_history)
                 if hasattr(actor, 'is_initialized') and actor.is_initialized:
                     metrics['entities_initialized'] += 1
         

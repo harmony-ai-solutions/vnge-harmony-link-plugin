@@ -35,11 +35,14 @@ def test_plugin_environment_setup():
     # Test character actors
     kaji_actor = env.get_character_actor('kaji')
     assert kaji_actor is not None, "Kaji actor should be created"
-    assert kaji_actor.entity_id == 'kaji', "Actor should have correct entity ID"
+    # Check the actor's name through the objctrl.treeNodeObject.textName
+    assert hasattr(kaji_actor, 'objctrl'), "Actor should have objctrl attribute"
+    assert kaji_actor.objctrl.treeNodeObject.textName == 'kaji', "Actor should have correct name"
     
     user_actor = env.get_character_actor('user')
     assert user_actor is not None, "User actor should be created"
-    assert user_actor.entity_id == 'user', "Actor should have correct entity ID"
+    assert hasattr(user_actor, 'objctrl'), "Actor should have objctrl attribute"
+    assert user_actor.objctrl.treeNodeObject.textName == 'user', "Actor should have correct name"
     
     # Test teardown
     env.teardown()
@@ -63,10 +66,10 @@ def test_mock_character_animation():
         # Test animation
         kaji_actor.animate2(0, 1, 0, 1.0)  # Walk animation
         
-        # Check animation was recorded
-        assert len(kaji_actor.animation_history) == 1, "Animation should be recorded"
+        # Check animation was recorded (animation_history is on objctrl)
+        assert len(kaji_actor.objctrl.animation_history) == 1, "Animation should be recorded"
         
-        last_animation = kaji_actor.get_last_animation()
+        last_animation = kaji_actor.objctrl.get_last_animation()
         assert last_animation is not None, "Last animation should exist"
         assert last_animation['group'] == 0, "Animation group should be correct"
         assert last_animation['category'] == 1, "Animation category should be correct"

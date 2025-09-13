@@ -2,16 +2,18 @@
 Unit Tests for harmony_modules/common.py
 
 Tests the HarmonyLinkEvent system, base classes, event types, and constants
-without requiring Unity/VNGE dependencies.
+using direct VNGE imports from Lib directory.
 """
 
-import pytest
 import sys
 import os
 import time
 
 # Add the src directory to the path so we can import the plugin modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
+
+# Add the Lib directory to the path so we can import VNGE modules directly
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'Lib'))
 
 # Add the tests directory to the path so we can import the test framework
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
