@@ -87,6 +87,11 @@ class HarmonyClientModuleBase:
         logger.info('Updated AI State')
 
         if ai_state is None or len(ai_state) == 0:
+            self.ai_state = None
+            logger.info('AI State set to None')
+            return
+
+        if self.ai_state is None:
             self.ai_state = AIState()
 
         self.ai_state.gender = ai_state["gender"]
