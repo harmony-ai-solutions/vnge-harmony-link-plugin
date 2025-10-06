@@ -15,388 +15,18 @@ from Studio import Info
 import time
 import json
 
-from movement_definitions import registered_actions, CompletionTypes, ActionCategories
-from movement_animations import AnimationDurationDetector, AnimationMapper
+from movement_actions import (
+    get_all_actions, 
+    CompletionTypes, 
+    ActionCategories,
+    ActionState,
+    ActionInstance,
+    ActionExecutor
+)
 
 # Initialize logger for this module
 logger = get_logger(__name__)
 
-
-# Action states for tracking execution lifecycle
-class ActionState:
-    QUEUED = "queued"
-    EXECUTING = "executing"
-    COMPLETED = "completed"
-    FAILED = "failed"
-    TIMEOUT = "timeout"
-
-
-# ActionInstance - represents a single action to be executed with state and timing
-class ActionInstance:
-    def __init__(self, name, targets=None, transition_mode="linear", graph_id=None):
-        self.name = name  # Action name (e.g., "walk", "sit_down")
-        self.targets = targets or []  # List of ActionTargetV1 dicts
-        self.transition_mode = transition_mode  # How to transition into this action
-        self.graph_id = graph_id  # ID of the ActionGraph this belongs to
-        
-        # State and timing management
-        self.state = ActionState.QUEUED
-        self.start_time = None
-        self.expected_duration = None
-        self.actual_duration = None
-        self.timeout_timer = None
-        self.max_execution_time = 10.0  # Maximum time before action is considered stuck
-
-    def start_execution(self, expected_duration=2.0):
-        """Mark action as started and set timing"""
-        self.state = ActionState.EXECUTING
-        self.start_time = time.time()
-        self.expected_duration = expected_duration
-        
-    def complete_execution(self, success=True):
-        """Mark action as completed and calculate actual duration"""
-        if self.start_time:
-            self.actual_duration = time.time() - self.start_time
-        
-        if success:
-            self.state = ActionState.COMPLETED
-        else:
-            self.state = ActionState.FAILED
-            
-        return self.actual_duration
-
-    def get_execution_time(self):
-        """Get current execution time if action is running"""
-        if self.start_time and self.state == ActionState.EXECUTING:
-            return time.time() - self.start_time
-        return 0.0
-
-    def is_timeout(self):
-        """Check if action has exceeded maximum execution time"""
-        if self.state == ActionState.EXECUTING and self.start_time:
-            return self.get_execution_time() > self.max_execution_time
-        return False
-
-
-# ActionExecutor - executes individual actions in the game
-class ActionExecutor:
-    def __init__(self, movement_handler):
-        self.movement_handler = movement_handler
-        self.entity_controller = movement_handler.entity_controller
-        self.chara = None  # Will be set when character is available
-        self.animation_mapper = AnimationMapper()
-        self.duration_detector = AnimationDurationDetector()
-        
-    def update_chara(self, chara):
-        """Update character reference"""
-        self.chara = chara
-    
-    def execute_action(self, action_instance):
-        """Main action execution dispatcher"""
-        if not self.chara:
-            logger.warning("No character available for action execution")
-            self.movement_handler.on_action_completed(action_instance, False)
-            return
-            
-        action_name = action_instance.name
-        logger.info("Executing action: %s", action_name)
-
-        # Check if we have animation mapping for this action
-        if not self.animation_mapper.has_mapping(action_name):
-            logger.warning("No animation mapping for action '%s', skipping", action_name)
-            self.movement_handler.on_action_completed(action_instance, False)
-            return
-        
-        # Get animation mapping for this action
-        animation_mapping = self.animation_mapper.get_animation_mapping(action_name)
-        # Detect dynamic animation duration if possible
-        expected_duration = self._get_animation_duration(action_name, animation_mapping)
-        # Update the mapping with detected duration for future reference - TODO: Check if needed
-        animation_mapping = animation_mapping.copy()  # Don't modify the original
-        animation_mapping["duration"] = expected_duration
-
-        # Begin Execution
-        action_instance.start_execution(action_name, expected_duration)
-        # Set up timeout monitoring
-        self._setup_timeout_monitoring(action_instance)
-
-        # Process integration for targets
-        self.movement_handler.trigger_target_perception_check(action_instance)
-        # TODO: trigger perception for other entities who are not explicitly targeted but may perceive the action
-        
-        # Execute the action based on type
-        action_category = self.animation_mapper.get_action_category(action_name)
-        if action_category in [ActionCategories.MOVEMENT]:
-            self._execute_movement_action(action_instance, animation_mapping)
-        elif action_category in [ActionCategories.POSTURE_STANDING, ActionCategories.POSTURE_SITTING, ActionCategories.POSTURE_LAYING]:
-            self._execute_posture_action(action_instance, animation_mapping)
-        elif action_category in [ActionCategories.SIMPLE_ACTION]:
-            self._execute_simple_action(action_instance, animation_mapping)
-        else:
-            logger.warning("Action type not yet implemented: %s", action_name)
-            # For now, just execute as simple action
-            self._execute_simple_action(action_instance, animation_mapping)
-
-    def _get_animation_duration(self, action_name, animation_mapping):
-        detected_duration = None
-        try:
-            detected_duration = self.duration_detector.get_animation_duration(
-                self.chara,
-                animation_mapping["group"],
-                animation_mapping["category"],
-                animation_mapping["no"]
-            )
-            if detected_duration:
-                logger.debug("Detected animation duration for %s: %.2fs", action_name, detected_duration)
-        except Exception as e:
-            logger.warning("Failed to detect animation duration for %s: %s", action_name, e)
-
-        # Use detected duration or fallback to mapping duration
-        expected_duration = detected_duration if detected_duration else animation_mapping.get("duration", 2.0)
-        return expected_duration
-    
-    def _setup_timeout_monitoring(self, action_instance):
-        """Set up timeout monitoring for the action"""
-        def check_timeout():
-            if action_instance.is_timeout():
-                logger.warning("Action '%s' timed out after %.2fs", action_instance.name, action_instance.get_execution_time())
-                action_instance.state = ActionState.TIMEOUT
-                self.movement_handler.on_action_completed(action_instance, False)
-        
-        # Schedule timeout check
-        self.entity_controller.gameset_timer(action_instance.max_execution_time, lambda g: check_timeout())
-    
-    def _execute_movement_action(self, action, mapping):
-        """Handle movement actions (walk, run, etc.)"""
-        try:
-            # Apply animation using VNGE character animation system
-            if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"], 
-                    mapping["no"],
-                    mapping["speed"]
-                )
-            else:
-                logger.error("Character or actor not available for movement action %s", action.name)
-                self.movement_handler.on_action_completed(action, False)
-                return
-            
-            # Adjust current entity based on target details
-            self._adjust_for_targets(action.targets)
-            
-            # Set timer for action completion based on completion type
-            completion_type = mapping.get("completion_type", CompletionTypes.DURATION)
-            duration = mapping.get("duration", 3.0)
-            # FIXME: This should not be the max duration of the animation, but travel time + threshold
-            
-            if completion_type == CompletionTypes.DISTANCE:
-                # Implement distance-based completion for movement actions
-                self._setup_distance_based_completion(action, duration)
-            else:
-                # Duration-based completion
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            
-        except Exception as e:
-            logger.error("Error executing movement action %s: %s", action.name, e)
-            self.movement_handler.on_action_completed(action, False)
-    
-    def _execute_posture_action(self, action, mapping):
-        """Handle posture changes (sit, stand, lay down)"""
-        try:
-            if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"],
-                    mapping["no"],
-                    mapping["speed"]
-                )
-            else:
-                logger.error("Character or actor not available for posture action %s", action.name)
-                self.movement_handler.on_action_completed(action, False)
-                return
-
-            # Adjust current entity based on target details
-            self._adjust_for_targets(action.targets)
-            
-            # Set timer for action completion based on completion type
-            completion_type = mapping.get("completion_type", CompletionTypes.STATE)
-            duration = mapping.get("duration", 2.0)
-            
-            if completion_type == CompletionTypes.STATE:
-                # For posture actions, we should implement state-based completion
-                # For now, use duration but log that state-based completion is needed
-                logger.debug("Posture action '%s' should use state-based completion (not yet implemented)", action.name)
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            else:
-                # Duration-based completion
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            
-        except Exception as e:
-            logger.error("Error executing posture action %s: %s", action.name, e)
-            self.movement_handler.on_action_completed(action, False)
-    
-    def _execute_simple_action(self, action, mapping):
-        """Handle simple animations (jumps, gestures, etc.)"""
-        try:
-            if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"],
-                    mapping["no"],
-                    mapping["speed"]
-                )
-            else:
-                logger.error("Character or actor not available for simple action %s", action.name)
-                self.movement_handler.on_action_completed(action, False)
-                return
-
-            # Adjust current entity based on target details
-            self._adjust_for_targets(action.targets)
-            
-            # Simple actions typically use duration-based completion
-            duration = mapping.get("duration", 1.5)
-            self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            
-        except Exception as e:
-            logger.error("Error executing simple action %s: %s", action.name, e)
-            self.movement_handler.on_action_completed(action, False)
-    
-    def _setup_distance_based_completion(self, action, max_duration):
-        """Set up distance-based completion monitoring for movement actions"""
-        if not self.chara or not hasattr(self.chara, 'actor') or not self.chara.actor:
-            logger.warning("Cannot setup distance-based completion: character/actor not available")
-            # Fallback to duration-based completion
-            self.entity_controller.game.set_timer(max_duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            return
-        
-        # Get starting position
-        start_pos = self.chara.actor.pos
-        start_position = [float(start_pos.x), float(start_pos.y), float(start_pos.z)]
-        
-        # Determine target position from action targets
-        target_position = self._get_target_position(action.targets)
-        if not target_position:
-            logger.debug("No target position found for movement action '%s', using duration-based completion", action.name)
-            self.entity_controller.game.set_timer(max_duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            return
-        
-        # Calculate target distance
-        target_distance = self._calculate_distance(start_position, target_position)
-        completion_threshold = 1.0  # 1.0 unit roughly equals 1 meter in game metric system
-        
-        logger.debug("Movement action '%s': start=%.2f,%.2f,%.2f target=%.2f,%.2f,%.2f distance=%.2f", 
-                    action.name, start_position[0], start_position[1], start_position[2],
-                    target_position[0], target_position[1], target_position[2], target_distance)
-        
-        # Set up periodic distance checking
-        check_interval = 0.1  # Check every 100ms
-        checks_performed = [0]  # Use a list for mutability in nested scope
-        max_checks = int(max_duration / check_interval)  # Maximum checks based on max duration
-        
-        def check_distance():
-            checks_performed[0] += 1
-            
-            # Check if action is still executing (might have been cancelled/timed out)
-            if action.state != ActionState.EXECUTING:
-                return
-            
-            try:
-                # Get current position
-                current_pos = self.chara.actor.pos
-                current_position = [float(current_pos.x), float(current_pos.y), float(current_pos.z)]
-                
-                # Calculate distance to target
-                current_distance = self._calculate_distance(current_position, target_position)
-                
-                # Check if we've reached the target
-                if current_distance <= completion_threshold:
-                    logger.debug("Movement action '%s' completed: reached target (distance=%.2f)", action.name, current_distance)
-                    self.movement_handler.on_action_completed(action, True)
-                    return
-                
-                # Check if we've exceeded maximum duration
-                if checks_performed[0] >= max_checks:
-                    logger.warning("Movement action '%s' timed out: max duration reached (distance=%.2f)", action.name, current_distance)
-                    self.movement_handler.on_action_completed(action, False)
-                    return
-                
-                # Schedule next check
-                self.entity_controller.game.set_timer(check_interval, lambda g: check_distance())
-                
-            except Exception as e:
-                logger.error("Error in distance-based completion check for action '%s': %s", action.name, e)
-                # Fallback to completing the action
-                self.movement_handler.on_action_completed(action, False)
-        
-        # Start the first distance check
-        self.entity_controller.game.set_timer(check_interval, lambda g: check_distance())
-    
-    def _get_target_position(self, targets):
-        """Extract target position from action targets"""
-        for target in targets:
-            # Check for explicit position coordinates
-            if "position" in target:
-                position = target["position"]
-                if isinstance(position, list) and len(position) >= 3:
-                    return [float(position[0]), float(position[1]), float(position[2])]
-            
-            # Check for named target (character or object)
-            target_name = target.get("name")
-            if target_name:
-                # Try to find target entity position
-                target_position = self._get_entity_position(target_name)
-                if target_position:
-                    return target_position
-                
-                # Try to find target object position
-                target_position = self._get_object_position(target_name)
-                if target_position:
-                    return target_position
-        
-        return None
-    
-    def _get_entity_position(self, entity_name):
-        """Get position of a named entity"""
-        try:
-            for entity_id, controller in self.entity_controller.game.scenedata.active_entities.items():
-                if (entity_id == entity_name and 
-                    controller.chara and 
-                    hasattr(controller.chara, 'actor') and 
-                    controller.chara.actor):
-                    pos = controller.chara.actor.pos
-                    return [float(pos.x), float(pos.y), float(pos.z)]
-        except Exception as e:
-            logger.debug("Error getting entity position for '%s': %s", entity_name, e)
-        return None
-    
-    def _get_object_position(self, object_name):
-        """Get position of a named object/prop"""
-        try:
-            for prop_id, prop_object in self.entity_controller.game.scenedata.registered_props.items():
-                if prop_id == object_name and prop_object and hasattr(prop_object, 'pos'):
-                    pos = prop_object.pos
-                    return [float(pos.x), float(pos.y), float(pos.z)]
-        except Exception as e:
-            logger.debug("Error getting object position for '%s': %s", object_name, e)
-        return None
-    
-    def _calculate_distance(self, pos1, pos2):
-        """Calculate 3D distance between two positions"""
-        dx = pos1[0] - pos2[0]
-        dy = pos1[1] - pos2[1]
-        dz = pos1[2] - pos2[2]
-        return (dx*dx + dy*dy + dz*dz) ** 0.5
-    
-    def _adjust_for_targets(self, targets):
-        """Adjust for targets (look_at_target, etc.)"""
-        for target in targets:
-            target_name = target.get("name")
-            look_at_target = target.get("look_at_target", False)
-            
-            if look_at_target and target_name:
-                # TODO: Implement look-at functionality
-                logger.debug("Should look at target: %s", target_name)
 
 
 # MovementHandler - module main class
@@ -697,11 +327,21 @@ class MovementHandler(HarmonyClientModuleBase):
                 position_vector = controller.chara.actor.pos
                 orientation_vector = controller.chara.actor.rot
 
+                # Get current action - ensure it's None when not executing
+                current_action = None
+                if (hasattr(controller, 'movementModule') and 
+                    controller.movementModule is not None and
+                    hasattr(controller.movementModule, 'current_action') and
+                    controller.movementModule.current_action is not None):
+                    # Only include action name if it's actually executing
+                    if controller.movementModule.current_action.state == ActionState.EXECUTING:
+                        current_action = controller.movementModule.current_action.name
+
                 character_definition_v1 = {
                     "name": entity_id,
                     "position": [float(position_vector.x), float(position_vector.y), float(position_vector.z)],
                     "orientation": [float(orientation_vector.x), float(orientation_vector.y), float(orientation_vector.z)],
-                    "current_action": None
+                    "current_action": current_action
                 }
                 scene_data["characters"].append(character_definition_v1)
 
@@ -736,7 +376,7 @@ class MovementHandler(HarmonyClientModuleBase):
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ACTIONS and event.status == EVENT_STATE_DONE:
             # Define actions Data Object according to ActionsDataV1 spec
             actions_data = {
-                "actions": registered_actions
+                "actions": get_all_actions()
             }
 
             event = HarmonyLinkEvent(

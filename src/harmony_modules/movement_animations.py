@@ -8,7 +8,7 @@ import os
 import random
 
 from harmony_modules.logging import get_logger
-from movement_definitions import get_actions_dict, CompletionTypes, ActionCategories
+from movement_actions import get_actions_dict, CompletionTypes, ActionCategories
 
 # Initialize logger for this module
 logger = get_logger(__name__)
