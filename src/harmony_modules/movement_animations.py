@@ -203,7 +203,7 @@ class AnimationMapper:
 
     def _load_animation_database(self):
         """Load animation database from animation_list_short.json"""
-        animation_db_path = os.path.join(os.path.dirname(__file__), '../harmony_data', 'animation_list.json')
+        animation_db_path = os.path.join(os.path.dirname(__file__), '../harmony_data', 'animation_list_wip.json')
 
         if not os.path.exists(animation_db_path):
             raise RuntimeError(

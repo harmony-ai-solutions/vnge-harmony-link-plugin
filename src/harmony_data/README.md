@@ -51,3 +51,31 @@ games, as well as animations from mod files. We'll look into providing individua
 
 A new animation list for your game can be generated when starting the plugin with `debug_mode = 2` set in `harmony.ini`.
 
+## Updating Animation Descriptions
+
+File: `update_animations.py`
+
+This script updates animation descriptions in the animation list from KKS format.
+
+### Usage
+
+Run the script with default files:
+
+```bash
+python update_animations.py
+```
+
+Or specify custom file paths:
+
+```bash
+python update_animations.py --descriptions custom_descriptions.json --animation-list custom_list.json
+```
+
+### Command Line Options
+
+- `--descriptions`: Path to the source descriptions JSON file (default: `animation_descriptions_kks.json`)
+- `--animation-list`: Path to the target animation list JSON file (default: `animation_list_updated.json`)
+- `--error-log`: Path to the error log for unmapped animations (default: `unmapped_animations_error.json`)
+- `--simple-error-log`: Path to the simple error log for unmapped animations (default: `unmapped_animations_simple.json`)
+
+Use `--help` to see all options.
