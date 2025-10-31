@@ -16,7 +16,7 @@ An action definition looks like this:
 ```python
 example_action = {
     "name": "got_pushed_away", # unique name identifier of the action
-    "description": "got pushed away by the other chara", # description of the action; so the intention to be captured is clear
+    "description": "got pushed away by the other chara", # basic description of the action
     "category": "character_interaction", # category of the action; defines how the action will be evaluated on plugin side
     "duration": 1.0, # default duration for this action
     # examples define roleplay actions which may trigger this action. Used for RAG matching
@@ -32,15 +32,12 @@ example_action = {
     "trigger_conditions": [
         "push_away"
     ],
-    # animations reference valid ingame animations which may play while this action is being executed
-    # if empty, idle animations may play
-    "animations": []
 }
 ```
 
 
 ## List of available ingame Animations
-File: `animation_list.json`
+File: `animation_list.kks.json`
 Sample: `animation_list.sample.json`
 
 This file contains animations detected from ingame assets.
@@ -50,6 +47,42 @@ These animations have been loaded from Koikatsu Sunshine and may contain differe
 games, as well as animations from mod files. We'll look into providing individual lists for all supported games in the future.
 
 A new animation list for your game can be generated when starting the plugin with `debug_mode = 2` set in `harmony.ini`.
+
+The structure of `animation_list.sample.kks.json` is as follows:
+
+```json
+{
+  "animation_group_id": {
+    "name": "Animation Group Name",
+    "categories": {
+      "category_id": {
+        "name": "Category Name",
+        "animation_items": [
+          {
+            "name": "Animation Name",
+            "description": "Description of the animation (often empty)"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+- The root of the JSON is an object where each key (`animation_group_id`) is a numerical string representing a unique identifier for an animation group.
+- Each animation group object contains:
+    - `name`: A string that provides a human-readable name for the animation group (e.g., "Character", "H-Caressing").
+    - `categories`: An object where each key (`category_id`) is a numerical string representing a unique identifier for a category within that animation group.
+- Each category object contains:
+    - `name`: A string that provides a human-readable name for the animation category (e.g., "Basic", "Standing").
+    - `animation_items`: An array of objects, where each object represents a specific animation.
+- Each animation item object contains:
+    - `name`: A string that provides the name of the individual animation (e.g., "T-Pose", "Idle").
+    - `description`: A string that can contain a description of the animation, but is often empty in the sample data.
+
+VNGE uses a simple ID based mapping in it's animate2 function, therefore the VNGE Plugin and Harmony Link Entity modules referencing animations require descriptions to be provided, so they are aware of the actual behaviour performed when executing an animation.
+
+This may be extended with a more sophisticated per-frame analysis at a later point, to make the Plugin capable of performing more precise and directed movement.
 
 ## Updating Animation Descriptions
 

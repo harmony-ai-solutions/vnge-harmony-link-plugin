@@ -14,30 +14,6 @@ from movement_actions import get_actions_dict, CompletionTypes, ActionCategories
 logger = get_logger(__name__)
 
 
-class AnimationGroups:
-    CHARACTER = "Character"
-
-
-class AnimationCategories:
-    # Character group categories
-    BASIC = "Basic"
-    POSE = "Pose"
-    EMOTIONS = "Emotions"
-    WALKING_RUNNING = "Walking & Running"
-    STANDING = "Standing"
-    CONVERSATION = "Conversation"
-    CHAIRS = "Chairs"
-    SITTING_AT_DESK = "Sitting At Desk"
-    SITTING_ON_FLOOR = "Sitting On Floor"
-    EATING = "Eating"
-    ACTION = "Action"
-    REACTION = "Reaction"
-    LAYING = "Laying"
-    LIVE_CONCERT = "Live Concert"
-    MALE = "Male"
-    ADDITIONAL_1 = "Additional 1"
-
-
 class AnimationDurationDetector:
     """
     Detects actual animation durations from Unity's animation system
@@ -194,12 +170,13 @@ class AnimationDurationDetector:
         }
 
 
-# AnimationMapper - maps actions to VNGE animations
-class AnimationMapper:
-    def __init__(self):
+# AnimationDatabase - loads and provides access to animation definitions
+class AnimationDatabase:
+    def __init__(self, game_type='kks'):
+        self.game_type = game_type
         self.animation_database = self._load_animation_database()
-        self.action_categories = self._define_action_categories()
-        self.animation_mappings = self._generate_dynamic_mappings()
+        self.animations_by_name = {}  # name -> definition mapping
+        self._build_animation_definitions()
 
     def _load_animation_database(self):
         """Load animation database from animation_list_short.json"""
@@ -227,279 +204,72 @@ class AnimationMapper:
         except Exception as e:
             raise RuntimeError("Error loading animation database: {0}".format(e))
 
-    def _define_action_categories(self):
-        """Define action categories for intelligent mapping using centralized definitions"""
-        # Get actions dictionary from centralized definitions
-        actions_dict = get_actions_dict()
-
-        # Build category mappings from centralized action definitions
-        category_mappings = {}
-        for action_name, action_def in actions_dict.items():
-            category = action_def.get('category', 'unknown')
-            if category not in category_mappings:
-                category_mappings[category] = []
-            category_mappings[category].append(action_name)
-
-        return category_mappings
-
-    def _generate_dynamic_mappings(self):
-        """Generate animation mappings based on action categories and available animations"""
-        mappings = {}
-
-        # Find Character group by name
-        character_group_id, character_group = self._find_group_by_name(AnimationGroups.CHARACTER)
-        if not character_group_id or not character_group:
-            raise RuntimeError(
-                "Character animation group '{0}' not found in animation database. Database structure may be invalid.".format(AnimationGroups.CHARACTER))
-
-        # Movement actions - use Walking & Running category
-        walking_category_id, walking_category = self._find_category_by_name(character_group, AnimationCategories.WALKING_RUNNING)
-        if walking_category_id and walking_category:
-            walking_anims = walking_category["animation_items"]
-
-            # Map movement actions to appropriate walking/running animations
-            mappings["move"] = {
-                "group": int(character_group_id), "category": int(walking_category_id), "no": 0,  # Walking 1
-                "duration": 2.5, "speed": 0.5, "completion_type": CompletionTypes.DISTANCE
-            }
-            mappings["walk"] = {
-                "group": int(character_group_id), "category": int(walking_category_id), "no": 1,  # Walking 2
-                "duration": 2.0, "speed": 0.7, "completion_type": CompletionTypes.DISTANCE
-            }
-
-            # Running animations - use multiple running options
-            running_options = [i for i, name in enumerate(walking_anims) if "Running" in name]
-            if running_options:
-                mappings["run"] = {
-                    "group": int(character_group_id), "category": int(walking_category_id),
-                    "no": running_options[0] if running_options else 2,
-                    "duration": 1.5, "speed": 1.0, "completion_type": CompletionTypes.DISTANCE
-                }
-
-        # Posture actions - use appropriate categories
-        # Sitting actions - use Chairs category
-        chairs_category_id, chairs_category = self._find_category_by_name(character_group, AnimationCategories.CHAIRS)
-        if chairs_category_id and chairs_category:
-            mappings["sit_down"] = {
-                "group": int(character_group_id), "category": int(chairs_category_id), "no": 0,  # Chair Idle
-                "duration": 2.0, "speed": 0.5, "completion_type": CompletionTypes.STATE
-            }
-
-        # Standing actions - use Standing category
-        standing_category_id, standing_category = self._find_category_by_name(character_group, AnimationCategories.STANDING)
-        if standing_category_id and standing_category:
-            standing_anims = standing_category["animation_items"]
-
-            mappings["stand_up"] = {
-                "group": int(character_group_id), "category": int(standing_category_id), "no": 0,  # Standing Idle 1
-                "duration": 1.5, "speed": 0.6, "completion_type": CompletionTypes.STATE
-            }
-
-            # Find leaning animation by name
-            leaning_idx = self._find_animation_by_name(standing_anims, "Leaning On Wall")
-            if leaning_idx >= 0:
-                mappings["lean_against"] = {
-                    "group": int(character_group_id), "category": int(standing_category_id), "no": leaning_idx,
-                    "duration": 2.0, "speed": 0.5, "completion_type": CompletionTypes.STATE
-                }
-
-        # Laying actions - use Laying category
-        laying_category_id, laying_category = self._find_category_by_name(character_group, AnimationCategories.LAYING)
-        if laying_category_id and laying_category:
-            laying_anims = laying_category["animation_items"]
-            laying_idx = self._find_animation_by_name(laying_anims, "Laying")
-            if laying_idx >= 0:
-                mappings["lay_down"] = {
-                    "group": int(character_group_id), "category": int(laying_category_id), "no": laying_idx,
-                    "duration": 2.5, "speed": 0.4, "completion_type": CompletionTypes.STATE
-                }
-
-        # Simple actions - use Basic category for jumps
-        basic_category_id, basic_category = self._find_category_by_name(character_group, AnimationCategories.BASIC)
-        if basic_category_id and basic_category:
-            mappings["jump_fixed"] = {
-                "group": int(character_group_id), "category": int(basic_category_id), "no": 1,  # Basic 1
-                "duration": 1.0, "speed": 0.8, "completion_type": CompletionTypes.DURATION
-            }
-            mappings["jump_over"] = {
-                "group": int(character_group_id), "category": int(basic_category_id), "no": 2,  # Basic 2
-                "duration": 1.2, "speed": 1.0, "completion_type": CompletionTypes.DURATION
-            }
-
-        # Object interaction actions - use Standing poses with hand gestures
-        if standing_category_id and standing_category:
-            standing_anims = standing_category["animation_items"]
-
-            # Find specific animations by name
-            searching_idx = self._find_animation_by_name(standing_anims, "Searching For Book")
-            examining_idx = self._find_animation_by_name(standing_anims, "Examining Self")
-            distributing_idx = self._find_animation_by_name(standing_anims, "Distributing Leaflets")
-
-            # Pick up actions
-            for action in ["pick_up_left_hand", "pick_up_right_hand", "pick_up_both_hands"]:
-                mappings[action] = {
-                    "group": int(character_group_id), "category": int(standing_category_id),
-                    "no": searching_idx if searching_idx >= 0 else 3,  # Searching For Book (reaching gesture)
-                    "duration": 1.5, "speed": 0.6, "completion_type": CompletionTypes.DURATION
-                }
-
-            # Drop/place actions
-            for action in ["drop_item", "place_item"]:
-                mappings[action] = {
-                    "group": int(character_group_id), "category": int(standing_category_id), "no": 0,  # Standing Idle
-                    "duration": 1.0, "speed": 0.5, "completion_type": CompletionTypes.DURATION
-                }
-
-            # Storage actions
-            for action in ["store_item", "retrieve_item"]:
-                mappings[action] = {
-                    "group": int(character_group_id), "category": int(standing_category_id),
-                    "no": examining_idx if examining_idx >= 0 else 15,  # Examining Self
-                    "duration": 1.5, "speed": 0.5, "completion_type": CompletionTypes.DURATION
-                }
-
-            # Give item action
-            mappings["give_item"] = {
-                "group": int(character_group_id), "category": int(standing_category_id),
-                "no": distributing_idx if distributing_idx >= 0 else 16,  # Distributing Leaflets (giving gesture)
-                "duration": 1.5, "speed": 0.5, "completion_type": CompletionTypes.DURATION
-            }
-
-        # Character interaction actions - use Conversation category
-        conversation_category_id, conversation_category = self._find_category_by_name(character_group, AnimationCategories.CONVERSATION)
-        if conversation_category_id and conversation_category:
-            conversation_anims = conversation_category["animation_items"]
-
-            # Hand-based interactions
-            mappings["take_hand"] = {
-                "group": int(character_group_id), "category": int(conversation_category_id), "no": 1,  # Talking 1
-                "duration": 2.0, "speed": 0.5, "completion_type": CompletionTypes.DURATION
-            }
-
-            # Caressing actions
-            for action in ["caress_cheek", "caress_head"]:
-                mappings[action] = {
-                    "group": int(character_group_id), "category": int(conversation_category_id), "no": 3,
-                    # Talking 2 (gentle gesture)
-                    "duration": 2.5, "speed": 0.4, "completion_type": CompletionTypes.DURATION
-                }
-
-            # Kissing actions
-            for action in ["kiss_hand", "kiss_cheek", "kiss_forehead", "kiss_lips"]:
-                mappings[action] = {
-                    "group": int(character_group_id), "category": int(conversation_category_id), "no": 5,
-                    # Talking 3 (intimate gesture)
-                    "duration": 2.0, "speed": 0.4, "completion_type": CompletionTypes.DURATION
-                }
-
-            # Push away action
-            mappings["push_away"] = {
-                "group": int(character_group_id), "category": int(conversation_category_id), "no": 7,
-                # Talking 4 (defensive gesture)
-                "duration": 1.0, "speed": 0.8, "completion_type": CompletionTypes.DURATION
-            }
-
-        # Validate that we have mappings for core movement actions
-        core_actions = ["move", "walk", "run"]
-        missing_core_actions = [action for action in core_actions if action not in mappings]
-        if missing_core_actions:
-            raise RuntimeError(
-                "Failed to generate mappings for core movement actions: {0}. Check animation database structure.".format(missing_core_actions))
-
-        # Add fallback mappings for any remaining actions that don't have specific mappings
-        self._add_fallback_mappings(mappings)
-
-        logger.info("Generated %d dynamic animation mappings using name-based lookups", len(mappings))
-        return mappings
-
-    def _find_group_by_name(self, group_name):
-        """Find animation group by name"""
+    def _build_animation_definitions(self):
+        """Build animation definitions with descriptions from the database"""
         if not self.animation_database:
-            return None, None
-
+            logger.warning("Animation database not loaded, cannot build definitions")
+            return
+        
         for group_id, group_data in self.animation_database.items():
-            if isinstance(group_data, dict) and group_data.get("name") == group_name:
-                return group_id, group_data
-        return None, None
-
-    def _find_category_by_name(self, group_data, category_name):
-        """Find animation category by name within a group"""
-        if not group_data or not isinstance(group_data, dict) or "categories" not in group_data:
-            return None, None
-
-        categories = group_data["categories"]
-        if not isinstance(categories, dict):
-            return None, None
-
-        for category_id, category_data in categories.items():
-            if isinstance(category_data, dict) and category_data.get("name") == category_name:
-                return category_id, category_data
-        return None, None
-
-    def _find_animation_by_name(self, animation_list, animation_name_pattern):
-        """Find animation index by name pattern"""
-        if not animation_list or not isinstance(animation_list, list):
-            return -1
-
-        for i, anim_name in enumerate(animation_list):
-            if isinstance(anim_name, str) and animation_name_pattern in anim_name:
-                return i
-        return -1
-
-    def _add_fallback_mappings(self, mappings):
-        """Add fallback mappings for actions not yet covered"""
-        # Find Character group and Standing category for fallback
-        character_group_id, character_group = self._find_group_by_name(AnimationGroups.CHARACTER)
-        if not character_group_id or not character_group:
-            raise RuntimeError("Cannot create fallback mappings: Character group not found")
-
-        standing_category_id, standing_category = self._find_category_by_name(character_group,
-                                                                              AnimationCategories.STANDING)
-        if not standing_category_id or not standing_category:
-            raise RuntimeError("Cannot create fallback mappings: Standing category not found")
-
-        fallback_mapping = {
-            "group": int(character_group_id),
-            "category": int(standing_category_id),
-            "no": 0,  # Standing Idle as fallback
-            "duration": 2.0,
-            "speed": 0.5,
-            "completion_type": CompletionTypes.DURATION
-        }
-
-        # Get all action names from movement_definitions
-        all_actions = set()
-        for category_actions in self.action_categories.values():
-            all_actions.update(category_actions)
-
-        # Add fallback for any missing actions
-        for action in all_actions:
-            if action not in mappings:
-                mappings[action] = fallback_mapping.copy()
-                logger.debug("Added fallback mapping for action: %s", action)
-
-    def get_animation_mapping(self, action_name):
-        """Get animation mapping for a specific action"""
-        mapping = self.animation_mappings.get(action_name)
-        if mapping:
-            # Add some randomization for running animations to add variety
-            if action_name == "run" and "0" in self.animation_database and "3" in self.animation_database["0"][
-                "categories"]:
-                walking_anims = self.animation_database["0"]["categories"]["3"]["animation_items"]
-                running_options = [i for i, name in enumerate(walking_anims) if "Running" in name]
-                if len(running_options) > 1:
-                    mapping = mapping.copy()  # Don't modify the original
-                    mapping["no"] = random.choice(running_options)
-
-        return mapping
-
-    def has_mapping(self, action_name):
-        """Check if action has animation mapping"""
-        return action_name in self.animation_mappings
-
-    def get_action_category(self, action_name):
-        """Get the category of an action for completion type determination"""
-        for category, actions in self.action_categories.items():
-            if action_name in actions:
-                return category
-        return "unknown"
+            if not isinstance(group_data, dict):
+                continue
+            
+            group_name = group_data.get("name", "Unknown")
+            categories = group_data.get("categories", {})
+            
+            for category_id, category_data in categories.items():
+                if not isinstance(category_data, dict):
+                    continue
+                
+                category_name = category_data.get("name", "Unknown")
+                animation_items = category_data.get("animation_items", [])
+                
+                for animation_no, animation_name in enumerate(animation_items):
+                    if not animation_name:
+                        continue
+                    
+                    # Create unique animation identifier
+                    anim_key = "{0}_{1}_{2}".format(group_name.lower().replace(" ", "_"),
+                                                     category_name.lower().replace(" & ", "_").replace(" ", "_"),
+                                                     animation_name.lower().replace(" ", "_"))
+                    
+                    # Create animation definition
+                    anim_def = {
+                        "name": anim_key,
+                        "description": "{0} - {1}: {2}".format(group_name, category_name, animation_name),
+                        "group_id": int(group_id),
+                        "group": group_name,
+                        "category_id": int(category_id),
+                        "category": category_name,
+                        "animation_no": animation_no,
+                        "duration": 2.0  # Default duration
+                    }
+                    
+                    self.animations_by_name[anim_key] = anim_def
+        
+        logger.info("Built %d animation definitions from database", len(self.animations_by_name))
+    
+    def get_animation_by_name(self, name):
+        """Get animation definition by name"""
+        return self.animations_by_name.get(name)
+    
+    def resolve_animation(self, name):
+        """
+        Resolve animation name to (group_id, category_id, animation_no) tuple
+        
+        Returns:
+            tuple: (group_id, category_id, animation_no) or None if not found
+        """
+        anim_def = self.get_animation_by_name(name)
+        if anim_def:
+            return (anim_def["group_id"], anim_def["category_id"], anim_def["animation_no"])
+        return None
+    
+    def get_all_animations(self):
+        """
+        Get all animations as a list compatible with AnimationDefinitionV1
+        
+        Returns:
+            list: List of animation definitions or empty list if no animations loaded
+        """
+        return list(self.animations_by_name.values()) if self.animations_by_name else []

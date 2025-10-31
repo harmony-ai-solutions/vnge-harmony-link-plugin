@@ -23,6 +23,7 @@ from movement_actions import (
     ActionInstance,
     ActionExecutor
 )
+from movement_animations import AnimationDatabase
 
 # Initialize logger for this module
 logger = get_logger(__name__)
@@ -37,6 +38,9 @@ class MovementHandler(HarmonyClientModuleBase):
         HarmonyClientModuleBase.__init__(self, entity_controller=entity_controller)
         # Set config
         self.config = movement_config
+        
+        # Initialize animation database
+        self.animation_db = AnimationDatabase()
         
         # Movement execution components
         self.action_executor = ActionExecutor(self)
@@ -79,16 +83,22 @@ class MovementHandler(HarmonyClientModuleBase):
             # Queue all ActionVectors for execution
             logger.info("Executing ActionGraph %s with %s action vectors", graph_id, len(graph_vectors))
             for action_vector in graph_vectors:
+                # Extract animation data from ActionVector
+                animation_data = action_vector.get("animation")
+                
                 action_instance = ActionInstance(
                     name=action_vector["action"],
                     targets=action_vector.get("targets", []),
                     transition_mode=action_vector.get("transition_mode", "linear"),
-                    graph_id=graph_id
+                    graph_id=graph_id,
+                    animation_selection=animation_data  # Pass animation selection from Harmony Link
                 )
                 
                 self.action_queue.append(action_instance)
-                logger.debug("Queued action: %s with %s targets (state: %s)", 
-                    action_instance.name, len(action_instance.targets), action_instance.state)
+                logger.debug("Queued action: %s with %s targets, animations: %s (state: %s)", 
+                    action_instance.name, len(action_instance.targets), 
+                    animation_data.get("animation") if animation_data else "none", 
+                    action_instance.state)
             
             # Start execution if not already running
             if not self.current_action and self.action_queue:
@@ -390,6 +400,26 @@ class MovementHandler(HarmonyClientModuleBase):
                 logger.info('Available actions provided for entity "%s"', self.entity_controller.entity_id)
             else:
                 logger.error('Failed to transmit available actions for entity "%s"', self.entity_controller.entity_id)
+
+        # Requested available Animations
+        if event.event_type == EVENT_TYPE_MOVEMENT_V1_REQUEST_ANIMATIONS and event.status == EVENT_STATE_DONE:
+            # Define animations Data Object according to AnimationsDataV1 spec
+            animations_data = {
+                "animations": self.animation_db.get_all_animations()
+            }
+
+            event = HarmonyLinkEvent(
+                event_id='actor_{0}_available_animations'.format(self.entity_controller.entity_id),
+                event_type=EVENT_TYPE_MOVEMENT_V1_REGISTER_ANIMATIONS,
+                status=EVENT_STATE_NEW,
+                payload=animations_data
+            )
+            send_success = self.backend_connector.send_event(event)
+            if send_success:
+                logger.info('Available animations provided for entity "%s" (count: %s)', 
+                    self.entity_controller.entity_id, len(animations_data["animations"]))
+            else:
+                logger.error('Failed to transmit available animations for entity "%s"', self.entity_controller.entity_id)
 
         # Action Graph received from Harmony Link
         if event.event_type == EVENT_TYPE_MOVEMENT_V1_PERFORM_ACTIONS and event.status == EVENT_STATE_DONE:

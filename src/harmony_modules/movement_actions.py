@@ -11,7 +11,7 @@ import os
 import time
 from harmony_modules.logging import get_logger
 
-from movement_animations import AnimationDurationDetector, AnimationMapper
+from movement_animations import AnimationDurationDetector
 from movement_tracking import SpaceManager
 
 logger = get_logger(__name__)
@@ -208,11 +208,12 @@ class ActionState:
 
 # ActionInstance - represents a single action to be executed with state and timing
 class ActionInstance:
-    def __init__(self, name, targets=None, transition_mode="linear", graph_id=None):
+    def __init__(self, name, targets=None, transition_mode="linear", graph_id=None, animation_selection=None):
         self.name = name  # Action name (e.g., "walk", "sit_down")
         self.targets = targets or []  # List of ActionTargetV1 dicts
         self.transition_mode = transition_mode  # How to transition into this action
         self.graph_id = graph_id  # ID of the ActionGraph this belongs to
+        self.animation_selection = animation_selection  # AnimationSelectionV1 from Harmony Link
         
         # State and timing management
         self.state = ActionState.QUEUED
@@ -259,7 +260,7 @@ class ActionExecutor:
         self.movement_handler = movement_handler
         self.entity_controller = movement_handler.entity_controller
         self.chara = None  # Will be set when character is available
-        self.animation_mapper = AnimationMapper()
+        self.animation_db = movement_handler.animation_db  # Reference to animation database
         self.duration_detector = AnimationDurationDetector()
         self.space_manager = SpaceManager()
         
@@ -277,24 +278,37 @@ class ActionExecutor:
         action_name = action_instance.name
         logger.info("Executing action: %s", action_name)
 
-        # Check if we have animation mapping for this action
-        if not self.animation_mapper.has_mapping(action_name):
-            logger.warning("No animation mapping for action '%s', skipping", action_name)
+        # Check if we have animation selection from Harmony Link
+        animation_selection = action_instance.animation_selection
+        if not animation_selection or not animation_selection.get("animation"):
+            logger.warning("No animation selected for action '%s', skipping", action_name)
             self.movement_handler.on_action_completed(action_instance, False)
             return
         
-        # Get animation mapping for this action
-        animation_mapping = self.animation_mapper.get_animation_mapping(action_name)
-        if not animation_mapping:
-            logger.warning("No animation mapping data for action '%s', skipping", action_name)
+        # Resolve main animation name to group/category/no
+        main_anim_name = animation_selection.get("animation")
+        main_anim_ids = self.animation_db.resolve_animation(main_anim_name)
+        if not main_anim_ids:
+            logger.warning("Cannot resolve animation '%s' for action '%s', skipping", main_anim_name, action_name)
             self.movement_handler.on_action_completed(action_instance, False)
             return
-            
+        
+        group_id, category_id, animation_no = main_anim_ids
+        
         # Detect dynamic animation duration if possible
-        expected_duration = self._get_animation_duration(action_name, animation_mapping)
-        # Update the mapping with detected duration for future reference - TODO: Check if needed
-        animation_mapping = animation_mapping.copy()  # Don't modify the original
-        animation_mapping["duration"] = expected_duration
+        expected_duration = None
+        try:
+            expected_duration = self.duration_detector.get_animation_duration(
+                self.chara, group_id, category_id, animation_no
+            )
+            if expected_duration:
+                logger.debug("Detected animation duration for %s: %.2fs", action_name, expected_duration)
+        except Exception as e:
+            logger.warning("Failed to detect animation duration for %s: %s", action_name, e)
+        
+        # Fallback to default duration if detection failed
+        if not expected_duration:
+            expected_duration = 2.0
 
         # Begin Execution
         action_instance.start_execution(expected_duration)
@@ -305,37 +319,21 @@ class ActionExecutor:
         self.movement_handler.trigger_target_perception_check(action_instance)
         # TODO: trigger perception for other entities who are not explicitly targeted but may perceive the action
         
-        # Execute the action based on type
-        action_category = self.animation_mapper.get_action_category(action_name)
+        # Get action definition to determine category
+        action_def = get_action_by_name(action_name)
+        action_category = action_def.get('category', 'unknown') if action_def else 'unknown'
+        
+        # Execute based on action category
         if action_category in [ActionCategories.MOVEMENT]:
-            self._execute_movement_action(action_instance, animation_mapping)
+            self._execute_movement_action(action_instance, group_id, category_id, animation_no, expected_duration)
         elif action_category in [ActionCategories.POSTURE_STANDING, ActionCategories.POSTURE_SITTING, ActionCategories.POSTURE_LAYING]:
-            self._execute_posture_action(action_instance, animation_mapping)
-        elif action_category in [ActionCategories.SIMPLE_ACTION]:
-            self._execute_simple_action(action_instance, animation_mapping)
+            self._execute_posture_action(action_instance, group_id, category_id, animation_no, expected_duration)
+        elif action_category in [ActionCategories.SIMPLE_ACTION, ActionCategories.OBJECT_INTERACTION, ActionCategories.CHARACTER_INTERACTION]:
+            self._execute_simple_action(action_instance, group_id, category_id, animation_no, expected_duration)
         else:
-            logger.warning("Action type not yet implemented: %s", action_name)
-            # For now, just execute as simple action
-            self._execute_simple_action(action_instance, animation_mapping)
+            logger.warning("Unknown action category: %s for action %s, executing as simple action", action_category, action_name)
+            self._execute_simple_action(action_instance, group_id, category_id, animation_no, expected_duration)
 
-    def _get_animation_duration(self, action_name, animation_mapping):
-        detected_duration = None
-        try:
-            detected_duration = self.duration_detector.get_animation_duration(
-                self.chara,
-                animation_mapping["group"],
-                animation_mapping["category"],
-                animation_mapping["no"]
-            )
-            if detected_duration:
-                logger.debug("Detected animation duration for %s: %.2fs", action_name, detected_duration)
-        except Exception as e:
-            logger.warning("Failed to detect animation duration for %s: %s", action_name, e)
-
-        # Use detected duration or fallback to mapping duration
-        expected_duration = detected_duration if detected_duration else animation_mapping.get("duration", 2.0)
-        return expected_duration
-    
     def _setup_timeout_monitoring(self, action_instance):
         """Set up timeout monitoring for the action"""
         def check_timeout():
@@ -347,17 +345,39 @@ class ActionExecutor:
         # Schedule timeout check
         self.entity_controller.game.set_timer(action_instance.max_execution_time, lambda g: check_timeout())
     
-    def _execute_movement_action(self, action, mapping):
+    def _execute_movement_action(self, action, group_id, category_id, animation_no, duration):
         """Handle movement actions (walk, run, etc.)"""
         try:
-            # Apply animation using VNGE character animation system
+            # Check if we have a start animation
+            animation_selection = action.animation_selection
+            start_anim_name = animation_selection.get("animation_start") if animation_selection else None
+            
+            if start_anim_name:
+                # Play start animation first
+                start_anim_ids = self.animation_db.resolve_animation(start_anim_name)
+                if start_anim_ids:
+                    start_group, start_category, start_no = start_anim_ids
+                    logger.debug("Playing start animation '%s' for action %s", start_anim_name, action.name)
+                    if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
+                        self.chara.actor.animate2(start_group, start_category, start_no, 0.5)
+                        # Wait for start animation to complete (TODO: detect actual duration)
+                        # For now, use a small delay
+                        self.entity_controller.game.set_timer(0.5, lambda g: self._start_main_animation(action, group_id, category_id, animation_no, duration))
+                        return
+            
+            # No start animation, go directly to main animation
+            self._start_main_animation(action, group_id, category_id, animation_no, duration)
+            
+        except Exception as e:
+            logger.error("Error executing movement action %s: %s", action.name, e)
+            self.movement_handler.on_action_completed(action, False)
+    
+    def _start_main_animation(self, action, group_id, category_id, animation_no, duration):
+        """Start the main animation for an action"""
+        try:
+            # Apply main animation
             if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"], 
-                    mapping["no"],
-                    mapping["speed"]
-                )
+                self.chara.actor.animate2(group_id, category_id, animation_no, 0.5)  # Default speed
             else:
                 logger.error("Character or actor not available for movement action %s", action.name)
                 self.movement_handler.on_action_completed(action, False)
@@ -366,32 +386,44 @@ class ActionExecutor:
             # Adjust current entity based on target details
             self._adjust_for_targets(action.targets)
             
-            # Set timer for action completion based on completion type
-            completion_type = mapping.get("completion_type", CompletionTypes.DURATION)
-            duration = mapping.get("duration", 3.0)
-            # FIXME: This should not be the max duration of the animation, but travel time + threshold
-            
-            if completion_type == CompletionTypes.DISTANCE:
-                # Implement distance-based completion for movement actions
-                self._setup_distance_based_completion(action, duration)
-            else:
-                # Duration-based completion
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
+            # Movement actions use distance-based completion
+            self._setup_distance_based_completion(action, duration)
             
         except Exception as e:
-            logger.error("Error executing movement action %s: %s", action.name, e)
+            logger.error("Error starting main animation for %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
     
-    def _execute_posture_action(self, action, mapping):
+    def _execute_posture_action(self, action, group_id, category_id, animation_no, duration):
         """Handle posture changes (sit, stand, lay down)"""
         try:
+            # Check if we have a start animation
+            animation_selection = action.animation_selection
+            start_anim_name = animation_selection.get("animation_start") if animation_selection else None
+            
+            if start_anim_name:
+                # Play start animation first
+                start_anim_ids = self.animation_db.resolve_animation(start_anim_name)
+                if start_anim_ids:
+                    start_group, start_category, start_no = start_anim_ids
+                    logger.debug("Playing start animation '%s' for action %s", start_anim_name, action.name)
+                    if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
+                        self.chara.actor.animate2(start_group, start_category, start_no, 0.5)
+                        # Wait for start animation, then play main
+                        self.entity_controller.game.set_timer(0.5, lambda g: self._apply_main_posture_animation(action, group_id, category_id, animation_no, duration))
+                        return
+            
+            # No start animation, apply main animation directly
+            self._apply_main_posture_animation(action, group_id, category_id, animation_no, duration)
+            
+        except Exception as e:
+            logger.error("Error executing posture action %s: %s", action.name, e)
+            self.movement_handler.on_action_completed(action, False)
+    
+    def _apply_main_posture_animation(self, action, group_id, category_id, animation_no, duration):
+        """Apply main posture animation"""
+        try:
             if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"],
-                    mapping["no"],
-                    mapping["speed"]
-                )
+                self.chara.actor.animate2(group_id, category_id, animation_no, 0.5)
             else:
                 logger.error("Character or actor not available for posture action %s", action.name)
                 self.movement_handler.on_action_completed(action, False)
@@ -400,33 +432,47 @@ class ActionExecutor:
             # Adjust current entity based on target details
             self._adjust_for_targets(action.targets)
             
-            # Set timer for action completion based on completion type
-            completion_type = mapping.get("completion_type", CompletionTypes.STATE)
-            duration = mapping.get("duration", 2.0)
+            # Posture actions use duration-based completion with optional end animation
+            def on_complete():
+                self._play_end_animation_if_needed(action)
             
-            if completion_type == CompletionTypes.STATE:
-                # For posture actions, we should implement state-based completion
-                # For now, use duration but log that state-based completion is needed
-                logger.debug("Posture action '%s' should use state-based completion (not yet implemented)", action.name)
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
-            else:
-                # Duration-based completion
-                self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
+            self.entity_controller.game.set_timer(duration, lambda g: on_complete())
             
         except Exception as e:
-            logger.error("Error executing posture action %s: %s", action.name, e)
+            logger.error("Error applying main posture animation %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
     
-    def _execute_simple_action(self, action, mapping):
+    def _execute_simple_action(self, action, group_id, category_id, animation_no, duration):
         """Handle simple animations (jumps, gestures, etc.)"""
         try:
+            # Check if we have a start animation
+            animation_selection = action.animation_selection
+            start_anim_name = animation_selection.get("animation_start") if animation_selection else None
+            
+            if start_anim_name:
+                # Play start animation first
+                start_anim_ids = self.animation_db.resolve_animation(start_anim_name)
+                if start_anim_ids:
+                    start_group, start_category, start_no = start_anim_ids
+                    logger.debug("Playing start animation '%s' for action %s", start_anim_name, action.name)
+                    if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
+                        self.chara.actor.animate2(start_group, start_category, start_no, 0.5)
+                        # Wait for start animation, then play main
+                        self.entity_controller.game.set_timer(0.5, lambda g: self._apply_main_simple_animation(action, group_id, category_id, animation_no, duration))
+                        return
+            
+            # No start animation, apply main animation directly
+            self._apply_main_simple_animation(action, group_id, category_id, animation_no, duration)
+            
+        except Exception as e:
+            logger.error("Error executing simple action %s: %s", action.name, e)
+            self.movement_handler.on_action_completed(action, False)
+    
+    def _apply_main_simple_animation(self, action, group_id, category_id, animation_no, duration):
+        """Apply main simple animation"""
+        try:
             if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
-                self.chara.actor.animate2(
-                    mapping["group"],
-                    mapping["category"],
-                    mapping["no"],
-                    mapping["speed"]
-                )
+                self.chara.actor.animate2(group_id, category_id, animation_no, 0.5)
             else:
                 logger.error("Character or actor not available for simple action %s", action.name)
                 self.movement_handler.on_action_completed(action, False)
@@ -435,13 +481,38 @@ class ActionExecutor:
             # Adjust current entity based on target details
             self._adjust_for_targets(action.targets)
             
-            # Simple actions typically use duration-based completion
-            duration = mapping.get("duration", 1.5)
-            self.entity_controller.game.set_timer(duration, lambda g: self.movement_handler.on_action_completed(action, True))
+            # Simple actions use duration-based completion with optional end animation
+            def on_complete():
+                self._play_end_animation_if_needed(action)
+            
+            self.entity_controller.game.set_timer(duration, lambda g: on_complete())
             
         except Exception as e:
-            logger.error("Error executing simple action %s: %s", action.name, e)
+            logger.error("Error applying main simple animation %s: %s", action.name, e)
             self.movement_handler.on_action_completed(action, False)
+    
+    def _play_end_animation_if_needed(self, action):
+        """Play end animation if specified, then complete action"""
+        animation_selection = action.animation_selection
+        end_anim_name = animation_selection.get("animation_end") if animation_selection else None
+        
+        if end_anim_name:
+            # Play end animation
+            end_anim_ids = self.animation_db.resolve_animation(end_anim_name)
+            if end_anim_ids:
+                end_group, end_category, end_no = end_anim_ids
+                logger.debug("Playing end animation '%s' for action %s", end_anim_name, action.name)
+                try:
+                    if self.chara and hasattr(self.chara, 'actor') and self.chara.actor:
+                        self.chara.actor.animate2(end_group, end_category, end_no, 0.5)
+                        # Wait for end animation to complete
+                        self.entity_controller.game.set_timer(0.5, lambda g: self.movement_handler.on_action_completed(action, True))
+                        return
+                except Exception as e:
+                    logger.warning("Failed to play end animation for %s: %s", action.name, e)
+        
+        # No end animation or failed to play, complete action directly
+        self.movement_handler.on_action_completed(action, True)
     
     def _setup_distance_based_completion(self, action, max_duration):
         """Set up distance-based completion monitoring for movement actions"""

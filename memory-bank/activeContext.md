@@ -1,13 +1,15 @@
 # VNGE Harmony Link Plugin - Active Context
 
 ## Current Work Focus
+**JUST COMPLETED**: RAG-Based Animation Selection System - Migrated from hardcoded AnimationMapper to RAG-based dynamic animation selection. Plugin now syncs all available animations with auto-generated descriptions to Harmony Link on startup. AnimationDatabase class replaces AnimationMapper, auto-generating animation definitions from animation_list JSON structure. Action execution updated to resolve animation names from ActionVector's AnimationSelectionV1 and execute AnimationStart → main Animation → AnimationEnd sequences with proper timing.
+
 **JUST COMPLETED**: STT Recording Synchronization Enhancement - Implemented synchronization improvements to resolve button spam issues and ensure reliable audio frame processing between VNGE Plugin and Harmony Link.
 
 **JUST COMPLETED**: TTS Audio Playback Timing Fix - Fixed critical audio playback issue where TTS audio would not play due to race condition in playback monitoring.
 
 **JUST COMPLETED**: Created a configurable logging wrapper system to replace all print() statements throughout the VNGE Harmony Link Plugin codebase.
 
-**JUST COMPLETED**: Movement Module Enhancement - Implemented actual movement features for Harmony Link's VNGE Plugin, transforming the current stub implementation into a fully functional system. This includes dynamic animation duration detection, intelligent animation mapping, hard error handling for animation database issues, and distance-based completion detection for movement actions. The implementation is still subject to further review and modifications in the follow-up sessions.
+**JUST COMPLETED**: Movement Module Enhancement - Implemented actual movement features for Harmony Link's VNGE Plugin, transforming the current stub implementation into a fully functional system. This includes dynamic animation duration detection, intelligent animation mapping, hard error handling for animation database issues, and distance-based completion detection for movement actions.
 
 **JUST COMPLETED**: Testing Framework Enhancement - Significantly improved the VNGE Plugin testing framework with comprehensive mock systems, enhanced fixtures using actual VNGE classes, and expanded Studio/Unity mock coverage for better testing capabilities.
 
@@ -19,33 +21,31 @@
 
 The focus continues on enhancing the Movement module's execution and refining plugin integration, with improved testing capabilities now available.
 
-### Animation System Extension (Priority: High)
-The current implementation has hardcoded animation mappings in `AnimationMapper._load_animation_mappings()`. With the comprehensive `animation_list_short.json` available, the next major step is extending the system to dynamically utilize the full VNGE animation database.
+### RAG Animation System (Just Implemented)
+**Achievement**: Successfully migrated to RAG-based animation selection eliminating all hardcoded animation mappings.
 
-**Current Hardcoded Mappings:**
-- Basic movement: move, walk, run
-- Posture: sit_down, stand_up, lay_down  
-- Simple: jump_fixed
+**Implementation Details:**
+- **AnimationDatabase**: Auto-generates animation definitions from `animation_list_wip.json` with names like `{group}_{category}_{animation_name}`
+- **Animation Syncing**: All animations synced to Harmony Link on startup via `EVENT_TYPE_MOVEMENT_V1_REQUEST_ANIMATIONS`
+- **Description Generation**: Automatic descriptions in format "{Group} - {Category}: {Animation Name}"
+- **Name Resolution**: `resolve_animation(name)` converts animation names to (group_id, category_id, animation_no) tuples
+- **Sequence Execution**: Supports AnimationStart → main Animation (loop) → AnimationEnd sequences
 
-**Animation Database Structure (from animation_list_short.json):**
-- Group 0 "Character": Basic, Pose, Emotions, Walking & Running, Standing, Conversation, etc.
-- Group 8 "Battle": Combat animations
-- Group 10 "Outdoors": Swimming, sports activities
-- Group 1011 "Kohai": Extensive Mixamo animation library
+**Key Benefits:**
+- No hardcoded mappings to maintain
+- Full animation database available for RAG matching
+- Context-aware animation selection via Harmony Link's LLM
+- Smooth transitions with start/end animations
+- Extensible as new animations added to game
 
-### Animation Duration Detection Challenge
-**Critical Issue:** Currently unable to determine actual animation duration from VNGE/Unity runtime. Current system uses hardcoded expected durations in mappings (e.g., `"duration": 3.0`), but actual animation lengths are unknown.
+### Animation Duration Detection Enhancement Opportunity
+**Current State:** AnimationDurationDetector attempts runtime detection but often falls back to default 2.0s duration.
 
-**Current Workaround:**
-- Timeout detection (10 seconds max) prevents stuck animations
-- Fixed duration estimates for action completion timing
-- Performance monitoring tracks actual vs expected execution times
-
-**Potential Solutions to Investigate:**
-1. VNGE API exploration for animation duration queries
-2. Unity AnimationClip.length property access via IronPython
-3. Timing analysis based on animation file metadata
-4. Dynamic duration learning from execution patterns
+**Future Enhancements:**
+1. Improve Unity AnimationClip.length property access
+2. Enhance duration caching for performance
+3. Consider timing analysis from actual execution patterns
+4. Explore VNGE-specific animation info APIs
 
 ### Cognitive Integration Stubs (Recently Added)
 The `CognitiveIntegrationStub` class provides framework for future AI entity cognitive system integration:
