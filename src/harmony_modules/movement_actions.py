@@ -11,8 +11,8 @@ import os
 import time
 from harmony_modules.logging import get_logger
 
-from movement_animations import AnimationDurationDetector
-from movement_tracking import SpaceManager
+from harmony_modules.movement_animations import AnimationDurationDetector
+from harmony_modules.movement_tracking import SpaceManager
 
 logger = get_logger(__name__)
 

@@ -15,15 +15,13 @@ from Studio import Info
 import time
 import json
 
-from movement_actions import (
-    get_all_actions, 
-    CompletionTypes, 
-    ActionCategories,
+from harmony_modules.movement_actions import (
+    get_all_actions,
     ActionState,
     ActionInstance,
     ActionExecutor
 )
-from movement_animations import AnimationDatabase
+from harmony_modules.movement_animations import AnimationDatabase
 
 # Initialize logger for this module
 logger = get_logger(__name__)
