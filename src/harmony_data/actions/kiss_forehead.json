@@ -1,0 +1,18 @@
+{
+  "name": "kiss_forehead",
+  "description": "kiss forehead of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} leans in and kisses {{other_character}} on the forehead",
+    "{{character}} gently presses their lips to {{other_character}}'s forehead",
+    "{{character}} softly plants a kiss on {{other_character}}'s forehead",
+    "{{character}} reaches out and kisses {{other_character}}'s forehead",
+    "{{character}} approaches {{other_character}} and kisses them on the forehead",
+    "{{character}} moves closer to {{other_character}} and kisses their forehead",
+    "{{character}} steps towards {{other_character}} and gives them a kiss on their forehead",
+    "{{character}} gets nearer to {{other_character}} and presses a kiss to their forehead",
+    "{{character}} comes close to {{other_character}} and kisses their forehead affectionately",
+    "{{character}} draws close to {{other_character}} and plants a tender kiss on their forehead"
+  ]
+}

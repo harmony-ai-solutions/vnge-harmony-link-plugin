@@ -1,0 +1,18 @@
+{
+  "name": "retrieve_item",
+  "description": "retrieve item from pocket / inventory into hand",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{character}} reaches into {{character}}'s pocket and pulls out {{object}}",
+    "{{character}} grabs {{object}} from {{character}}'s inventory",
+    "{{character}} withdraws {{object}} from {{character}}'s backpack",
+    "{{character}} takes {{object}} out of {{character}}'s bag",
+    "{{character}} removes {{object}} from {{character}}'s satchel",
+    "{{character}} fetches {{object}} from {{character}}'s belt",
+    "{{character}} picks up {{object}} from {{character}}'s holster",
+    "{{character}} lifts {{object}} out of {{character}}'s pouch",
+    "{{character}} extracts {{object}} from {{character}}'s sheath",
+    "{{character}} draws {{object}} from {{character}}'s scabbard"
+  ]
+}

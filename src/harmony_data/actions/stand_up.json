@@ -1,0 +1,24 @@
+{
+  "name": "stand_up",
+  "description": "stand up from sitting or lying position",
+  "category": "posture_standing",
+  "duration": 1.5,
+  "examples": [
+    "{{character}} rises from their seated position",
+    "{{character}} gets up from the {{object}}",
+    "{{character}} stands up after resting on {{object}}",
+    "{{character}} lifts themselves off {{object}}",
+    "{{character}} pushes themselves up from {{object}}",
+    "{{character}} climbs back onto their feet",
+    "{{character}} raises from a kneeling posture",
+    "{{character}} unfolds themself from a squatting stance",
+    "{{character}} rises slowly from {{object}}",
+    "{{character}} swiftly gets up from a prone position",
+    "{{character}} jumps up from {{object}}",
+    "{{character}} ascends from a crouching state",
+    "{{character}} elevates themself from {{object}}",
+    "{{character}} emerges from underneath {{object}}",
+    "{{character}} disengages from a sprawled layout"
+  ],
+  "trigger_conditions": []
+}

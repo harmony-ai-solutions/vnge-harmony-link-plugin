@@ -1,6 +1,8 @@
 # VNGE Harmony Link Plugin - Active Context
 
 ## Current Work Focus
+**JUST COMPLETED**: Restructured Actions and Animations - Actions and animations are now stored in separate JSON files instead of single large files. Actions are in `harmony_data/actions/` and animations are in game-specific subfolders under `harmony_data/animations/` (e.g., `KKS_charastudio/`). Refactored `ActionRegistry` and `AnimationDatabase` to load from these new directories dynamically.
+
 **JUST COMPLETED**: RAG-Based Animation Selection System - Migrated from hardcoded AnimationMapper to RAG-based dynamic animation selection. Plugin now syncs all available animations with auto-generated descriptions to Harmony Link on startup. AnimationDatabase class replaces AnimationMapper, auto-generating animation definitions from animation_list JSON structure. Action execution updated to resolve animation names from ActionVector's AnimationSelectionV1 and execute AnimationStart → main Animation → AnimationEnd sequences with proper timing.
 
 **JUST COMPLETED**: STT Recording Synchronization Enhancement - Implemented synchronization improvements to resolve button spam issues and ensure reliable audio frame processing between VNGE Plugin and Harmony Link.

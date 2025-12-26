@@ -1,0 +1,18 @@
+{
+  "name": "place_item",
+  "description": "place item currently in hands on the ground or an object",
+  "category": "object_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} lays down {{object}} on {{other_object}}",
+    "{{character}} sets {{object}} on {{other_object}}",
+    "{{character}} places {{object}} into {{other_object}}",
+    "{{character}} puts {{object}} next to {{other_object}}",
+    "{{character}} drops {{object}} at {{other_character}}'s feet",
+    "{{character}} leaves {{object}} behind",
+    "{{character}} positions {{object}} carefully on {{other_object}}",
+    "{{character}} throws {{object}} onto {{other_object}}",
+    "{{character}} plops {{object}} down on {{other_object}}",
+    "{{character}} hangs {{object}} on {{other_object}}"
+  ]
+}

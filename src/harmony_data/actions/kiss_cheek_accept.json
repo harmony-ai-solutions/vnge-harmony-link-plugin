@@ -1,0 +1,17 @@
+{
+  "name": "kiss_cheek_accept",
+  "description": "accepts kiss cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} blushes slightly and smiles back at {{other_character}}",
+    "{{character}} chuckles and returns the gesture, giving a quick peck on {{other_character}}'s cheek",
+    "{{character}} shyly giggles and leans closer to {{other_character}}",
+    "{{character}} gazes into {{other_character}}'s eyes and moves even closer, reciprocating the kiss",
+    "{{character}} feels flattered by {{other_character}}'s affectionate act, responding positively",
+    "{{character}} seems touched and responds with a loving smile"
+  ],
+  "trigger_conditions": [
+    "kiss_cheek"
+  ]
+}

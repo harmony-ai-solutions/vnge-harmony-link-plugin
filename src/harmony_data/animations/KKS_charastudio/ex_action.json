@@ -1,0 +1,32 @@
+{
+  "group_id": 25,
+  "group_name": "EX",
+  "category_id": 10,
+  "category_name": "Action",
+  "animation_items": [
+    {
+      "name": "Drinking from an armchair loop",
+      "description": ""
+    },
+    {
+      "name": "Drinking in an armchair action",
+      "description": ""
+    },
+    {
+      "name": "Drink on the couch. loop.",
+      "description": ""
+    },
+    {
+      "name": "Drinks on the couch action",
+      "description": ""
+    },
+    {
+      "name": "Viewing the scenery loop",
+      "description": ""
+    },
+    {
+      "name": "View action",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "give_item",
+  "description": "give item in hand to the other chara's hand",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} passes {{object}} to {{other_character}}",
+    "{{character}} transfers {{object}} to {{other_character}}",
+    "{{character}} presents {{object}} to {{other_character}}",
+    "{{character}} offers {{object}} to {{other_character}}",
+    "{{character}} holds out {{object}} to {{other_character}}",
+    "{{character}} extends {{object}} towards {{other_character}}",
+    "{{character}} puts {{object}} into {{other_character}}'s hand",
+    "{{character}} lays {{object}} in {{other_character}}'s palm",
+    "{{character}} sets {{object}} down next to {{other_character}}",
+    "{{character}} places {{object}} by {{other_character}}"
+  ]
+}

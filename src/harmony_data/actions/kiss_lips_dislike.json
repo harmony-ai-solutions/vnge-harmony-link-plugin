@@ -1,0 +1,15 @@
+{
+  "name": "kiss_lips_dislike",
+  "description": "dislike the other chara's kiss",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} stiffens up during the kiss",
+    "{{character}} pulls back abruptly from the kiss",
+    "{{character}} looks uncomfortable after the kiss",
+    "{{character}} wipes their lips after the kiss"
+  ],
+  "trigger_conditions": [
+    "kiss_lips"
+  ]
+}

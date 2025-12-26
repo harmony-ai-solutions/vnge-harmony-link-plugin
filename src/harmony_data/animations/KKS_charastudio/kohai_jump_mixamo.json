@@ -1,0 +1,224 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 8,
+  "category_name": "Jump (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Backflip 1",
+      "description": ""
+    },
+    {
+      "name": "Backflip 2",
+      "description": ""
+    },
+    {
+      "name": "Backflip 3",
+      "description": ""
+    },
+    {
+      "name": "Backflip 4",
+      "description": ""
+    },
+    {
+      "name": "Big Jump",
+      "description": ""
+    },
+    {
+      "name": "Box Jump",
+      "description": ""
+    },
+    {
+      "name": "Front Flip",
+      "description": ""
+    },
+    {
+      "name": "Front Twist Flip",
+      "description": ""
+    },
+    {
+      "name": "Injured Standing Jump",
+      "description": ""
+    },
+    {
+      "name": "Joyful Jump 1",
+      "description": ""
+    },
+    {
+      "name": "Joyful Jump 2",
+      "description": ""
+    },
+    {
+      "name": "Jump 1",
+      "description": ""
+    },
+    {
+      "name": "Jump 2",
+      "description": ""
+    },
+    {
+      "name": "Jump 3",
+      "description": ""
+    },
+    {
+      "name": "Jump 4",
+      "description": ""
+    },
+    {
+      "name": "Jump 5",
+      "description": ""
+    },
+    {
+      "name": "Jump 6",
+      "description": ""
+    },
+    {
+      "name": "Jump Away 1",
+      "description": ""
+    },
+    {
+      "name": "Jump Away 2",
+      "description": ""
+    },
+    {
+      "name": "Jump Away 3",
+      "description": ""
+    },
+    {
+      "name": "Jump Away 4",
+      "description": ""
+    },
+    {
+      "name": "Jump Away 5",
+      "description": ""
+    },
+    {
+      "name": "Jump From Wall",
+      "description": ""
+    },
+    {
+      "name": "Jump Over",
+      "description": ""
+    },
+    {
+      "name": "Jump To Freehang",
+      "description": ""
+    },
+    {
+      "name": "Jump To Hang",
+      "description": ""
+    },
+    {
+      "name": "Jumping 1",
+      "description": ""
+    },
+    {
+      "name": "Jumping 2",
+      "description": ""
+    },
+    {
+      "name": "Jumping 3",
+      "description": ""
+    },
+    {
+      "name": "Jumping 4",
+      "description": ""
+    },
+    {
+      "name": "Jumping 5",
+      "description": ""
+    },
+    {
+      "name": "Jumping 6",
+      "description": ""
+    },
+    {
+      "name": "Jumping 7",
+      "description": ""
+    },
+    {
+      "name": "Jumping 8",
+      "description": ""
+    },
+    {
+      "name": "Jumping 9",
+      "description": ""
+    },
+    {
+      "name": "Jumping 10",
+      "description": ""
+    },
+    {
+      "name": "Jumping 11",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 1",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 2",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 3",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 4",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 5",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 6",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 7",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 8",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down 9",
+      "description": ""
+    },
+    {
+      "name": "Jumping To Hanging",
+      "description": ""
+    },
+    {
+      "name": "Mutant Jumping",
+      "description": ""
+    },
+    {
+      "name": "Running Jump 1",
+      "description": ""
+    },
+    {
+      "name": "Running Jump 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Jump 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Jump 2",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Jump Running",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Jump",
+      "description": ""
+    }
+  ]
+}

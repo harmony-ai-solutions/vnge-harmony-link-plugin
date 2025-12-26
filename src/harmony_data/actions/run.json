@@ -1,0 +1,19 @@
+{
+  "name": "run",
+  "description": "running",
+  "category": "movement",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} runs forward quickly",
+    "{{character}} sprints ahead",
+    "{{character}} dashes past {{object}}",
+    "{{character}} rushes towards {{other_character}}",
+    "{{character}} bolts from {{character_group}} to {{other_character_group}}",
+    "{{character}} jogs around {{object_collection}}",
+    "{{character}} hurries while carrying {{object}}",
+    "{{character}} rapidly moves away from danger",
+    "{{character}} escapes by running fast",
+    "{{character}} outpaces {{other_character}} easily"
+  ],
+  "trigger_conditions": []
+}

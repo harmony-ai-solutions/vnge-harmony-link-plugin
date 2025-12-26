@@ -1,0 +1,14 @@
+{
+  "name": "store_item_failure",
+  "description": "store item in hand in pocket / inventory failed",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{object}} does not fit",
+    "{{object}} is too large",
+    "{{object}} is not suitable for storage"
+  ],
+  "trigger_conditions": [
+    "store_item"
+  ]
+}

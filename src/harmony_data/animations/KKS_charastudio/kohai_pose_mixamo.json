@@ -1,0 +1,316 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 9,
+  "category_name": "Pose (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Female Action Pose",
+      "description": ""
+    },
+    {
+      "name": "Female Crouch Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Crouch Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Female Dance Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Female Dynamic Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Dynamic Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Dynamic Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Female Dynamic Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 7",
+      "description": ""
+    },
+    {
+      "name": "Female Laying Pose 8",
+      "description": ""
+    },
+    {
+      "name": "Female Locomotion Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Locomotion Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Female Sitting Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 7",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 8",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 9",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 10",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 11",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 12",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 13",
+      "description": ""
+    },
+    {
+      "name": "Female Standing Pose 14",
+      "description": ""
+    },
+    {
+      "name": "Male Action Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Action Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Action Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Action Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Male Action Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Male Crouch Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Crouch Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Crouch Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Dynamic Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Dynamic Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Dynamic Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Laying Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Laying Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Laying Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Laying Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Male Laying Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 7",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 8",
+      "description": ""
+    },
+    {
+      "name": "Male Sitting Pose 9",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 4",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 5",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 6",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 7",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 8",
+      "description": ""
+    },
+    {
+      "name": "Male Standing Pose 9",
+      "description": ""
+    }
+  ]
+}

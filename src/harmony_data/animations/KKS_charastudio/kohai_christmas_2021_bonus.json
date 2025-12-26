@@ -1,0 +1,268 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 11,
+  "category_name": "Christmas_2021_Bonus",
+  "animation_items": [
+    {
+      "name": "A2_Bare_Taunt",
+      "description": ""
+    },
+    {
+      "name": "A2_Bracers_Taunt",
+      "description": ""
+    },
+    {
+      "name": "A2_Heavysword_Taunt",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bare_Dash_Heavyattack",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bare_Heavy Attack",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bracers_Dash_Heavy Attack",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bracers_Heavy Attack_A",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bracers_Heavy Attack_B",
+      "description": ""
+    },
+    {
+      "name": "A2B_Bracers_Perfect Evade Counter",
+      "description": ""
+    },
+    {
+      "name": "A2B_Cool_Climbing end",
+      "description": ""
+    },
+    {
+      "name": "A2B_Dashing",
+      "description": ""
+    },
+    {
+      "name": "A2B_Dashing on a banked track_L",
+      "description": ""
+    },
+    {
+      "name": "A2B_Dashing on a banked track_R",
+      "description": ""
+    },
+    {
+      "name": "A2B_Diving",
+      "description": ""
+    },
+    {
+      "name": "A2B_Heavysword_Perfect evade counter",
+      "description": ""
+    },
+    {
+      "name": "A2B_Idle",
+      "description": ""
+    },
+    {
+      "name": "A2B_Kick",
+      "description": ""
+    },
+    {
+      "name": "A2B_Looks like part of a Bracers attack",
+      "description": ""
+    },
+    {
+      "name": "A2B_Walking",
+      "description": ""
+    },
+    {
+      "name": "Acto_Aerobic Dance",
+      "description": ""
+    },
+    {
+      "name": "Acto_Air Dance",
+      "description": ""
+    },
+    {
+      "name": "Acto_Change Pose",
+      "description": ""
+    },
+    {
+      "name": "Acto_Crouch Walk R Against wall",
+      "description": ""
+    },
+    {
+      "name": "Acto_Dance Graceful",
+      "description": ""
+    },
+    {
+      "name": "Acto_Draw dual gun behind back",
+      "description": ""
+    },
+    {
+      "name": "Acto_Dual gun end pose",
+      "description": ""
+    },
+    {
+      "name": "Acto_Dual gun mov cool shoot",
+      "description": ""
+    },
+    {
+      "name": "Acto_Hold gun break door",
+      "description": ""
+    },
+    {
+      "name": "Acto_Low Hide wall reload",
+      "description": ""
+    },
+    {
+      "name": "Acto_Mage spell cast_05",
+      "description": ""
+    },
+    {
+      "name": "Acto_Sideshoot",
+      "description": ""
+    },
+    {
+      "name": "Acto_Sneakwalk",
+      "description": ""
+    },
+    {
+      "name": "Acto_Stand Talk",
+      "description": ""
+    },
+    {
+      "name": "Bubbletop_MMD_Karintou",
+      "description": ""
+    },
+    {
+      "name": "Cold_Idle_01",
+      "description": ""
+    },
+    {
+      "name": "Cold_Idle_02",
+      "description": ""
+    },
+    {
+      "name": "Cold_Idle_03",
+      "description": ""
+    },
+    {
+      "name": "Cold_Idle_04",
+      "description": ""
+    },
+    {
+      "name": "Coughing_Idle",
+      "description": ""
+    },
+    {
+      "name": "Dva_Heroic",
+      "description": ""
+    },
+    {
+      "name": "Dva_Secret Dance_Needs more touch up",
+      "description": ""
+    },
+    {
+      "name": "Dva_Self-Destruct",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Catwalk",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Dodge with a forward roll",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Drunk",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Generic Walk And Trip Over",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Golf",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Mid Rhythm Dance 07",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Saber Combo 1",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Slow walk with weapon",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Smoking",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Spinning leg sweep attack",
+      "description": ""
+    },
+    {
+      "name": "Rokoko_Swinging on Rope",
+      "description": ""
+    },
+    {
+      "name": "Shuffle dance A_MMD_Pisutachiomaru",
+      "description": ""
+    },
+    {
+      "name": "Shuffle dance B_MMD_Pisutachiomaru",
+      "description": ""
+    },
+    {
+      "name": "Shuffle dance C_MMD_Pisutachiomaru",
+      "description": ""
+    },
+    {
+      "name": "Sombra_Dance",
+      "description": ""
+    },
+    {
+      "name": "Tracer_BackFlip",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Charleston",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Cheer",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Finger Guns",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Just in case",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Kickin'",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Spin",
+      "description": ""
+    },
+    {
+      "name": "Tracer_Warm up",
+      "description": ""
+    }
+  ]
+}

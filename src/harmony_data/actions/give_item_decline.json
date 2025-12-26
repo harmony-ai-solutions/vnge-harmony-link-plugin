@@ -1,0 +1,16 @@
+{
+  "name": "give_item_decline",
+  "description": "give item in hand to the other chara's hand failed",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{other_character}} declines {{object}}",
+    "{{other_character}} pushes {{object}} away",
+    "{{other_character}} avoids {{object}}",
+    "{{other_character}} shuns {{object}}",
+    "{{other_character}} ignores {{object}}"
+  ],
+  "trigger_conditions": [
+    "give_item"
+  ]
+}

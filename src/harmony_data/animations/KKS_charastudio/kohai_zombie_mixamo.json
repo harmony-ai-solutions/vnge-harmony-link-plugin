@@ -1,0 +1,164 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 17,
+  "category_name": "Zombie (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Walking 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 1",
+      "description": ""
+    },
+    {
+      "name": "Walking 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 2",
+      "description": ""
+    },
+    {
+      "name": "Walking 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 5 In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Agonizing",
+      "description": ""
+    },
+    {
+      "name": "Zombie Attack 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Attack 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Biting 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Biting 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Crawl In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Crawl",
+      "description": ""
+    },
+    {
+      "name": "Zombie Death",
+      "description": ""
+    },
+    {
+      "name": "Zombie Dying",
+      "description": ""
+    },
+    {
+      "name": "Zombie Headbutt",
+      "description": ""
+    },
+    {
+      "name": "Zombie Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Zombie Kicking",
+      "description": ""
+    },
+    {
+      "name": "Zombie Neck Bite",
+      "description": ""
+    },
+    {
+      "name": "Zombie Punching 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Punching 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Punching 3",
+      "description": ""
+    },
+    {
+      "name": "Zombie Reaction Hit",
+      "description": ""
+    },
+    {
+      "name": "Zombie Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Running 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Running 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Running 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Running 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Scratch Idle",
+      "description": ""
+    },
+    {
+      "name": "Zombie Scream",
+      "description": ""
+    },
+    {
+      "name": "Zombie Stand Up 1",
+      "description": ""
+    },
+    {
+      "name": "Zombie Stand Up 2",
+      "description": ""
+    },
+    {
+      "name": "Zombie Stumbling",
+      "description": ""
+    },
+    {
+      "name": "Zombie Transition",
+      "description": ""
+    },
+    {
+      "name": "Zombie Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Zombie Walk",
+      "description": ""
+    }
+  ]
+}

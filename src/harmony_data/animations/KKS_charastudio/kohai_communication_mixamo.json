@@ -1,0 +1,668 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 2,
+  "category_name": "Communication (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Acknowledging",
+      "description": ""
+    },
+    {
+      "name": "Agony",
+      "description": ""
+    },
+    {
+      "name": "Agreeing 1",
+      "description": ""
+    },
+    {
+      "name": "Agreeing 2",
+      "description": ""
+    },
+    {
+      "name": "Angry Gesture 1",
+      "description": ""
+    },
+    {
+      "name": "Angry Gesture 2",
+      "description": ""
+    },
+    {
+      "name": "Angry Gesture 3",
+      "description": ""
+    },
+    {
+      "name": "Angry",
+      "description": ""
+    },
+    {
+      "name": "Annoyed Head Shake",
+      "description": ""
+    },
+    {
+      "name": "Arm Gesture",
+      "description": ""
+    },
+    {
+      "name": "Asking Question 1",
+      "description": ""
+    },
+    {
+      "name": "Asking Question 2",
+      "description": ""
+    },
+    {
+      "name": "Banging Fist",
+      "description": ""
+    },
+    {
+      "name": "Bashful",
+      "description": ""
+    },
+    {
+      "name": "Beckoning",
+      "description": ""
+    },
+    {
+      "name": "Blow A Kiss 1",
+      "description": ""
+    },
+    {
+      "name": "Blow A Kiss 2",
+      "description": ""
+    },
+    {
+      "name": "Bored",
+      "description": ""
+    },
+    {
+      "name": "Charge",
+      "description": ""
+    },
+    {
+      "name": "Cheering 1",
+      "description": ""
+    },
+    {
+      "name": "Cheering 2",
+      "description": ""
+    },
+    {
+      "name": "Cheering 3",
+      "description": ""
+    },
+    {
+      "name": "Cheering While Sitting",
+      "description": ""
+    },
+    {
+      "name": "Cocky Head Turn",
+      "description": ""
+    },
+    {
+      "name": "Counting 1",
+      "description": ""
+    },
+    {
+      "name": "Counting 2",
+      "description": ""
+    },
+    {
+      "name": "Crazy Gesture",
+      "description": ""
+    },
+    {
+      "name": "Crying",
+      "description": ""
+    },
+    {
+      "name": "Defeat 1",
+      "description": ""
+    },
+    {
+      "name": "Defeat 2",
+      "description": ""
+    },
+    {
+      "name": "Defeat Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Defeat Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Defeated",
+      "description": ""
+    },
+    {
+      "name": "Disappointed",
+      "description": ""
+    },
+    {
+      "name": "Dismissing Gesture 1",
+      "description": ""
+    },
+    {
+      "name": "Dismissing Gesture 2",
+      "description": ""
+    },
+    {
+      "name": "Excited",
+      "description": ""
+    },
+    {
+      "name": "Focus",
+      "description": ""
+    },
+    {
+      "name": "Hand Raising",
+      "description": ""
+    },
+    {
+      "name": "Hands Forward Gesture",
+      "description": ""
+    },
+    {
+      "name": "Happy Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Happy Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Happy",
+      "description": ""
+    },
+    {
+      "name": "Having A Meeting Female",
+      "description": ""
+    },
+    {
+      "name": "Having A Meeting Male",
+      "description": ""
+    },
+    {
+      "name": "Head Nod Yes",
+      "description": ""
+    },
+    {
+      "name": "Insult",
+      "description": ""
+    },
+    {
+      "name": "Kiss 1",
+      "description": ""
+    },
+    {
+      "name": "Kiss 2",
+      "description": ""
+    },
+    {
+      "name": "Kiss 3",
+      "description": ""
+    },
+    {
+      "name": "Kiss 4",
+      "description": ""
+    },
+    {
+      "name": "Kneeling Pointing",
+      "description": ""
+    },
+    {
+      "name": "Laughing",
+      "description": ""
+    },
+    {
+      "name": "Lengthy Head Nod",
+      "description": ""
+    },
+    {
+      "name": "Look Away Gesture",
+      "description": ""
+    },
+    {
+      "name": "Looking Down",
+      "description": ""
+    },
+    {
+      "name": "Loser",
+      "description": ""
+    },
+    {
+      "name": "No 1",
+      "description": ""
+    },
+    {
+      "name": "No 2",
+      "description": ""
+    },
+    {
+      "name": "Pacing And Talking On A Phone",
+      "description": ""
+    },
+    {
+      "name": "Pain Gesture",
+      "description": ""
+    },
+    {
+      "name": "Patting",
+      "description": ""
+    },
+    {
+      "name": "Pointing 1",
+      "description": ""
+    },
+    {
+      "name": "Pointing 2",
+      "description": ""
+    },
+    {
+      "name": "Pointing 3",
+      "description": ""
+    },
+    {
+      "name": "Pointing 4",
+      "description": ""
+    },
+    {
+      "name": "Pointing Forward",
+      "description": ""
+    },
+    {
+      "name": "Pointing Gesture 1",
+      "description": ""
+    },
+    {
+      "name": "Pointing Gesture 2",
+      "description": ""
+    },
+    {
+      "name": "Praying 1",
+      "description": ""
+    },
+    {
+      "name": "Praying 2",
+      "description": ""
+    },
+    {
+      "name": "Praying 3",
+      "description": ""
+    },
+    {
+      "name": "Praying 4",
+      "description": ""
+    },
+    {
+      "name": "Quick Formal Bow",
+      "description": ""
+    },
+    {
+      "name": "Quick Informal Bow",
+      "description": ""
+    },
+    {
+      "name": "Rejected",
+      "description": ""
+    },
+    {
+      "name": "Relieved Sigh",
+      "description": ""
+    },
+    {
+      "name": "Restrain",
+      "description": ""
+    },
+    {
+      "name": "Sad Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Sad Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Sad Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Salute",
+      "description": ""
+    },
+    {
+      "name": "Sarcastic Head Nod",
+      "description": ""
+    },
+    {
+      "name": "Scared",
+      "description": ""
+    },
+    {
+      "name": "Shake Fist",
+      "description": ""
+    },
+    {
+      "name": "Shaking Hands 1",
+      "description": ""
+    },
+    {
+      "name": "Shaking Hands 2",
+      "description": ""
+    },
+    {
+      "name": "Shaking Head No",
+      "description": ""
+    },
+    {
+      "name": "Shrugging",
+      "description": ""
+    },
+    {
+      "name": "Sitting And Pointing",
+      "description": ""
+    },
+    {
+      "name": "Sitting Angry",
+      "description": ""
+    },
+    {
+      "name": "Sitting Clap 1",
+      "description": ""
+    },
+    {
+      "name": "Sitting Clap 2",
+      "description": ""
+    },
+    {
+      "name": "Sitting Clap 3",
+      "description": ""
+    },
+    {
+      "name": "Sitting Clap 4",
+      "description": ""
+    },
+    {
+      "name": "Sitting Clap 5",
+      "description": ""
+    },
+    {
+      "name": "Sitting Disapproval",
+      "description": ""
+    },
+    {
+      "name": "Sitting Disbelief 1",
+      "description": ""
+    },
+    {
+      "name": "Sitting Disbelief 2",
+      "description": ""
+    },
+    {
+      "name": "Sitting Laughing",
+      "description": ""
+    },
+    {
+      "name": "Sitting Talking",
+      "description": ""
+    },
+    {
+      "name": "Sitting Thumbs Up",
+      "description": ""
+    },
+    {
+      "name": "Sitting Victory",
+      "description": ""
+    },
+    {
+      "name": "Sitting Yell 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Arguing 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Arguing 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Clap_1",
+      "description": ""
+    },
+    {
+      "name": "Standing Clap_2",
+      "description": ""
+    },
+    {
+      "name": "Standing Clap_3",
+      "description": ""
+    },
+    {
+      "name": "Standing Clap_4",
+      "description": ""
+    },
+    {
+      "name": "Standing Greeting 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Greeting 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Greeting 3",
+      "description": ""
+    },
+    {
+      "name": "Standing Greeting 4",
+      "description": ""
+    },
+    {
+      "name": "Standing Thumbs Up",
+      "description": ""
+    },
+    {
+      "name": "Standing Yell",
+      "description": ""
+    },
+    {
+      "name": "Surprised 1",
+      "description": ""
+    },
+    {
+      "name": "Surprised 2",
+      "description": ""
+    },
+    {
+      "name": "Surprised 3",
+      "description": ""
+    },
+    {
+      "name": "Talking 1",
+      "description": ""
+    },
+    {
+      "name": "Talking 2",
+      "description": ""
+    },
+    {
+      "name": "Talking 3",
+      "description": ""
+    },
+    {
+      "name": "Talking 4",
+      "description": ""
+    },
+    {
+      "name": "Talking 5",
+      "description": ""
+    },
+    {
+      "name": "Talking 6",
+      "description": ""
+    },
+    {
+      "name": "Talking 7",
+      "description": ""
+    },
+    {
+      "name": "Talking At Watercooler",
+      "description": ""
+    },
+    {
+      "name": "Talking On A Cell Phone",
+      "description": ""
+    },
+    {
+      "name": "Talking On Phone",
+      "description": ""
+    },
+    {
+      "name": "Talking Phone Pacing",
+      "description": ""
+    },
+    {
+      "name": "Talking",
+      "description": ""
+    },
+    {
+      "name": "Taunt 1",
+      "description": ""
+    },
+    {
+      "name": "Taunt 2",
+      "description": ""
+    },
+    {
+      "name": "Taunt 3",
+      "description": ""
+    },
+    {
+      "name": "Taunt Gesture",
+      "description": ""
+    },
+    {
+      "name": "Telling A Secret 1",
+      "description": ""
+    },
+    {
+      "name": "Telling A Secret 2",
+      "description": ""
+    },
+    {
+      "name": "Terrified",
+      "description": ""
+    },
+    {
+      "name": "Texting While Standing",
+      "description": ""
+    },
+    {
+      "name": "Texting",
+      "description": ""
+    },
+    {
+      "name": "Thankful",
+      "description": ""
+    },
+    {
+      "name": "Thinking",
+      "description": ""
+    },
+    {
+      "name": "Thoughtful Head Nod",
+      "description": ""
+    },
+    {
+      "name": "Thoughtful Head Shake",
+      "description": ""
+    },
+    {
+      "name": "Threatening",
+      "description": ""
+    },
+    {
+      "name": "Victory 1",
+      "description": ""
+    },
+    {
+      "name": "Victory 2",
+      "description": ""
+    },
+    {
+      "name": "Victory 3",
+      "description": ""
+    },
+    {
+      "name": "Victory 4",
+      "description": ""
+    },
+    {
+      "name": "Victory 5",
+      "description": ""
+    },
+    {
+      "name": "Victory Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Victory Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Victory Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Waving 1",
+      "description": ""
+    },
+    {
+      "name": "Waving 2",
+      "description": ""
+    },
+    {
+      "name": "Waving 3",
+      "description": ""
+    },
+    {
+      "name": "Waving 4",
+      "description": ""
+    },
+    {
+      "name": "Waving Gesture",
+      "description": ""
+    },
+    {
+      "name": "Whatever Gesture",
+      "description": ""
+    },
+    {
+      "name": "Yelling 1",
+      "description": ""
+    },
+    {
+      "name": "Yelling 2",
+      "description": ""
+    },
+    {
+      "name": "Yelling 3",
+      "description": ""
+    },
+    {
+      "name": "Yelling Out",
+      "description": ""
+    },
+    {
+      "name": "Yelling While Standing 1",
+      "description": ""
+    },
+    {
+      "name": "Yelling While Standing 2",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,692 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 6,
+  "category_name": "Gun (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Aiming Gun",
+      "description": ""
+    },
+    {
+      "name": "Backward Jump",
+      "description": ""
+    },
+    {
+      "name": "Backwards Rifle Walk",
+      "description": ""
+    },
+    {
+      "name": "Block With Rifle",
+      "description": ""
+    },
+    {
+      "name": "Cautious Backward Walk",
+      "description": ""
+    },
+    {
+      "name": "Check Shoe",
+      "description": ""
+    },
+    {
+      "name": "Crawl Forward",
+      "description": ""
+    },
+    {
+      "name": "Crouch Rapid Fire",
+      "description": ""
+    },
+    {
+      "name": "Crouch Running",
+      "description": ""
+    },
+    {
+      "name": "Crouch Stop Walking 1",
+      "description": ""
+    },
+    {
+      "name": "Crouch Stop Walking 2",
+      "description": ""
+    },
+    {
+      "name": "Crouch To Stand 2",
+      "description": ""
+    },
+    {
+      "name": "Crouch To Standing With Rifle",
+      "description": ""
+    },
+    {
+      "name": "Crouched Strafe Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Death From Back Headshot",
+      "description": ""
+    },
+    {
+      "name": "Death From Front Headshot",
+      "description": ""
+    },
+    {
+      "name": "Death From Right",
+      "description": ""
+    },
+    {
+      "name": "Death From The Back",
+      "description": ""
+    },
+    {
+      "name": "Death From The Front",
+      "description": ""
+    },
+    {
+      "name": "Death",
+      "description": ""
+    },
+    {
+      "name": "Dive Roll",
+      "description": ""
+    },
+    {
+      "name": "Dodging",
+      "description": ""
+    },
+    {
+      "name": "Emerge From Cover",
+      "description": ""
+    },
+    {
+      "name": "Emerging",
+      "description": ""
+    },
+    {
+      "name": "Fall Over",
+      "description": ""
+    },
+    {
+      "name": "Fire Rifle",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 2",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Firing Rifle 5",
+      "description": ""
+    },
+    {
+      "name": "Grab And Put Back Rifle",
+      "description": ""
+    },
+    {
+      "name": "Grab Rifle And Put Back",
+      "description": ""
+    },
+    {
+      "name": "Grab Rifle From Behind Shoulder",
+      "description": ""
+    },
+    {
+      "name": "Grab Rifle From The Side",
+      "description": ""
+    },
+    {
+      "name": "Grabbing Ammo",
+      "description": ""
+    },
+    {
+      "name": "Grenade Throw",
+      "description": ""
+    },
+    {
+      "name": "Gunplay 1",
+      "description": ""
+    },
+    {
+      "name": "Gunplay 2",
+      "description": ""
+    },
+    {
+      "name": "Gunplay 3",
+      "description": ""
+    },
+    {
+      "name": "Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Idle Aiming",
+      "description": ""
+    },
+    {
+      "name": "Jump Forward",
+      "description": ""
+    },
+    {
+      "name": "Jump",
+      "description": ""
+    },
+    {
+      "name": "Jumping 1",
+      "description": ""
+    },
+    {
+      "name": "Jumping 2",
+      "description": ""
+    },
+    {
+      "name": "Jumping 3",
+      "description": ""
+    },
+    {
+      "name": "Jumping Down",
+      "description": ""
+    },
+    {
+      "name": "Knocked Down",
+      "description": ""
+    },
+    {
+      "name": "Left Cover Sneak W  Rifle In Place",
+      "description": ""
+    },
+    {
+      "name": "Left Turn",
+      "description": ""
+    },
+    {
+      "name": "Lower Pistol",
+      "description": ""
+    },
+    {
+      "name": "Military Signaling 1",
+      "description": ""
+    },
+    {
+      "name": "Military Signaling 2",
+      "description": ""
+    },
+    {
+      "name": "Military Signaling 3",
+      "description": ""
+    },
+    {
+      "name": "Military Signaling 4",
+      "description": ""
+    },
+    {
+      "name": "Moving Backward In Crawl Position In Place",
+      "description": ""
+    },
+    {
+      "name": "Pistol Aim",
+      "description": ""
+    },
+    {
+      "name": "Pistol Idle",
+      "description": ""
+    },
+    {
+      "name": "Pistol Jump",
+      "description": ""
+    },
+    {
+      "name": "Pistol Kneeling Idle",
+      "description": ""
+    },
+    {
+      "name": "Pistol Run Arc",
+      "description": ""
+    },
+    {
+      "name": "Pistol Run Backward Arc",
+      "description": ""
+    },
+    {
+      "name": "Pistol Run Backward",
+      "description": ""
+    },
+    {
+      "name": "Pistol Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Pistol Run",
+      "description": ""
+    },
+    {
+      "name": "Pistol Walk Backward Arc",
+      "description": ""
+    },
+    {
+      "name": "Pistol Walk Backward",
+      "description": ""
+    },
+    {
+      "name": "Pistol Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Pistol Walk",
+      "description": ""
+    },
+    {
+      "name": "Pistol Whip",
+      "description": ""
+    },
+    {
+      "name": "Prone Death",
+      "description": ""
+    },
+    {
+      "name": "Prone Firing Rifle 1",
+      "description": ""
+    },
+    {
+      "name": "Prone Firing Rifle 2",
+      "description": ""
+    },
+    {
+      "name": "Prone Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Prone Forward",
+      "description": ""
+    },
+    {
+      "name": "Prone Left Turn",
+      "description": ""
+    },
+    {
+      "name": "Prone Reloading",
+      "description": ""
+    },
+    {
+      "name": "Prone Roll",
+      "description": ""
+    },
+    {
+      "name": "Put Back Rifle 1",
+      "description": ""
+    },
+    {
+      "name": "Put Back Rifle 2",
+      "description": ""
+    },
+    {
+      "name": "Reload 1",
+      "description": ""
+    },
+    {
+      "name": "Reload 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Reload 2",
+      "description": ""
+    },
+    {
+      "name": "Reloading 1",
+      "description": ""
+    },
+    {
+      "name": "Reloading 2",
+      "description": ""
+    },
+    {
+      "name": "Rifle Aim To Down",
+      "description": ""
+    },
+    {
+      "name": "Rifle Backward Run To Stop",
+      "description": ""
+    },
+    {
+      "name": "Rifle Backward Walk To Stop",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Idle To Walk",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Turn 1",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Turn 2",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Turn 3",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Walk To Idle",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Walk To Kneel",
+      "description": ""
+    },
+    {
+      "name": "Rifle Crouch Walk",
+      "description": ""
+    },
+    {
+      "name": "Rifle Death",
+      "description": ""
+    },
+    {
+      "name": "Rifle Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Rifle Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Rifle Punch",
+      "description": ""
+    },
+    {
+      "name": "Rifle Put Away",
+      "description": ""
+    },
+    {
+      "name": "Rifle Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Rifle Run To Dying",
+      "description": ""
+    },
+    {
+      "name": "Rifle Run To Stop",
+      "description": ""
+    },
+    {
+      "name": "Rifle Run",
+      "description": ""
+    },
+    {
+      "name": "Rifle Shielding Face",
+      "description": ""
+    },
+    {
+      "name": "Rifle Turn 1",
+      "description": ""
+    },
+    {
+      "name": "Rifle Turn 2",
+      "description": ""
+    },
+    {
+      "name": "Rifle Turn And Kick",
+      "description": ""
+    },
+    {
+      "name": "Rifle Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Rifle Walk",
+      "description": ""
+    },
+    {
+      "name": "Right Cover Sneak W  Rifle",
+      "description": ""
+    },
+    {
+      "name": "Roll Left",
+      "description": ""
+    },
+    {
+      "name": "Run And Throw Grenade",
+      "description": ""
+    },
+    {
+      "name": "Run Backwards",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Run Strafing Jump",
+      "description": ""
+    },
+    {
+      "name": "Run To Stop",
+      "description": ""
+    },
+    {
+      "name": "Running Dive Roll",
+      "description": ""
+    },
+    {
+      "name": "Running To Stop",
+      "description": ""
+    },
+    {
+      "name": "Shoot Rifle In Place",
+      "description": ""
+    },
+    {
+      "name": "Shoot Rifle",
+      "description": ""
+    },
+    {
+      "name": "Shooting Gun",
+      "description": ""
+    },
+    {
+      "name": "Shooting Pistol",
+      "description": ""
+    },
+    {
+      "name": "Spit Reaction",
+      "description": ""
+    },
+    {
+      "name": "Sprint Backward",
+      "description": ""
+    },
+    {
+      "name": "Start Walking",
+      "description": ""
+    },
+    {
+      "name": "Stepping Backward",
+      "description": ""
+    },
+    {
+      "name": "Stop Walking With Rifle",
+      "description": ""
+    },
+    {
+      "name": "Stop Walking",
+      "description": ""
+    },
+    {
+      "name": "Strafe 1",
+      "description": ""
+    },
+    {
+      "name": "Strafe 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Strafe 2",
+      "description": ""
+    },
+    {
+      "name": "Strafe 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Strafe 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Strafe 4",
+      "description": ""
+    },
+    {
+      "name": "Strafe Right",
+      "description": ""
+    },
+    {
+      "name": "Strafing 1",
+      "description": ""
+    },
+    {
+      "name": "Strafing 2",
+      "description": ""
+    },
+    {
+      "name": "Strafing 3",
+      "description": ""
+    },
+    {
+      "name": "Strafing 4",
+      "description": ""
+    },
+    {
+      "name": "Strafing 5",
+      "description": ""
+    },
+    {
+      "name": "Strafing 6",
+      "description": ""
+    },
+    {
+      "name": "Strafing 7",
+      "description": ""
+    },
+    {
+      "name": "Strafing 8",
+      "description": ""
+    },
+    {
+      "name": "Strafing Jump",
+      "description": ""
+    },
+    {
+      "name": "Taking Cover Idle",
+      "description": ""
+    },
+    {
+      "name": "Taking Cover",
+      "description": ""
+    },
+    {
+      "name": "Throw Grenade 1",
+      "description": ""
+    },
+    {
+      "name": "Throw Grenade 2",
+      "description": ""
+    },
+    {
+      "name": "Toss Grenade",
+      "description": ""
+    },
+    {
+      "name": "Turn 90 Left",
+      "description": ""
+    },
+    {
+      "name": "Turning Right 45 Degrees",
+      "description": ""
+    },
+    {
+      "name": "Walk Crouching Backward Left",
+      "description": ""
+    },
+    {
+      "name": "Walk Crouching Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Crouching Right",
+      "description": ""
+    },
+    {
+      "name": "Walk Forward Left",
+      "description": ""
+    },
+    {
+      "name": "Walk Forward Right",
+      "description": ""
+    },
+    {
+      "name": "Walk Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Right In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Right",
+      "description": ""
+    },
+    {
+      "name": "Walk With Rifle 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk With Rifle 1",
+      "description": ""
+    },
+    {
+      "name": "Walk With Rifle 2",
+      "description": ""
+    },
+    {
+      "name": "Walking 1",
+      "description": ""
+    },
+    {
+      "name": "Walking 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards",
+      "description": ""
+    },
+    {
+      "name": "Walking To Dying",
+      "description": ""
+    }
+  ]
+}

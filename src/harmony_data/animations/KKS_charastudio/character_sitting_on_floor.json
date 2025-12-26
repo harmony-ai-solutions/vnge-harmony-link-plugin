@@ -1,0 +1,48 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 8,
+  "category_name": "Sitting On Floor",
+  "animation_items": [
+    {
+      "name": "Squatting 1",
+      "description": "Sitting on the floor in a deep squat position, knees bent at approximately ninety degrees with feet flat and evenly spaced. Hands rest on the pubic region, palms facing downward, fingers gently curved. Head maintains an upright position with eyes directed downward. The stance exhibits stability and balance, with no noticeable movement observed across the presented frames."
+    },
+    {
+      "name": "Squatting 2",
+      "description": "The character maintains a deep squat position with knees bent significantly, feet flat on the ground, and hips lowered toward the floor. Weight is distributed evenly through the balls of the feet, knees tracking outward. Arms draw inward, hands clasped tightly together approximately at waist height, fingertips soft against the inner thigh regions. Both hands rest symmetrically with palmar surfaces opposed, fingers curving slightly inward. Head remains upright, facing directly forward without tilt or rotation. Subtle pelvic oscillation occurs, reflecting controlled stability within the squat. Overall posture demonstrates focused engagement in sustaining the squatting maneuver."
+    },
+    {
+      "name": "Squatting 3",
+      "description": "Squatting on the floor with knees bent and feet flat on the ground. Hands positioned near the face, right hand resting on the cheek and left hand supporting the jawline. Head tilted slightly downward, gaze directed toward the ground. Balanced posture maintained with weight distributed evenly across the hips and ankles. No significant movement occurs during the sequence."
+    },
+    {
+      "name": "Sitting Seiza",
+      "description": "Sitting on floor in traditional seiza position, knees bent with heels drawn toward buttock base, feet flat on ground. Upright torso maintains vertical spinal alignment. Hands rest palm-down on upper thighs/lap, fingers intertwined and gently closed. Head faces directly forward without tilt. Static pose exhibiting no detectable movement throughout sequence."
+    },
+    {
+      "name": "About To Perform Tea Ceremony",
+      "description": "kneeling on floor with legs wide apart, knees bent and feet flat on ground. Right hand extends slightly outward from midsection, left hand rests on upper thigh. Body upright, spine aligned, head facing forward without tilt. Minimal movement observed as character transitions between poses in preparation for ceremonial gesture."
+    },
+    {
+      "name": "Performing Tea Ceremony",
+      "description": "Kneeling on the floor with knees bent and feet flat, the character maintains a forward-facing lean. Head is bowed downward, chin aligned with the upper chest. Left hand rests on the ground near the left knee with fingers spread; right hand mirrors this position on the right side. Slight adjustments in hand placement and body alignment occur between frames, emphasizing controlled, deliberate movement. Stance reflects focused attentiveness characteristic of traditional tea ceremony practice, conveying cultural reverence and mindful engagement."
+    },
+    {
+      "name": "About To Drink Tea",
+      "description": "Sitting on the floor with knees bent and feet flat on the ground. Hands positioned near the chest, fingers curled inward as if holding a teacup. Head tilted downward with gaze fixed on the lower torso, preparing to drink. Motion consists of minimal adjustment to stabilize the cup."
+    },
+    {
+      "name": "Drinking Tea",
+      "description": "Sitting on the floor with knees bent and feet flat on the surface. Initial hand position rests near the chest, fingers interlaced or grasping a container. Hands elevate smoothly toward the mouth, fingers wrapping around a vessel\u2019s rim while elbows bend outward to bring the cup close to the face. After taking a sip, hands slowly retract back toward the torso. Head stays neutrally aligned, focused on the container during consumption. No significant emotional cues are observable."
+    },
+    {
+      "name": "Girly Sitting",
+      "description": "Sitting on floor with legs widely parted, knees flexed and feet flat. Hands rest on outer thighs with palms downward, fingers relaxed. Head is upright and facing directly forward with no tilt. Static pose conveying a composed, demure seating arrangement typical of girly aesthetic."
+    },
+    {
+      "name": "Onee-san Sitting",
+      "description": "Sitting on floor with legs extended straight and feet pointed forward. Left hand rests flat on the ground to the left side of the body, right hand similarly positioned on the ground to the right side. Torso upright, back supported by the floor surface. Head faces directly ahead without tilt. Facial expression conveys calm relaxation."
+    }
+  ]
+}

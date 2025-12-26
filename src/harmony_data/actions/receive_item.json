@@ -1,0 +1,16 @@
+{
+  "name": "receive_item",
+  "description": "receive item in hand from the other chara's hand",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} receives {{object}}",
+    "{{character}} grasps {{object}}",
+    "{{character}} catches {{object}}",
+    "{{character}} takes hold of {{object}}",
+    "{{character}} clutches {{object}}"
+  ],
+  "trigger_conditions": [
+    "give_item"
+  ]
+}

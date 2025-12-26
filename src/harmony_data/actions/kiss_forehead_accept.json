@@ -1,0 +1,17 @@
+{
+  "name": "kiss_forehead_accept",
+  "description": "accepts kiss forehead of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} smiles",
+    "{{character}} blushes",
+    "{{character}} giggles",
+    "{{character}} closes their eyes",
+    "{{character}} sighs contentedly",
+    "{{character}} leans into the kiss"
+  ],
+  "trigger_conditions": [
+    "kiss_forehead"
+  ]
+}

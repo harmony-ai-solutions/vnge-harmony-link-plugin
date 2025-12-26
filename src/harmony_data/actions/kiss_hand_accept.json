@@ -1,0 +1,17 @@
+{
+  "name": "kiss_hand_accept",
+  "description": "accept kiss hand of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} blushes at the gesture",
+    "{{character}} smiles warmly at {{other_character}}",
+    "{{character}} squeezes {{other_character}}'s hand back",
+    "{{character}} leans closer to {{other_character}}",
+    "{{character}} returns the gaze",
+    "{{character}} thanks {{other_character}} quietly"
+  ],
+  "trigger_conditions": [
+    "kiss_hand"
+  ]
+}

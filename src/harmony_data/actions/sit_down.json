@@ -1,0 +1,19 @@
+{
+  "name": "sit_down",
+  "description": "sit down on the ground or an object",
+  "category": "posture_sitting",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} sits down on the {{object}}",
+    "{{character}} lowers himself onto the {{object}}",
+    "{{character}} plops down on the {{object}}",
+    "{{character}} takes a seat on the {{object}}",
+    "{{character}} perches on the {{object}}",
+    "{{character}} settles into the {{object}}",
+    "{{character}} squats down on the {{object}}",
+    "{{character}} kneels down next to {{object}}",
+    "{{character}} sits cross-legged on the {{object}}",
+    "{{character}} hunkers down behind the {{object}}"
+  ],
+  "trigger_conditions": []
+}

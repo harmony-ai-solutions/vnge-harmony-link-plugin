@@ -1,0 +1,16 @@
+{
+  "name": "caress_cheek_decline",
+  "description": "declines caress cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} flinches",
+    "{{character}} pulls away",
+    "{{character}} looks uncomfortable",
+    "{{character}} tenses up",
+    "{{character}} glares at {{character}}"
+  ],
+  "trigger_conditions": [
+    "caress_cheek"
+  ]
+}

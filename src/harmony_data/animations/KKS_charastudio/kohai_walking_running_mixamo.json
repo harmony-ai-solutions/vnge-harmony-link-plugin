@@ -1,0 +1,1092 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 14,
+  "category_name": "Walking & Running (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Catwalk Walk Start Backwards 180R Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Start Turn 180 Right Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Start Turn 180 Right",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Stop Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Stop Twist R Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Stop Twist R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Stop",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Turn 180 Tight Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Turn 180 Tight L",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Turn 180 Tight R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Turn 180 Wide Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Turn 180 Wide R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walking",
+      "description": ""
+    },
+    {
+      "name": "Change Direction",
+      "description": ""
+    },
+    {
+      "name": "Crawl Backwards In Place",
+      "description": ""
+    },
+    {
+      "name": "Crawl Backwards",
+      "description": ""
+    },
+    {
+      "name": "Crawling Backwards",
+      "description": ""
+    },
+    {
+      "name": "Crouch Walk Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Crouch Walk Forward",
+      "description": ""
+    },
+    {
+      "name": "Crouch Walk Right",
+      "description": ""
+    },
+    {
+      "name": "Crouch Walk",
+      "description": ""
+    },
+    {
+      "name": "Crouched Sneaking Left 1",
+      "description": ""
+    },
+    {
+      "name": "Crouched Sneaking Left 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Crouched Sneaking Left 2",
+      "description": ""
+    },
+    {
+      "name": "Crouched Sneaking Left",
+      "description": ""
+    },
+    {
+      "name": "Crouched Sneaking Right",
+      "description": ""
+    },
+    {
+      "name": "Drunk Run Forward",
+      "description": ""
+    },
+    {
+      "name": "Drunk Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Drunk Walk",
+      "description": ""
+    },
+    {
+      "name": "Dwarf Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Dwarf Walk",
+      "description": ""
+    },
+    {
+      "name": "Fast Run",
+      "description": ""
+    },
+    {
+      "name": "Female Stop Walking",
+      "description": ""
+    },
+    {
+      "name": "Female Tough Walk",
+      "description": ""
+    },
+    {
+      "name": "Female Walk",
+      "description": ""
+    },
+    {
+      "name": "Goofy Running",
+      "description": ""
+    },
+    {
+      "name": "Goofy Running In Place",
+      "description": ""
+    },
+    {
+      "name": "Happy Walk Backward In Place",
+      "description": ""
+    },
+    {
+      "name": "Happy Walk Backward",
+      "description": ""
+    },
+    {
+      "name": "Happy Walk Forward Arc Left",
+      "description": ""
+    },
+    {
+      "name": "Happy Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Happy Walk",
+      "description": ""
+    },
+    {
+      "name": "Holding Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Holding Walk",
+      "description": ""
+    },
+    {
+      "name": "Injured Backwards Turn Left",
+      "description": ""
+    },
+    {
+      "name": "Injured Jog",
+      "description": ""
+    },
+    {
+      "name": "Injured Jog In Place",
+      "description": ""
+    },
+    {
+      "name": "Injured Run Backwards",
+      "description": ""
+    },
+    {
+      "name": "Injured Run",
+      "description": ""
+    },
+    {
+      "name": "Injured Turn Left",
+      "description": ""
+    },
+    {
+      "name": "Injured Walk Backwards In Place",
+      "description": ""
+    },
+    {
+      "name": "Injured Walk Backwards",
+      "description": ""
+    },
+    {
+      "name": "Injured Walk",
+      "description": ""
+    },
+    {
+      "name": "Injured Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Injured Walking",
+      "description": ""
+    },
+    {
+      "name": "Jog Backward",
+      "description": ""
+    },
+    {
+      "name": "Jog Backward In Place",
+      "description": ""
+    },
+    {
+      "name": "Jog Backward Diagonal 1",
+      "description": ""
+    },
+    {
+      "name": "Jog Backward Diagonal 2",
+      "description": ""
+    },
+    {
+      "name": "Jog Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Jog Forward",
+      "description": ""
+    },
+    {
+      "name": "Jog In Circle",
+      "description": ""
+    },
+    {
+      "name": "Jog Strafe Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Jog Strafe Left",
+      "description": ""
+    },
+    {
+      "name": "Jog Strafe Right",
+      "description": ""
+    },
+    {
+      "name": "Jogging",
+      "description": ""
+    },
+    {
+      "name": "Jogging In Place",
+      "description": ""
+    },
+    {
+      "name": "Jogging Stumble",
+      "description": ""
+    },
+    {
+      "name": "Jogging With Box 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Jogging With Box 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Jogging With Box",
+      "description": ""
+    },
+    {
+      "name": "Left Cover Sneak",
+      "description": ""
+    },
+    {
+      "name": "Left Strafe In Place",
+      "description": ""
+    },
+    {
+      "name": "Left Strafe Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Left Strafe Walk",
+      "description": ""
+    },
+    {
+      "name": "Left Strafe",
+      "description": ""
+    },
+    {
+      "name": "Left Turn W Briefcase 1",
+      "description": ""
+    },
+    {
+      "name": "Left Turn W Briefcase 2",
+      "description": ""
+    },
+    {
+      "name": "Left Turn",
+      "description": ""
+    },
+    {
+      "name": "Look Behind Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Look Behind Run",
+      "description": ""
+    },
+    {
+      "name": "Low Crawl In Place",
+      "description": ""
+    },
+    {
+      "name": "Medium Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Medium Run",
+      "description": ""
+    },
+    {
+      "name": "Mutant Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Ninja Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Old Man Walk",
+      "description": ""
+    },
+    {
+      "name": "Orc Walk 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Orc Walk 1",
+      "description": ""
+    },
+    {
+      "name": "Orc Walk 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Orc Walk 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Pick Up Item",
+      "description": ""
+    },
+    {
+      "name": "Pole Walking",
+      "description": ""
+    },
+    {
+      "name": "Right Cover Sneak In Place",
+      "description": ""
+    },
+    {
+      "name": "Right Cover Sneak",
+      "description": ""
+    },
+    {
+      "name": "Right Strafe Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Right Strafe Walking",
+      "description": ""
+    },
+    {
+      "name": "Right Turn 1",
+      "description": ""
+    },
+    {
+      "name": "Right Turn 2",
+      "description": ""
+    },
+    {
+      "name": "Right Turn 3",
+      "description": ""
+    },
+    {
+      "name": "Right Turn W  Briefcase",
+      "description": ""
+    },
+    {
+      "name": "Run 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Run 2",
+      "description": ""
+    },
+    {
+      "name": "Run And Swing",
+      "description": ""
+    },
+    {
+      "name": "Run Backward",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 1",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 2",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Run Forward 3",
+      "description": ""
+    },
+    {
+      "name": "Run Forward Arc Left",
+      "description": ""
+    },
+    {
+      "name": "Run Forward Arc Right",
+      "description": ""
+    },
+    {
+      "name": "Run Look Back",
+      "description": ""
+    },
+    {
+      "name": "Run To Stop 1",
+      "description": ""
+    },
+    {
+      "name": "Running 1",
+      "description": ""
+    },
+    {
+      "name": "Running 2",
+      "description": ""
+    },
+    {
+      "name": "Running 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running 3",
+      "description": ""
+    },
+    {
+      "name": "Running 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running 4",
+      "description": ""
+    },
+    {
+      "name": "Running 5 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running 5",
+      "description": ""
+    },
+    {
+      "name": "Running 6 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running 7 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running Backward 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running Backward 1",
+      "description": ""
+    },
+    {
+      "name": "Running Backward 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Running Crawl In Place",
+      "description": ""
+    },
+    {
+      "name": "Running Crawl",
+      "description": ""
+    },
+    {
+      "name": "Running Forward Flip",
+      "description": ""
+    },
+    {
+      "name": "Running Right Turn",
+      "description": ""
+    },
+    {
+      "name": "Running Slide",
+      "description": ""
+    },
+    {
+      "name": "Running Tired",
+      "description": ""
+    },
+    {
+      "name": "Running To Turn",
+      "description": ""
+    },
+    {
+      "name": "Running Up Stairs",
+      "description": ""
+    },
+    {
+      "name": "Sad Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Sad Walk",
+      "description": ""
+    },
+    {
+      "name": "Scary Clown Stopping",
+      "description": ""
+    },
+    {
+      "name": "Scary Clown Walk 1",
+      "description": ""
+    },
+    {
+      "name": "Scary Clown Walk 2",
+      "description": ""
+    },
+    {
+      "name": "Scary Clown Walk 3",
+      "description": ""
+    },
+    {
+      "name": "Side Step In Place",
+      "description": ""
+    },
+    {
+      "name": "Slow Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Sneak Walk 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Sneak Walk 1",
+      "description": ""
+    },
+    {
+      "name": "Sneak Walk 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Sneak Walk 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Sneaking Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Sneaking Forward",
+      "description": ""
+    },
+    {
+      "name": "Sprint",
+      "description": ""
+    },
+    {
+      "name": "Sprint Turn",
+      "description": ""
+    },
+    {
+      "name": "Standard Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Standard Run",
+      "description": ""
+    },
+    {
+      "name": "Standard Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Standard Walk",
+      "description": ""
+    },
+    {
+      "name": "Standing Run Back",
+      "description": ""
+    },
+    {
+      "name": "Standing Run Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Run Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Run Left",
+      "description": ""
+    },
+    {
+      "name": "Standing Sprint Forward  In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Sprint Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Back In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Back",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Forward 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Forward 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Left",
+      "description": ""
+    },
+    {
+      "name": "Stop Walking",
+      "description": ""
+    },
+    {
+      "name": "Strafe In Place",
+      "description": ""
+    },
+    {
+      "name": "Strafe",
+      "description": ""
+    },
+    {
+      "name": "Strut Walking",
+      "description": ""
+    },
+    {
+      "name": "Strut Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Swagger Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Swagger Walk",
+      "description": ""
+    },
+    {
+      "name": "Texting And Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Texting And Walking",
+      "description": ""
+    },
+    {
+      "name": "Turn To Running",
+      "description": ""
+    },
+    {
+      "name": "Two Cycle Sprint In Place",
+      "description": ""
+    },
+    {
+      "name": "Two Cycle Sprint",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Run Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Walk Forward In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Backward 1",
+      "description": ""
+    },
+    {
+      "name": "Walk Backwards In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Backwards",
+      "description": ""
+    },
+    {
+      "name": "Walk Forward Arc",
+      "description": ""
+    },
+    {
+      "name": "Walk In Circle 1",
+      "description": ""
+    },
+    {
+      "name": "Walk In Circle 2",
+      "description": ""
+    },
+    {
+      "name": "Walk In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Strafe Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Strafe Left",
+      "description": ""
+    },
+    {
+      "name": "Walk Strafe Right In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk Strafe Right",
+      "description": ""
+    },
+    {
+      "name": "Walk W  Briefcase In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk W  Briefcase",
+      "description": ""
+    },
+    {
+      "name": "Walk With Briefcase In Place",
+      "description": ""
+    },
+    {
+      "name": "Walk",
+      "description": ""
+    },
+    {
+      "name": "Walking 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 1",
+      "description": ""
+    },
+    {
+      "name": "Walking 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 2",
+      "description": ""
+    },
+    {
+      "name": "Walking 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 3",
+      "description": ""
+    },
+    {
+      "name": "Walking 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 4",
+      "description": ""
+    },
+    {
+      "name": "Walking 5 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 5",
+      "description": ""
+    },
+    {
+      "name": "Walking 6",
+      "description": ""
+    },
+    {
+      "name": "Walking 7 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 7",
+      "description": ""
+    },
+    {
+      "name": "Walking 8 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 8",
+      "description": ""
+    },
+    {
+      "name": "Walking 9 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 10 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 11 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 12 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 13 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 14 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 15 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 16 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 17 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking 18 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backward Arc Right",
+      "description": ""
+    },
+    {
+      "name": "Walking Backward In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backward",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards 1",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Turn 180",
+      "description": ""
+    },
+    {
+      "name": "Walking While Texting In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking While Texting",
+      "description": ""
+    },
+    {
+      "name": "Walking(Heel-up)",
+      "description": ""
+    },
+    {
+      "name": "Wheelbarrow Walk 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Wheelbarrow Walk 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Wheelbarrow Walk 2",
+      "description": ""
+    },
+    {
+      "name": "180 Turn W Briefcase",
+      "description": ""
+    },
+    {
+      "name": "Backward Right Turn",
+      "description": ""
+    },
+    {
+      "name": "Backward Walking Turn",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Idle To Twist R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Idle",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 01 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 01",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 02 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 02",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 03 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 04 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Sequence 05 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Twist L To Twist R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Twist L To Walk 180 Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Twist R To Twist L Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Twist R To Walk 180",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward 02 In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward 02",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward 03 In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward 03",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Arc 90L Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Arc 90L",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Arc 90R Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Arc 90R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Crossed Heel In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Heel In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward HighKnees Heel In Place",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward HighKnees Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Turn 90L Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Turn 90L",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Forward Turn 90R",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Start Backwards 180L Heel",
+      "description": ""
+    },
+    {
+      "name": "Catwalk Walk Start Backwards 180L",
+      "description": ""
+    }
+  ]
+}

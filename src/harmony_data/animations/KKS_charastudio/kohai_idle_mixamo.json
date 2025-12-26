@@ -1,0 +1,216 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 7,
+  "category_name": "Idle (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Breathing Idle",
+      "description": ""
+    },
+    {
+      "name": "Cover Idle",
+      "description": ""
+    },
+    {
+      "name": "Crouch Idle 03 Looking Over",
+      "description": ""
+    },
+    {
+      "name": "Drunk Idle Variation 1",
+      "description": ""
+    },
+    {
+      "name": "Drunk Idle Variation 2",
+      "description": ""
+    },
+    {
+      "name": "Drunk Idle",
+      "description": ""
+    },
+    {
+      "name": "Dwarf Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Dwarf Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Dwarf Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Fallen Idle",
+      "description": ""
+    },
+    {
+      "name": "Falling Idle",
+      "description": ""
+    },
+    {
+      "name": "Fishing Idle",
+      "description": ""
+    },
+    {
+      "name": "Hanging Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Hanging Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Hanging Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Hanging Idle 4",
+      "description": ""
+    },
+    {
+      "name": "Holding Idle",
+      "description": ""
+    },
+    {
+      "name": "Hostage Situation Idle Hostage",
+      "description": ""
+    },
+    {
+      "name": "Hostage Situation Idle Villain",
+      "description": ""
+    },
+    {
+      "name": "Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Idle 4",
+      "description": ""
+    },
+    {
+      "name": "Idle Transition 1",
+      "description": ""
+    },
+    {
+      "name": "Idle Transition 2",
+      "description": ""
+    },
+    {
+      "name": "Injured Hurting Idle",
+      "description": ""
+    },
+    {
+      "name": "Injured Idle",
+      "description": ""
+    },
+    {
+      "name": "Injured Stumble Idle",
+      "description": ""
+    },
+    {
+      "name": "Injured Wave Idle",
+      "description": ""
+    },
+    {
+      "name": "Kneeling Idle",
+      "description": ""
+    },
+    {
+      "name": "Laying Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Laying Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Neutral Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Neutral Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Ninja Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Ninja Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Ninja Idle 3",
+      "description": ""
+    },
+    {
+      "name": "Old Man Idle",
+      "description": ""
+    },
+    {
+      "name": "Orc Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Orc Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Scary Clown Idle",
+      "description": ""
+    },
+    {
+      "name": "Seated Idle",
+      "description": ""
+    },
+    {
+      "name": "Sitting Idle",
+      "description": ""
+    },
+    {
+      "name": "Sleeping Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Sleeping Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Standard Idle",
+      "description": ""
+    },
+    {
+      "name": "Standing Idle Looking Ver 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Idle",
+      "description": ""
+    },
+    {
+      "name": "Standing W Briefcase Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Standing W Briefcase Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Idle Looking Ver 1",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Idle Looking Ver 2",
+      "description": ""
+    }
+  ]
+}

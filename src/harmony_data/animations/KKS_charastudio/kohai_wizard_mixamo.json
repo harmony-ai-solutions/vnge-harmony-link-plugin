@@ -1,0 +1,176 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 16,
+  "category_name": "Wizard (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Casting_Spell",
+      "description": ""
+    },
+    {
+      "name": "Crouch Turn Right 90",
+      "description": ""
+    },
+    {
+      "name": "Crouch Walk Back",
+      "description": ""
+    },
+    {
+      "name": "Crouch_Turn_Left_90",
+      "description": ""
+    },
+    {
+      "name": "Crouch_Walk_Back_In_Place",
+      "description": ""
+    },
+    {
+      "name": "Crouch_Walk_Forward_In_Place",
+      "description": ""
+    },
+    {
+      "name": "Fireball",
+      "description": ""
+    },
+    {
+      "name": "Left Turn",
+      "description": ""
+    },
+    {
+      "name": "Magic Spell Casting",
+      "description": ""
+    },
+    {
+      "name": "Spell_Casting",
+      "description": ""
+    },
+    {
+      "name": "Standing 1H Magic Attack 01",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Cast Spell 01",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Area Attack 01",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Area Attack 02",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Attack 01",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Attack 02",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Attack 03",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Attack 04",
+      "description": ""
+    },
+    {
+      "name": "Standing 2H Magic Attack 05",
+      "description": ""
+    },
+    {
+      "name": "Standing_1H_Cast_Spell_01",
+      "description": ""
+    },
+    {
+      "name": "Standing_1H_Magic_Attack_02",
+      "description": ""
+    },
+    {
+      "name": "Standing_2H_Cast_Spell_01",
+      "description": ""
+    },
+    {
+      "name": "Standing_2H_Magic_Area_Attack_01",
+      "description": ""
+    },
+    {
+      "name": "Standing_2H_Magic_Area_Attack_02",
+      "description": ""
+    },
+    {
+      "name": "Standing_2H_Magic_Attack_04",
+      "description": ""
+    },
+    {
+      "name": "Standing_2H_Magic_Attack_05",
+      "description": ""
+    },
+    {
+      "name": "Standing_Block_Idle",
+      "description": ""
+    },
+    {
+      "name": "Standing_Idle_03",
+      "description": ""
+    },
+    {
+      "name": "Standing_Idle_04",
+      "description": ""
+    },
+    {
+      "name": "Standing_Jump_Running",
+      "description": ""
+    },
+    {
+      "name": "Standing_Land_To_Standing_Idle",
+      "description": ""
+    },
+    {
+      "name": "Standing_React_Death_Backward",
+      "description": ""
+    },
+    {
+      "name": "Standing_React_Death_Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing_React_Death_Left",
+      "description": ""
+    },
+    {
+      "name": "Standing_React_Death_Right",
+      "description": ""
+    },
+    {
+      "name": "Standing_React_Large_From_Left",
+      "description": ""
+    },
+    {
+      "name": "Standing_Run_Back",
+      "description": ""
+    },
+    {
+      "name": "Standing_Run_Left",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Back",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Right In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Walk Right",
+      "description": ""
+    },
+    {
+      "name": "Wide Arm Spell Casting",
+      "description": ""
+    }
+  ]
+}

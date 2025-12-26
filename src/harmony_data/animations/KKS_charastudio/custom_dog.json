@@ -1,0 +1,12 @@
+{
+  "group_id": 99,
+  "group_name": "CUSTOM",
+  "category_id": 994,
+  "category_name": "dog",
+  "animation_items": [
+    {
+      "name": "doggy",
+      "description": ""
+    }
+  ]
+}

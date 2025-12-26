@@ -1,0 +1,12 @@
+{
+  "group_id": 15,
+  "group_name": "EC",
+  "category_id": 1,
+  "category_name": "Pose",
+  "animation_items": [
+    {
+      "name": "Basic 1",
+      "description": ""
+    }
+  ]
+}

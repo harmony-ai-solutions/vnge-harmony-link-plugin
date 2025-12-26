@@ -1,0 +1,19 @@
+{
+  "name": "caress_cheek",
+  "description": "caress cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} gently caresses {{other_character}}'s cheek",
+    "{{character}} softly touches {{other_character}}'s face",
+    "{{character}} runs their fingers along {{other_character}}'s cheek",
+    "{{character}} leans in and caresses {{other_character}}'s cheek",
+    "{{character}} smiles and caresses {{other_character}}'s cheek",
+    "{{character}} lovingly strokes {{other_character}}'s cheek",
+    "{{character}} tenderly caresses {{other_character}}'s cheek",
+    "{{character}} sweetly touches {{other_character}}'s cheek",
+    "{{character}} kindly caresses {{other_character}}'s cheek",
+    "{{character}} carefully strokes {{other_character}}'s cheek",
+    "{{character}} delicately touches {{other_character}}'s cheek"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 12,
+  "category_name": "Laying",
+  "animation_items": [
+    {
+      "name": "Sleeping on my face",
+      "description": ""
+    },
+    {
+      "name": "Sleeping on a beach chair1",
+      "description": ""
+    },
+    {
+      "name": "Sleeping on a beach chair2",
+      "description": ""
+    },
+    {
+      "name": "Sleeping on a beach chair 3",
+      "description": ""
+    }
+  ]
+}

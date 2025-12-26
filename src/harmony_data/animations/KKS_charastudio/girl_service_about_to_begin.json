@@ -1,0 +1,28 @@
+{
+  "group_id": 2,
+  "group_name": "Girl Service",
+  "category_id": 111,
+  "category_name": "About To Begin",
+  "animation_items": [
+    {
+      "name": "Sitting On Floor",
+      "description": ""
+    },
+    {
+      "name": "Chairs",
+      "description": ""
+    },
+    {
+      "name": "Standing",
+      "description": ""
+    },
+    {
+      "name": "Pool",
+      "description": ""
+    },
+    {
+      "name": "Onahole",
+      "description": ""
+    }
+  ]
+}

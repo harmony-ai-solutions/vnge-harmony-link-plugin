@@ -1,0 +1,24 @@
+{
+  "group_id": 11,
+  "group_name": "Summer",
+  "category_id": 1,
+  "category_name": "Pose",
+  "animation_items": [
+    {
+      "name": "Basic 1",
+      "description": ""
+    },
+    {
+      "name": "Basic 2",
+      "description": ""
+    },
+    {
+      "name": "Basic 3",
+      "description": ""
+    },
+    {
+      "name": "Basic 4",
+      "description": ""
+    }
+  ]
+}

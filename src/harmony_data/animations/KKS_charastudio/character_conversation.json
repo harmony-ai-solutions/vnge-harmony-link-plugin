@@ -1,0 +1,120 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 5,
+  "category_name": "Conversation",
+  "animation_items": [
+    {
+      "name": "Idle 1",
+      "description": "Standing upright with feet spaced shoulder-width apart, alternating between placing left hand on hip and right hand on hip while maintaining balanced posture. Body remains aligned centrally, head upright and facing forward without tilt. Neutral stance indicative of relaxed attentiveness during conversation, with no significant movement observed."
+    },
+    {
+      "name": "Talking 1",
+      "description": "Standing upright with feet parallel and weight evenly distributed. While conversing, performs gentle hand gestures near the upper torso: hands lift and lower smoothly in coordinated motions, palms oriented upward with fingers slightly curved to emphasize spoken words. Maintains relaxed shoulders, vertical spinal alignment, and steady head position directed forward without tilts. Movement reflects engaged dialogue without additional contextual elements or visible emotional cues."
+    },
+    {
+      "name": "Idle 2",
+      "description": "standing upright with feet parallel and evenly spaced. Both hands positioned firmly on hip bones, fingers curled slightly with palms facing outward. Shoulders maintained square and level alignment. Head faced directly forward without tilt. Stance conveyed confident engagement appropriate for active participation in conversation, suggesting attentiveness and poised readiness to respond."
+    },
+    {
+      "name": "Talking 2",
+      "description": "Standing with hands on hips, then sequentially raising arms outward with palms open to convey expressive gestures during spoken dialogue. Head remains level and oriented forward without tilt. Motion demonstrates intentional hand positioning consistent with emphasizing points in casual conversation."
+    },
+    {
+      "name": "Idle 3",
+      "description": "Standing with feet shoulder-width apart and spine aligned vertically. Left hand overlaps the right hand in front of the abdomen, fingers loosely interlaced and thumbs resting against the inner forearms. Head faces directly forward without tilt. Subtle shifts in hand positioning and minimal upper-body adjustment indicate engaged yet relaxed posture during quiet conversation."
+    },
+    {
+      "name": "Talking 3",
+      "description": "Standing with feet shoulder-width apart and weight evenly distributed. Throughout the animation, hands transition between resting on the lower abdomen with fingers slightly parted and crossing over the mid-torso with palms oriented inward. These controlled movements suggest intentional emphasis during oral communication. The upper body stays stable, maintaining a vertical spinal alignment without lateral or rotational displacement. Head remains consistently facing forward with minimal tilt, reflecting engaged participation in dialogue."
+    },
+    {
+      "name": "Idle 4",
+      "description": "Standing upright with feet positioned parallel and grounded, weight equally distributed across both legs. Arms extend naturally beside the torso, hands resting at the sides with fingers gently curled. Head maintains a neutral alignment, gaze directed straight ahead. Posture reflects a calm, attentive stance consistent with a brief pause during interpersonal communication."
+    },
+    {
+      "name": "Talking 4",
+      "description": "Standing upright with feet parallel and balanced. Arms rest vertically beside the torso, hands positioned at hip height with palms facing rearward and fingers gently closed. Subtle upward-and-downward movement in the upper body accompanies speech articulation. Head remains steadily forward-facing without tilt, maintaining eye contact. Neutral facial expression suggests attentive and composed engagement in conversation."
+    },
+    {
+      "name": "Idle 5",
+      "description": "Standing with legs straight and feet evenly spaced, weight balanced symmetrically. Hand positions adjust across the sequence: from side-angle views, one hand rests on the hip while the opposing arm hangs loose at the side; in the frontal perspective, both hands maintain a neutral extension along the outer thighs. Head aligns squarely forward without tilt. The stance embodies focused engagement appropriate for interactive dialogue."
+    },
+    {
+      "name": "Talking 5",
+      "description": "Standing with feet parallel and approximately shoulder-width apart. Cycles through positions where one hand rests on hip while the other stays at the side, alternating between right and left sides. Head faces forward without tilt, sustaining direct engagement. Gentle fluctuations in torso angle align with verbal delivery, illustrating attentive involvement in dialogue."
+    },
+    {
+      "name": "Idle 6",
+      "description": "Stands upright with feet parallel, weight distributed equally on both feet. Hands rest naturally at sides, fingers extended and relaxed with palms facing rearward. Head maintains direct gaze forward without tilt or turn. Minimal postural shift between frames suggests a still, neutral stance suitable for engagement in low-key conversation."
+    },
+    {
+      "name": "Talking 6",
+      "description": "Standing with feet shoulder-width apart, balancing evenly. During conversation, hands rise sequentially to the mid-abdominal region, fingers interlocking with palms facing inward, then lower symmetrically to the outer thigh area. Head remains upright and oriented forward without tilt. These deliberate movements convey active participation in dialogue through measured physical expressiveness, consistent with conversational engagement."
+    },
+    {
+      "name": "Idle 7",
+      "description": "Standing with feet spaced shoulder-width apart, weight balanced equally across both legs. Left hand rests lightly along thigh with palm facing outward, fingers softly curved; right hand similarly positioned opposite side. Upper body remains aligned neutrally, shoulders relaxed and square. Subtle vertical shifting occurs between frames, suggesting quiet adjustment common in sustained conversations. Head holds level gaze directed forward without lateral tilt, conveying attentiveness within a low-energy exchange. No significant physical contact or external props indicated."
+    },
+    {
+      "name": "Talking 7",
+      "description": "Standing, feet shoulder-width apart, weight evenly distributed. Torso erect with spine aligned vertically throughout all frames.  \n\nIn the left-rotated view, the character\u2019s right hand is extended outward with palm facing upward, fingertips slightly spread, while the left hand rests along the midsection. From the central perspective, the right hand forms a gentle fist near the lower chest area, thumb tucked inward, and the left hand mirrors this position with the elbow bent sharply upward. In the right-rotated view, the right hand lifts toward the upper chest with fingers splayed, while the left hand presses firmly against the hip bone.  \n\nHead maintains direct gaze forward without lateral tilt or elevation. Subtle mouth opening occurs intermittently consistent with vocalization. No discernible emotional indicators such as furrowed brows or altered posture suggest distress or heightened excitement.  \n\nAll movements occur within controlled ranges, implying deliberate articulation rather than exaggerated expressive behavior. No additional environmental context (such as seating surfaces or interactive objects) is observable."
+    },
+    {
+      "name": "Idle 8",
+      "description": "Standing upright with feet parallel and weight evenly distributed across both feet. Arms hang vertically alongside the torso, hands positioned at mid-thigh height with fingers gently curled and relaxed. Head faces forward without tilt, conveying attentiveness appropriate for engaging in verbal communication. Static pose suggests a brief pause during conversation, with no noticeable physical movement other than maintained readiness for spoken interaction."
+    },
+    {
+      "name": "Talking 8",
+      "description": "standing with feet shoulder-width apart, spine straight. Both arms engage in deliberate, expressive motions congruent with speech: left hand repeatedly extends forward with palm open and fingers slightly curved; right hand matches this pattern with minor variations in timing and reach. The subject\u2019s head maintains primary forward orientation, occasionally tilting laterally to indicate directional awareness during discussion. Body posture supports active engagement through gentle shifts in torso lean."
+    },
+    {
+      "name": "Idle 9",
+      "description": "Standing upright with feet spaced moderately apart, weight evenly distributed. From the centered perspective, both hands rest at the sides with fingers gently curved and palms facing forward. Subtle postural adjustments occur throughout the sequence: the left hand briefly contacts the hip in the left-facing frame, followed by the right hand taking the same position in the right-facing frame, suggesting a quiet, rhythmic shift of balance consistent with passive participation in conversation. Head remains level and facing directly forward without tilt, conveying focused attention suitable for idle dialogue. No additional movement or facial expression indicators are present."
+    },
+    {
+      "name": "Talking 9",
+      "description": "Standing upright with feet aligned neutrally. During conversation, right hand cycles between extended forward with palm up and resting on hip, while left hand mirrors these adjustments. Head stays focused directly ahead without tilt, reflecting attentive listening and active participation in dialogue. Subtle upper-body shifts accompany hand movements to convey emphasis within speech patterns."
+    },
+    {
+      "name": "Idle 10",
+      "description": "Standing with feet parallel and spaced closely, weight balanced equally between both legs. Arms positioned at the sides, hands relaxed with fingers softly curled and open. Head aligned straight toward the viewer without tilt or turn, maintaining neutral facial orientation. Static pose indicative of attentive listening during conversation."
+    },
+    {
+      "name": "Talking 10",
+      "description": "standing, body upright with weight evenly distributed. Hands perform dynamic gestural motions consistent with verbal communication\u2014including open-palmed extensions outward and periodic directional pointing. Both hands shift positions continuously, reflecting active articulation during speech. Head remains consistently angled forward, implying sustained gaze toward an unseen conversational partner. No discernible emotional expression beyond routine engagement in discussion."
+    },
+    {
+      "name": "Idle 11",
+      "description": "Standing with feet shoulder-width apart, spine aligned neutrally. One hand rests firmly on the hip (appearing as left or right hand depending on viewing angle), while the opposite hand hangs relaxed at the side with fingers loosely curled. Head remains fully upright, eyes directed straight ahead without tilt or lateral deviation. Minor positional adjustment between frames suggests natural stillness maintained during engaged yet passive communication. No discernible emotional cues accompany the pose."
+    },
+    {
+      "name": "Talking 11",
+      "description": "Standing upright with feet shoulder-width apart. Initially hands rest on hips, then repeatedly lift right hand to chest height with fingers slightly spread before returning to hip position; left hand remains anchored on hip. Head maintains direct forward gaze without tilt, conveying attentiveness during spoken exchange. Subtle shifts in posture reflect natural conversational dynamics without exaggerated motion."
+    },
+    {
+      "name": "Idle 12",
+      "description": "standing upright, feet shoulder-width apart with toes facing forward and heels grounded. Both arms extend downward from shoulders, hands resting loosely beside the body with fingers relaxed. Left hand positioned on the character's left side, right hand on the right side. Head maintains direct eye contact forward without tilt. Neutral posture consistent with casual engagement during dialogue."
+    },
+    {
+      "name": "Talking 12",
+      "description": "Standing upright with feet parallel and weight balanced. From the central perspective, arms start hanging naturally at sides. During the animation, the left hand lifts to shoulder-height with an open palm, suggesting emphasis on spoken words. Shortly after, it lowers back to the side position. Meanwhile, the right hand remains steadily by the hip. Later stages involve both hands meeting in front of the chest, palms facing upward, reflecting moments of thoughtfulness or pausing in dialogue. Minimal upper-body shifts correspond to vocal delivery. Head stays directed straight ahead without tilt or turning, displaying attentive engagement in conversation. No distinct emotional indicators are evident in the posture."
+    },
+    {
+      "name": "Idle 13",
+      "description": "Standing with arms crossed over the torso. From the character\u2019s perspective, the left hand rests on the right upper arm and the right hand rests on the left upper arm, fingers gently curled. Head is upright and facing directly forward without tilt. Legs are straight with feet parallel, conveying a neutral stance. No visible emotional expression or movement occurs."
+    },
+    {
+      "name": "Talking 13",
+      "description": "Standing upright with balanced posture, the character initiates with arms crossed over the chest before shifting into dynamic hand gestures appropriate for conversation. Throughout the animation, both hands rise toward the torso with open palms, fingers splayed outward in a natural flow that emphasizes vocal delivery. The left hand typically leads the motion, while the right hand follows in sync, creating a cohesive visual cue for ongoing dialogue. Head remains steadily aligned forward without tilt, reflecting attentive engagement during the spoken exchange. No external objects or additional participants are indicated within the scene."
+    },
+    {
+      "name": "Idle 14",
+      "description": "Standing, arms crossed in front of the chest with right hand resting atop left hand. Bare feet grounded, spaced approximately shoulder width apart. Head oriented straight forward without tilt, maintaining direct gaze. Sustained static pose reflecting attentive engagement during verbal exchange with no discernible movement between frames."
+    },
+    {
+      "name": "Talking 14",
+      "description": "Standing upright, barefoot. Begins with arms crossed across the chest. Shifts to a conversational gesture where the left hand rests on the left hip with the thumb pointing outward, and the right hand extends outward with an open palm. Completes the gesture before reverting to the crossed-arm stance. Head remains upright, facing directly forward without tilt, conveying engaged dialogue."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "group_id": 10,
+  "group_name": "Outdoors",
+  "category_id": 62,
+  "category_name": "Stretching",
+  "animation_items": [
+    {
+      "name": "Stretching 1",
+      "description": ""
+    },
+    {
+      "name": "Stretching 2",
+      "description": ""
+    },
+    {
+      "name": "Stretching 3",
+      "description": ""
+    },
+    {
+      "name": "Stretching 4",
+      "description": ""
+    }
+  ]
+}

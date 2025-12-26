@@ -1,0 +1,140 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 1,
+  "category_name": "Capoeira (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Armada To Esquiva",
+      "description": ""
+    },
+    {
+      "name": "Armada",
+      "description": ""
+    },
+    {
+      "name": "Au To Role",
+      "description": ""
+    },
+    {
+      "name": "Au",
+      "description": ""
+    },
+    {
+      "name": "Bencao",
+      "description": ""
+    },
+    {
+      "name": "Butterfly Twirl",
+      "description": ""
+    },
+    {
+      "name": "Capoeira 1",
+      "description": ""
+    },
+    {
+      "name": "Capoeira 2",
+      "description": ""
+    },
+    {
+      "name": "Chapa 2",
+      "description": ""
+    },
+    {
+      "name": "Chapaeu De Couro",
+      "description": ""
+    },
+    {
+      "name": "ChapaGiratoria",
+      "description": ""
+    },
+    {
+      "name": "Esquiva 3",
+      "description": ""
+    },
+    {
+      "name": "Esquiva 4",
+      "description": ""
+    },
+    {
+      "name": "Esquiva 5",
+      "description": ""
+    },
+    {
+      "name": "Ginga Backward",
+      "description": ""
+    },
+    {
+      "name": "Ginga Sideways 1",
+      "description": ""
+    },
+    {
+      "name": "Ginga Sideways 2",
+      "description": ""
+    },
+    {
+      "name": "Ginga Sideways To Au",
+      "description": ""
+    },
+    {
+      "name": "Ginga Variation 1",
+      "description": ""
+    },
+    {
+      "name": "Ginga Variation 2",
+      "description": ""
+    },
+    {
+      "name": "Ginga Variation 3",
+      "description": ""
+    },
+    {
+      "name": "Macaco Side",
+      "description": ""
+    },
+    {
+      "name": "Martelo 3",
+      "description": ""
+    },
+    {
+      "name": "Martelo Do Chau Sem Mao",
+      "description": ""
+    },
+    {
+      "name": "Martelo Do Chau",
+      "description": ""
+    },
+    {
+      "name": "Meia Lua De Compasso Back",
+      "description": ""
+    },
+    {
+      "name": "Meia Lua De Frente",
+      "description": ""
+    },
+    {
+      "name": "Pontera",
+      "description": ""
+    },
+    {
+      "name": "Queshada 1",
+      "description": ""
+    },
+    {
+      "name": "Queshada 2",
+      "description": ""
+    },
+    {
+      "name": "Rasteira 1",
+      "description": ""
+    },
+    {
+      "name": "Rasteira 2",
+      "description": ""
+    },
+    {
+      "name": "Troca 1",
+      "description": ""
+    }
+  ]
+}

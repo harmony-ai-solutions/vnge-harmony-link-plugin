@@ -1,0 +1,36 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 14,
+  "category_name": "Male",
+  "animation_items": [
+    {
+      "name": "Running",
+      "description": ""
+    },
+    {
+      "name": "Watering",
+      "description": ""
+    },
+    {
+      "name": "Bird's nest observation",
+      "description": ""
+    },
+    {
+      "name": "Vending Machine",
+      "description": ""
+    },
+    {
+      "name": "Visitation",
+      "description": ""
+    },
+    {
+      "name": "Two shots",
+      "description": ""
+    },
+    {
+      "name": "Two-shot kiss",
+      "description": ""
+    }
+  ]
+}

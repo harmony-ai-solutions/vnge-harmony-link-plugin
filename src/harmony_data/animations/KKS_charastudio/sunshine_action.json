@@ -1,0 +1,84 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 10,
+  "category_name": "Action",
+  "animation_items": [
+    {
+      "name": "Table tennis ping-pong",
+      "description": ""
+    },
+    {
+      "name": "Table tennis swing 1",
+      "description": ""
+    },
+    {
+      "name": "Table tennis swing 2",
+      "description": ""
+    },
+    {
+      "name": "Basket Ball Holding Standby",
+      "description": ""
+    },
+    {
+      "name": "Basketball Wipe sweat",
+      "description": ""
+    },
+    {
+      "name": "Tennis Racket Standby",
+      "description": ""
+    },
+    {
+      "name": "Tennis swing",
+      "description": ""
+    },
+    {
+      "name": "Floating on a float",
+      "description": ""
+    },
+    {
+      "name": "Surfing board",
+      "description": ""
+    },
+    {
+      "name": "lying down on air mat 1",
+      "description": ""
+    },
+    {
+      "name": "Lying down on the air mat 2 loop",
+      "description": ""
+    },
+    {
+      "name": "Sleeping on Air Mat 2 action",
+      "description": ""
+    },
+    {
+      "name": "Riding on a killer whale float",
+      "description": ""
+    },
+    {
+      "name": "Watermelon splitter 1",
+      "description": ""
+    },
+    {
+      "name": "Watermelon splitter 2",
+      "description": ""
+    },
+    {
+      "name": "Watermelon splitting guidance",
+      "description": ""
+    },
+    {
+      "name": "Log jumping1",
+      "description": ""
+    },
+    {
+      "name": "Log jumping2",
+      "description": ""
+    },
+    {
+      "name": "Balance Beam",
+      "description": ""
+    }
+  ]
+}

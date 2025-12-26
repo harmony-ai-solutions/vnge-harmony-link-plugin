@@ -1,0 +1,52 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 8,
+  "category_name": "Sitting On Floor",
+  "animation_items": [
+    {
+      "name": "Soaking in Hot Spring 1",
+      "description": ""
+    },
+    {
+      "name": "Soaking in Hot Spring 2",
+      "description": ""
+    },
+    {
+      "name": "Sand tinkering loop",
+      "description": ""
+    },
+    {
+      "name": "Sand tinkering action",
+      "description": ""
+    },
+    {
+      "name": "Listening to the sound of shells A",
+      "description": ""
+    },
+    {
+      "name": "Listening to the sound of shells Changing posture 1",
+      "description": ""
+    },
+    {
+      "name": "Listening to the sound of shells B",
+      "description": ""
+    },
+    {
+      "name": "Listening to the sound of the shells Looking at the shells",
+      "description": ""
+    },
+    {
+      "name": "Listening to the sound of shells Changing posture 2",
+      "description": ""
+    },
+    {
+      "name": "Having a drink in a beach chair",
+      "description": ""
+    },
+    {
+      "name": "Waiting to have a drink in a beach chair",
+      "description": ""
+    }
+  ]
+}

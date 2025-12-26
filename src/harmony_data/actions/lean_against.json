@@ -1,0 +1,20 @@
+{
+  "name": "lean_against",
+  "description": "lean against an object or character",
+  "category": "posture_standing",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} leans against the {{object}}",
+    "{{character}} rests his back against the {{object}}",
+    "{{character}} finds support by leaning against the {{object}}",
+    "{{character}} uses the {{object}} as a prop to lean against",
+    "{{character}} relaxes by leaning against the {{object}}",
+    "{{character}} takes a break and leans against the {{object}}",
+    "{{character}} leans his weight against the {{object}}",
+    "{{character}} leans on the {{object}} for support",
+    "{{character}} finds comfort in leaning against the {{object}}",
+    "{{character}} enjoys the feeling of leaning against the {{object}}",
+    "{{character}} appreciates the sturdiness of the {{object}} while leaning against it"
+  ],
+  "trigger_conditions": []
+}

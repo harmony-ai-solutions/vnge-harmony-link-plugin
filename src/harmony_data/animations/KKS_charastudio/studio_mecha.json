@@ -1,0 +1,20 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 21,
+  "category_name": "Mecha",
+  "animation_items": [
+    {
+      "name": "Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Pose 3",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "group_id": 10,
+  "group_name": "Outdoors",
+  "category_id": 64,
+  "category_name": "Diving",
+  "animation_items": [
+    {
+      "name": "Diving 1",
+      "description": ""
+    },
+    {
+      "name": "Diving 2",
+      "description": ""
+    },
+    {
+      "name": "Diving 3",
+      "description": ""
+    },
+    {
+      "name": "Diving 4",
+      "description": ""
+    }
+  ]
+}

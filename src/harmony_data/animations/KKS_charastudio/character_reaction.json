@@ -1,0 +1,60 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 11,
+  "category_name": "Reaction",
+  "animation_items": [
+    {
+      "name": "Embarrassed 1",
+      "description": "Standing with feet shoulder-width apart, torso upright. Both hands slowly lift from sides toward cheeks, fingers gently pressing against skin while thumbs curve inward toward jawlines. Head tilts slightly downward, gaze fixed low to avoid direct visibility. Minimal wrist tremors indicate nervousness. Stance conveys strong signals of embarrassment through deliberate face-covering and evasive eye direction."
+    },
+    {
+      "name": "Embarrassed 2",
+      "description": "Standing with feet parallel and grounded. Right hand rises to softly cover the mouth area, fingers slightly curved inward. Head tilts downward, avoiding direct eye contact. The combined hand position and head orientation express clear signs of embarrassment through restrained, self-aware gestures."
+    },
+    {
+      "name": "Embarrassed 3",
+      "description": "Standing rigidly with shoulders slightly hunched, right hand repeatedly lifted to touch hair near the forehead and temples while left hand remains stationary at the side. Head is tilted downward, averting gaze, reflecting anxious discomfort inherent to embarrassment. Movement emphasizes restrained gestures and avoidance of direct engagement, signaling social vulnerability through physical stiffness and diminished eye contact."
+    },
+    {
+      "name": "Hiding Face From View",
+      "description": "Standing with feet parallel and shoulder-width apart, initially extending arms fully to either side. Progresses to lifting both hands smoothly toward the face, positioning palms against the cheeks and brow to obscure vision; fingers curl softly along the jawline. Head tilts downward, directing gaze toward the floor. Returns to original stance after completion. Posture conveys reserved apprehension or bashfulness."
+    },
+    {
+      "name": "Hiding Chest From Embarrassment",
+      "description": "Standing with feet shoulder-width apart and weight evenly distributed, the character begins with arms resting at sides before gradually raising both hands toward the chest. By completion, hands overlap protectively over the upper abdomen and thoracic region, palms facing inward with fingers gently curved against the skin. Head is sharply angled downward, eyes focused on the floor, signaling strong feelings of embarrassment. Shoulders tense faintly, reinforcing anxious physical response to the situation. Motion flows continuously from neutral stance to defensive coverage of the chest area."
+    },
+    {
+      "name": "Covering Chest From Touch 1",
+      "description": "Bent forward with knees slightly bent, hands raised to cover the chest area from the front. Palms face inward, fingers extended to create a protective barrier. Weight shifts forward onto the forearms, forming a hunched posture. Head lowers and turns slightly away, indicating discomfort or resistance to unwelcome physical contact."
+    },
+    {
+      "name": "Covering Chest From Touch 2",
+      "description": "standing, hands begin low along the sides before lifting vertically to cover the chest region. From the character's perspective, both hands raise to grasp the upper torso, fingers splayed evenly across the chest area. Head stays upright and facing forward without tilt. The stance demonstrates a quick defensive reaction to physical contact, reflecting modesty or discomfort through protective placement of hands over the chest."
+    },
+    {
+      "name": "Covering Chest From Touch 3",
+      "description": "standing with feet shoulder-width apart, balancing evenly. Both hands raised to chest level, fingers curved inward toward breast tissue, palms partially overlapping. Shoulders remain squared, spine aligned vertically. Head turned sharply away from assumed direction of touch, gaze fixed downward. The stance depicts an urgent reflexive motion to shield exposed skin following abrupt physical contact, conveying surprise or discomfort."
+    },
+    {
+      "name": "Hating Face Being Touched",
+      "description": "Standing with feet shoulder-width apart and spine aligned vertically. Right hand is raised to the face, fingers splayed and pressing softly against the cheekbone or temple area. The head is slightly tilted backward and to the right, directing gaze away from the expected contact point. This defensive stance demonstrates clear resistance to tactile stimuli on the face, reflecting heightened aversion and emotional discomfort through controlled body language."
+    },
+    {
+      "name": "Embarrassed From Hand Touch",
+      "description": "Standing with feet shoulder-width apart, weight evenly distributed. Hands lift slowly from sides toward chest region, fingers interlocked and pressing gently against upper torso. Head tilts downward and turns away from viewpoint, eyes concealed. Posture reveals noticeable hesitation and awareness of exposed skin, conveying overt embarrassment triggered by recent unwanted physical contact."
+    },
+    {
+      "name": "Hating Hand Being Touched",
+      "description": "Standing, feet shoulder-width apart. Both hands raised to chest height with palms facing outward and fingers splayed to block contact. Left hand elevated from the character\u2019s perspective (visible in left-angle frame), right hand lifted symmetrically from the character\u2019s right (central frame). Head tilted slightly backward, gaze directed downward. Posture conveys active resistance and clear discomfort toward unwanted physical contact involving the hands."
+    },
+    {
+      "name": "Covering Self Up",
+      "description": "Standing, feet firmly planted and aligned, upper body elevated as both hands ascend toward the chest and abdomen regions. Torso rotates minimally to showcase the gesture from lateral angles while preserving equilibrium. Head maintains an upright posture without tilt, suggesting heightened vigilance or anxiety. Movements reflect an immediate physical reaction to external stimuli, emphasizing defensive protection of sensitive areas through deliberate elevation of limbs. The stance conveys involuntary concern or surprise necessitating concealment."
+    },
+    {
+      "name": "Covering Self Up Loop",
+      "description": "standing, alternating between bent-forward and upright stances, with arms rising upward to cover the upper chest area. Right hand elevates higher than left, fingers pressing gently against the skin above the breasts while moving smoothly. Head remains slightly bowed, gaze directed downward throughout the sequence. Movements express cautious self-protection without revealing external context or partners."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "place_item_failure",
+  "description": "place item currently in hands on the ground or an object failed",
+  "category": "object_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{object}} cannot be placed there",
+    "{{object}} doesn't fit"
+  ],
+  "trigger_conditions": [
+    "place_item"
+  ]
+}

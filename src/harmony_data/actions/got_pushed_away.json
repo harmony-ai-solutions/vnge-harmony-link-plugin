@@ -1,0 +1,16 @@
+{
+  "name": "got_pushed_away",
+  "description": "got pushed away by the other chara",
+  "category": "character_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} falls backwards",
+    "{{character}} loses balance and topples over",
+    "{{character}} steps back surprisedly",
+    "{{character}} recoils from the sudden movement",
+    "{{character}} takes a step back from {{other_character}}"
+  ],
+  "trigger_conditions": [
+    "push_away"
+  ]
+}

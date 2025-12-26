@@ -1,0 +1,212 @@
+{
+  "group_id": 8,
+  "group_name": "Battle",
+  "category_id": 42,
+  "category_name": "Male: Cut-In",
+  "animation_items": [
+    {
+      "name": "Fighting A1",
+      "description": ""
+    },
+    {
+      "name": "Fighting A2",
+      "description": ""
+    },
+    {
+      "name": "Fighting A3",
+      "description": ""
+    },
+    {
+      "name": "Fighting B1",
+      "description": ""
+    },
+    {
+      "name": "Fighting B2",
+      "description": ""
+    },
+    {
+      "name": "Fighting B3",
+      "description": ""
+    },
+    {
+      "name": "Energy Bullet 1",
+      "description": ""
+    },
+    {
+      "name": "Energy Bullet 2",
+      "description": ""
+    },
+    {
+      "name": "Energy Bullet 3",
+      "description": ""
+    },
+    {
+      "name": "One-Handed Sword 1",
+      "description": ""
+    },
+    {
+      "name": "One-Handed Sword 2",
+      "description": ""
+    },
+    {
+      "name": "One-Handed Sword 3",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield 1",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield 2",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield 3",
+      "description": ""
+    },
+    {
+      "name": "Short Sword 1",
+      "description": ""
+    },
+    {
+      "name": "Short Sword 2",
+      "description": ""
+    },
+    {
+      "name": "Short Sword 3",
+      "description": ""
+    },
+    {
+      "name": "Twin Short Swords 1",
+      "description": ""
+    },
+    {
+      "name": "Twin Short Swords 2",
+      "description": ""
+    },
+    {
+      "name": "Twin Short Swords 3",
+      "description": ""
+    },
+    {
+      "name": "Pistol 1",
+      "description": ""
+    },
+    {
+      "name": "Pistol 2",
+      "description": ""
+    },
+    {
+      "name": "Pistol 3",
+      "description": ""
+    },
+    {
+      "name": "Twin Pistols 1",
+      "description": ""
+    },
+    {
+      "name": "Twin Pistols 2",
+      "description": ""
+    },
+    {
+      "name": "Twin Pistols 3",
+      "description": ""
+    },
+    {
+      "name": "Throwing 1",
+      "description": ""
+    },
+    {
+      "name": "Throwing 2",
+      "description": ""
+    },
+    {
+      "name": "Throwing 3",
+      "description": ""
+    },
+    {
+      "name": "Magic Wand 1",
+      "description": ""
+    },
+    {
+      "name": "Magic Wand 2",
+      "description": ""
+    },
+    {
+      "name": "Magic Wand 3",
+      "description": ""
+    },
+    {
+      "name": "Grimoire 1",
+      "description": ""
+    },
+    {
+      "name": "Grimoire 2",
+      "description": ""
+    },
+    {
+      "name": "Grimoire 3",
+      "description": ""
+    },
+    {
+      "name": "Two-Handed Sword 1",
+      "description": ""
+    },
+    {
+      "name": "Two-Handed Sword 2",
+      "description": ""
+    },
+    {
+      "name": "Two-Handed Sword 3",
+      "description": ""
+    },
+    {
+      "name": "Polearm / Spear 1",
+      "description": ""
+    },
+    {
+      "name": "Polearm / Spear 2",
+      "description": ""
+    },
+    {
+      "name": "Polearm / Spear 3",
+      "description": ""
+    },
+    {
+      "name": "Hammer / Sickle 1",
+      "description": ""
+    },
+    {
+      "name": "Hammer / Sickle 2",
+      "description": ""
+    },
+    {
+      "name": "Hammer / Sickle 3",
+      "description": ""
+    },
+    {
+      "name": "Rifle 1",
+      "description": ""
+    },
+    {
+      "name": "Rifle 2",
+      "description": ""
+    },
+    {
+      "name": "Rifle 3",
+      "description": ""
+    },
+    {
+      "name": "Bow And Arrow 1",
+      "description": ""
+    },
+    {
+      "name": "Bow And Arrow 2",
+      "description": ""
+    },
+    {
+      "name": "Bow And Arrow 3",
+      "description": ""
+    }
+  ]
+}

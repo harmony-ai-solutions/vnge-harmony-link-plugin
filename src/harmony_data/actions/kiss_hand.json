@@ -1,0 +1,18 @@
+{
+  "name": "kiss_hand",
+  "description": "take hand of the other chara, and kiss it in a romantic way",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} gently takes {{other_character}}'s hand",
+    "{{character}} reaches for {{other_character}}'s hand",
+    "{{character}} brings {{other_character}}'s hand to their lips",
+    "{{character}} softly kisses {{other_character}}'s hand",
+    "{{character}} holds {{other_character}}'s hand to their cheek",
+    "{{character}} gazes into {{other_character}}'s eyes while kissing their hand",
+    "{{character}} intertwines their fingers with {{other_character}}'s before kissing their hand",
+    "{{character}} lifts {{other_character}}'s hand to their mouth",
+    "{{character}} presses a tender kiss to {{other_character}}'s knuckles",
+    "{{character}} slowly traces {{other_character}}'s fingers with their lips"
+  ]
+}

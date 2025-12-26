@@ -1,0 +1,16 @@
+{
+  "name": "kiss_forehead_decline",
+  "description": "declines kiss forehead of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} turns their head away",
+    "{{character}} pulls back",
+    "{{character}} frowns",
+    "{{character}} looks uncomfortable",
+    "{{character}} pushes {{other_character}} away"
+  ],
+  "trigger_conditions": [
+    "kiss_forehead"
+  ]
+}

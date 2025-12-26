@@ -1,0 +1,36 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 20,
+  "category_name": "Calm",
+  "animation_items": [
+    {
+      "name": "Pose 1",
+      "description": "kneeling, knees bent and feet flat on ground, creating a stable foundation. Hands rest gently in front of the torso with palms facing upward and fingers softly curved. Head remains upright and aligned directly forward without tilt. The posture conveys a calm demeanor through balanced alignment and controlled presence, emphasizing stillness and inner composure."
+    },
+    {
+      "name": "Pose 2",
+      "description": "Static pose depicting a balanced lunge stance with knees bent at approximately ninety degrees, feet grounded and weight evenly distributed. Arms extended horizontally from shoulders with palms facing downward and fingers relaxed. Head maintained upright, facing forward with no tilt, conveying calm neutrality. Stance emphasizes stability and composed posture characteristic of a tranquil pose."
+    },
+    {
+      "name": "Pose 3",
+      "description": "stationary pose showcasing upright stance with feet parallel and weight evenly distributed. left hand (character's left) extended laterally outward from the body with fingers gently parted; right hand (character's right) relaxed along the side of the torso. head remains upright with no tilt, gaze directed straight forward. overall composition conveys calm serenity through stable posture and neutral physical alignment."
+    },
+    {
+      "name": "Pose 4",
+      "description": "Stationary standing posture with feet approximately shoulder-width apart, maintaining balanced weight distribution. Left hand (from character's perspective) rests on the hip with fingers slightly curved, while right hand is positioned near the lower abdomen with fingertips directed downward. Head remains upright and level, facing forward without tilt. Overall demeanor exhibits peaceful equilibrium with no discernible motion."
+    },
+    {
+      "name": "Pose 5",
+      "description": "Standing upright with feet parallel and balanced weight distribution. Right hand (from character's perspective) raised with index finger extended vertically, other fingers folded; left hand positioned near chest with fingers curled inward. On left rotation, head tilted left and facing left; in central alignment, head upright and facing forward; on right rotation, head tilted right and facing right. Stable posture reflects calm composure through controlled hand placements and symmetrical body balance."
+    },
+    {
+      "name": "Pose 6",
+      "description": "The character executes a calm walking animation with slow, deliberate strides. Throughout the sequence, one leg extends forward while the opposite leg lifts off the ground; concurrently, the corresponding upper extremity rises with a clenched fist, while the remaining arm rests downward. The head maintains a horizontal line facing directly ahead, with no discernible tilt or turn. The entire motion occurs with uniform tempo, emphasizing tranquility."
+    },
+    {
+      "name": "Pose 7",
+      "description": "The character executes a slow, deliberate stretch sequence showcasing mindful bodily awareness. Starting with a forward-leaning position (left frame), she transitions into a stable forward bend (frontal view), maintaining equal weight distribution across both feet. Both hands remain cupped on inner thighs with fingers curled inward, while the head aligns neutrally with the spine, facing downward. Concluding with a controlled lateral leg elevation (right frame), the movement progresses seamlessly through incremental adjustments, emphasizing tension release and equilibrium without abrupt motions. The stance reflects calm focus, highlighting coordinated flexibility and stability throughout the sequence."
+    }
+  ]
+}

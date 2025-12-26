@@ -1,0 +1,24 @@
+{
+  "name": "lay_down",
+  "description": "lay down on the ground or an object",
+  "category": "posture_laying",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} lies down on the {{object}}",
+    "{{character}} curls up on the {{object}}",
+    "{{character}} sprawls out on the {{object}}",
+    "{{character}} takes a rest by laying down on the {{object}}",
+    "{{character}} finds a comfortable spot and lays down",
+    "{{character}} decides to take a nap on the {{object}}",
+    "{{character}} settles down for a quick rest on the {{object}}",
+    "{{character}} stretches out on the {{object}}",
+    "{{character}} gently lowers themselves onto the {{object}}",
+    "{{character}} lays down next to {{other_character}} on the {{object}}",
+    "{{character}} lays down their head on the {{object}}",
+    "{{character}} makes a pillow of their arms and lays down on the {{object}}",
+    "{{character}} lays down on the {{object}}, gently swinging back and forth",
+    "{{character}} carefully lays down on the {{object}}",
+    "{{character}} cautiously lays down on the {{object}}"
+  ],
+  "trigger_conditions": []
+}

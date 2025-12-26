@@ -1,0 +1,17 @@
+{
+  "name": "drop_item",
+  "description": "drop item currently in hands to the ground",
+  "category": "object_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} drops {{object}} on the ground",
+    "{{character}} lets go of {{object}}",
+    "{{character}} releases {{object}}",
+    "{{character}} throws {{object}} down",
+    "{{character}} tosses {{object}} away",
+    "{{character}} sets {{object}} down",
+    "{{character}} unloads {{object}} from their inventory onto {{other_object}}",
+    "{{character}} discards {{object}}",
+    "{{character}} gets rid of {{object}} by dropping it"
+  ]
+}

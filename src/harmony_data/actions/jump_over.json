@@ -1,0 +1,17 @@
+{
+  "name": "jump_over",
+  "description": "jump over an object",
+  "category": "simple_action",
+  "duration": 1.2,
+  "examples": [
+    "{{character}} jumps over {{object}}",
+    "{{character}} leaps over {{object}}",
+    "{{character}} hops over {{object}}",
+    "{{character}} jumps high over {{object}}",
+    "{{character}} jumps far over {{object}}",
+    "{{character}} jumps quickly over {{object}}",
+    "{{character}} stumbles while jumping over {{object}}",
+    "{{character}} barely clears {{object}} with a jump",
+    "{{character}} struggles to jump over {{object}}"
+  ]
+}

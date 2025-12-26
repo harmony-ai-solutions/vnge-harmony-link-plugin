@@ -1,0 +1,15 @@
+{
+  "name": "pick_up_both_hands_failure",
+  "description": "pick up an object with both hands failed",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{object}} is too heavy for {{character}} to lift with both hands",
+    "{{object}} cannot be lifted with both hands",
+    "{{character}} struggles to lift {{object}} with both hands",
+    "{{character}} fails to pick up {{object}} with both hands"
+  ],
+  "trigger_conditions": [
+    "pick_up_both_hands"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "group_id": 6549,
+  "group_name": "MASCULINE",
+  "category_id": 65490,
+  "category_name": "Masculine",
+  "animation_items": [
+    {
+      "name": "Masculine 01",
+      "description": ""
+    },
+    {
+      "name": "Masculine 02",
+      "description": ""
+    },
+    {
+      "name": "Masculine 03",
+      "description": ""
+    },
+    {
+      "name": "Masculine 04",
+      "description": ""
+    },
+    {
+      "name": "Masculine 05",
+      "description": ""
+    },
+    {
+      "name": "Standard",
+      "description": ""
+    },
+    {
+      "name": "Swaying",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 4,
+  "category_name": "Standing",
+  "animation_items": [
+    {
+      "name": "Looking at the sky 1 A",
+      "description": ""
+    },
+    {
+      "name": "Looking at the sky 1 Changing posture",
+      "description": ""
+    },
+    {
+      "name": "Looking at the sky 1 B",
+      "description": ""
+    },
+    {
+      "name": "Looking at the sky 1 Changing posture",
+      "description": ""
+    },
+    {
+      "name": "Looking at the sky 2 in",
+      "description": ""
+    },
+    {
+      "name": "Looking at the sky 2 loop",
+      "description": ""
+    },
+    {
+      "name": "Look at the sky 2 out",
+      "description": ""
+    },
+    {
+      "name": "Fishing",
+      "description": ""
+    },
+    {
+      "name": "peddling",
+      "description": ""
+    },
+    {
+      "name": "Choose Clothes 1",
+      "description": ""
+    },
+    {
+      "name": "Selecting Clothes 2",
+      "description": ""
+    },
+    {
+      "name": "Looking at the waterfall",
+      "description": ""
+    },
+    {
+      "name": "Looking up at the waterfall",
+      "description": ""
+    },
+    {
+      "name": "Note in notebook",
+      "description": ""
+    },
+    {
+      "name": "Two shot 1",
+      "description": ""
+    },
+    {
+      "name": "Two shot 2",
+      "description": ""
+    },
+    {
+      "name": "Two shot 3",
+      "description": ""
+    },
+    {
+      "name": "Two-shot 4",
+      "description": ""
+    },
+    {
+      "name": "Two-shot five",
+      "description": ""
+    },
+    {
+      "name": "Two-shot six",
+      "description": ""
+    },
+    {
+      "name": "Two-shot seven",
+      "description": ""
+    },
+    {
+      "name": "Two-shot eight",
+      "description": ""
+    },
+    {
+      "name": "Two-shot 9",
+      "description": ""
+    },
+    {
+      "name": "Two-shot kiss",
+      "description": ""
+    }
+  ]
+}

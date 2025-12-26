@@ -1,0 +1,120 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 13,
+  "category_name": "Torch (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Crouch Torch Idle 02",
+      "description": ""
+    },
+    {
+      "name": "Crouch Torch Turn Right 90",
+      "description": ""
+    },
+    {
+      "name": "Crouch Torch Walk Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Burn Webs",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Idle 03",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Idle 04",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Inspect Downward",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Inspect Upward",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Jump Running To Standing Idle",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Jump Running",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Light Torch From Fire",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Light Torch From Wall",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Light Torch",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Melee Attack 01",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Melee Attack 02",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Melee Attack 04",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Melee Attack Stab",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Run Forward Stop At Edge",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Run Forward Stop",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Run Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Turn Left 180",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Turn Right 180",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Walk Back In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Walk Back",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Walk Forward Stop Edge",
+      "description": ""
+    },
+    {
+      "name": "Standing Torch Walk Forward Stop",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Grab Torch From Floor",
+      "description": ""
+    },
+    {
+      "name": "Unarmed Grab Torch From Wall",
+      "description": ""
+    }
+  ]
+}

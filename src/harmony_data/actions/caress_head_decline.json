@@ -1,0 +1,17 @@
+{
+  "name": "caress_head_decline",
+  "description": "declines caress head of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} stiffens and moves away from your touch",
+    "{{character}} flinches slightly at your sudden movement",
+    "{{character}} frowns and expresses discomfort",
+    "{{character}} raises their hand to halt your actions",
+    "{{character}} steps back, creating distance between you both",
+    "{{character}} looks uncomfortable and avoids eye contact"
+  ],
+  "trigger_conditions": [
+    "caress_head"
+  ]
+}

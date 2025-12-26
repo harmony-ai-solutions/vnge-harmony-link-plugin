@@ -1,0 +1,32 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 6,
+  "category_name": "Chairs",
+  "animation_items": [
+    {
+      "name": "Body wash",
+      "description": ""
+    },
+    {
+      "name": "Washing my head",
+      "description": ""
+    },
+    {
+      "name": "Cooling off with a fan",
+      "description": ""
+    },
+    {
+      "name": "Standby with sanshin",
+      "description": ""
+    },
+    {
+      "name": "Playing the Sanshin",
+      "description": ""
+    },
+    {
+      "name": "Matching the sound of the sanshin",
+      "description": ""
+    }
+  ]
+}

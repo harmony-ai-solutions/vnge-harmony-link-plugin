@@ -1,0 +1,16 @@
+{
+  "group_id": 12,
+  "group_name": "Generic",
+  "category_id": 22,
+  "category_name": "Dancing",
+  "animation_items": [
+    {
+      "name": "Fever",
+      "description": ""
+    },
+    {
+      "name": "Monkey Dance",
+      "description": ""
+    }
+  ]
+}

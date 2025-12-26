@@ -1,0 +1,76 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 6,
+  "category_name": "Chairs",
+  "animation_items": [
+    {
+      "name": "Idle",
+      "description": "Sitting on chair, stationary posture presented from three distinct angles. Centered view shows legs widely separated with knees bent, feet flat on surface, hands clasped together in front of lower torso. Left and right angled perspectives feature legs crossed at the ankles with hands resting on lap. Head maintained direct forward-facing orientation without tilt throughout. No observable movement occurs during idle sequence."
+    },
+    {
+      "name": "Reading Book 1",
+      "description": "Sitting on chair, legs parted with knees flexed and feet planted flat on seat surface. Both hands cradle open book, fingers curved along spine while thumbs support inner margins. Head tilted downward toward text, gaze fixed on written material. Subtle upper-body adjustments include light finger pressure on page edges and gradual shift of hand placement to sustain visual contact during ongoing reading. Stance maintains consistent stability with minimal movement, reflecting attentive engagement with textual content."
+    },
+    {
+      "name": "Reading Book 2",
+      "description": "Sitting on a chair, back upright with knees slightly bent. Both hands grasp a book open in front of the chest, fingers curled along the outer edges of the pages, thumbs pressing against the inner surfaces to stabilize the book. Head tilts downward to direct vision toward the book. Stance maintains consistent balance throughout the motion."
+    },
+    {
+      "name": "Looking At Smartphone",
+      "description": "Sitting on a chair with legs splayed, knees bent, and feet flat on the ground. One hand repeatedly lifts with the index finger extended upward while the opposing hand rests near the chest or abdominal area, creating a cyclical motion. Gaze stays directed downward toward a smartphone held within reach. Minimal bodily movement emphasizes sustained attention to the device."
+    },
+    {
+      "name": "Swiping Smartphone Screen",
+      "description": "Sitting on chair with knees bent and feet grounded, hands perform rapid horizontal swipes at chest height; right hand sweeps leftwards, then returns rightwards, repeating motion. Left hand mirrors this pattern alternately. Head faces straight ahead without tilt, conveying focused engagement with imaginary smartphone. Stance maintains consistent balance throughout the looping action."
+    },
+    {
+      "name": "Playing Game",
+      "description": "Seated on chair with legs bent at knees and feet flat on floor, maintaining stable posture throughout. From character's perspective, both hands are positioned close to midsection, fingers frequently bending and extending in small rapid motions suggestive of interacting with digital controls. Right hand often appears slightly closer to upper torso while left hand mirrors its movements. Head remains oriented forward without significant tilt, conveying concentrated engagement with unseen game interface. Minimal body sway observed, emphasizing controlled motor responses aligned with active gameplay mechanics. No distinct emotional cues evident beyond sustained focus indicative of immersive participation."
+    },
+    {
+      "name": "Listening To Music",
+      "description": "Sitting with legs bent and feet grounded, the character maintains stability throughout the animation. Repeatedly raising both hands toward the head, the character uses fingertips to adjust earpieces on both sides of the skull, directing attention toward fitting audio devices securely. From the character's perspective, the right hand targets the right ear while the left hand adjusts the left ear, executing controlled motions typical of preparing for active listening. Though no visual depiction of headphones exists, the action aligns with prepping personal audio equipment for immersive music engagement. The postural consistency emphasizes focused concentration without noticeable shifts in facial expression or body lean."
+    },
+    {
+      "name": "About To Drink",
+      "description": "Sitting on a chair with legs apart, right hand resting on abdomen, left hand on thigh. Transitioning to standing, right hand rises toward mouth with palm open and fingers slightly curled, suggesting grasp of a drinking vessel. Returning to seated position, right hand extends forward, palm open, poised for contact with a cup. Movement sequences express cautious readiness to consume a beverage."
+    },
+    {
+      "name": "Drinking",
+      "description": "Sitting on a chair with legs bent at knees and feet flat on ground. The right hand repeatedly raises to bring a container to the mouth in a slow-sip motion, fingers gripping the container firmly. After each sip, the hand returns to rest on the lap. The left hand remains stationary on the thigh throughout. While drinking, the head tilts slightly backward to align the container with the mouth. The motion emphasizes a steady, deliberate pace characteristic of hydrating behavior."
+    },
+    {
+      "name": "Stretching",
+      "description": "Sitting on chair, legs separated with knees bent and feet flat on floor. Hands begin clasped on lap, arms elevating smoothly toward shoulders before extending fully overhead with palms facing upward. Peak stretch features a slight backward arch of the torso while maintaining hip stability. Arms subsequently descend evenly back to the starting position."
+    },
+    {
+      "name": "Fixing Hair",
+      "description": "Seated on a chair with legs crossed and feet planted firmly on the ground, the individual performs deliberate hair-adjustment motions. Initially, the right hand rises toward the forehead, fingers gently guiding hair away from the face before descending toward the temple. The left hand mirrors this movement on the opposing side, creating a symmetrical rhythm of elevation and repositioning. Minor lateral head turns accompany each shift to access distinct sections of the hairline, yet the torso remains stable. No overt emotional cues emerge from posture or expression, emphasizing a routine act of personal grooming."
+    },
+    {
+      "name": "Leg Tucked In Arm",
+      "description": "Sitting on a chair, legs bent and tucked closely toward the torso with knees elevated. Arms wrap around the inner thighs and shins, hands clasped firmly with fingers curled inward against the skin. Head is angled downward, focusing on the legs without noticeable tilt. Body maintains a stable yet contained posture, conveying quiet introspection or self-restraint. Minimal movement occurs in the animation, emphasizing sustained positioning of legs tucked inward while arms secure the lower limbs."
+    },
+    {
+      "name": "Crosslegged 1",
+      "description": "Sitting on a chair with legs crossed in a crosslegged style, knees bent and feet angled inward. Both hands rest on the lap, fingers gently curled and joined. Head is upright, facing forward without tilting. The pose demonstrates a stable, relaxed seated position."
+    },
+    {
+      "name": "Switching Legs 1",
+      "description": "seated on a chair, legs positioned with one leg elevated over the other in sequential adjustments throughout the animation. The character methodically shifts weight between legs, rotating hip and ankle joints to alter leg configuration while maintaining balance. Hands rest on the outer surfaces of the thighs, fingertips gently curved toward the midline of the body. Head remains upright and oriented forward without lateral tilt. The stance demonstrates deliberate repositioning of extremities, typical of transitional movements while seated."
+    },
+    {
+      "name": "Crosslegged 2",
+      "description": "Sitting on chair with legs crossed, knees bent, one thigh resting atop the opposite knee. Hands rest on inner thighs, fingers intertwined or gently clasped together. Upright torso, shoulders aligned neutrally, head oriented forward without tilt. Static pose conveying stable seating with minimal adjustment between frames."
+    },
+    {
+      "name": "Switching Legs 2",
+      "description": "Seated on a chair, legs cycle through three distinct alignments: initially spreading legs laterally (right leg extended forward, left leg bent inward), then converging into a closed position with ankles crossed, and finally reverting to the symmetrical lateral extension. Hands remain interlinked on the lap throughout. Head stays upright and directed forward without tilt. The motion entails controlled, repetitive adjustments of lower-limb positioning while preserving core balance and stability."
+    },
+    {
+      "name": "Relaxing On Sofa",
+      "description": "Sitting on a sofa with back supported, legs parted and knees slightly bent, feet flat on the surface. Arms extend downward to sides, hands resting on thighs with palms facing down and fingers loose. Head remains upright, facing directly ahead without tilt. Stance conveys a deeply relaxed and composed posture, reflecting quiet tranquility and comfort during leisure time."
+    }
+  ]
+}

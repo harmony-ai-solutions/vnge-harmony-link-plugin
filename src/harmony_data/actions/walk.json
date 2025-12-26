@@ -1,0 +1,23 @@
+{
+  "name": "walk",
+  "description": "fast walking",
+  "category": "movement",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} jogs",
+    "{{character}} hurries",
+    "{{character}} rushes",
+    "{{character}} moves quickly",
+    "{{character}} speeds up",
+    "{{character}} walks briskly",
+    "{{character}} strides",
+    "{{character}} marches",
+    "{{character}} hastens",
+    "{{character}} trots",
+    "{{character}} scurries",
+    "{{character}} dashes",
+    "{{character}} bolts",
+    "{{character}} sprints"
+  ],
+  "trigger_conditions": []
+}

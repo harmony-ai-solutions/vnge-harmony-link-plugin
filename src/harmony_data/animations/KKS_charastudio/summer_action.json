@@ -1,0 +1,84 @@
+{
+  "group_id": 11,
+  "group_name": "Summer",
+  "category_id": 10,
+  "category_name": "Action",
+  "animation_items": [
+    {
+      "name": "Beach Ball 1",
+      "description": ""
+    },
+    {
+      "name": "Beach Ball 2",
+      "description": ""
+    },
+    {
+      "name": "Beach Ball 3",
+      "description": ""
+    },
+    {
+      "name": "Beach Ball 4",
+      "description": ""
+    },
+    {
+      "name": "Girl: Warm-Up Exercise",
+      "description": ""
+    },
+    {
+      "name": "Girl: Splashing Water",
+      "description": ""
+    },
+    {
+      "name": "Girl: Splashed By Water",
+      "description": ""
+    },
+    {
+      "name": "Boy: Warm-Up Exercise",
+      "description": ""
+    },
+    {
+      "name": "Boy: Splashing Water",
+      "description": ""
+    },
+    {
+      "name": "Boy: Splashed By Water",
+      "description": ""
+    },
+    {
+      "name": "Ukelele",
+      "description": ""
+    },
+    {
+      "name": "Shooting Water Gun",
+      "description": ""
+    },
+    {
+      "name": "Changing 1",
+      "description": ""
+    },
+    {
+      "name": "Changing 2",
+      "description": ""
+    },
+    {
+      "name": "Changing 3",
+      "description": ""
+    },
+    {
+      "name": "Changing 4",
+      "description": ""
+    },
+    {
+      "name": "Changing 5",
+      "description": ""
+    },
+    {
+      "name": "Changing 6",
+      "description": ""
+    },
+    {
+      "name": "Changing 7",
+      "description": ""
+    }
+  ]
+}

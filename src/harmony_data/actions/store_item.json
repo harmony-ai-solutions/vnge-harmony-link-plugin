@@ -1,0 +1,19 @@
+{
+  "name": "store_item",
+  "description": "store item in hand in pocket / inventory",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{character}} puts {{object}} into their pocket",
+    "{{character}} stores {{object}} in their inventory",
+    "{{character}} stows away {{object}} in their bag",
+    "{{character}} hides {{object}} in their sleeve",
+    "{{character}} secures {{object}} in their belt",
+    "{{character}} places {{object}} in their backpack",
+    "{{character}} tucks {{object}} into their shirt",
+    "{{character}} slots {{object}} into their holster",
+    "{{character}} inserts {{object}} into their sheath",
+    "{{character}} deposits {{object}} in their container",
+    "{{character}} saves {{object}} in their storage"
+  ]
+}

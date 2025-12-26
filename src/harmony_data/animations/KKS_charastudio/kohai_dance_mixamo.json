@@ -1,0 +1,524 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 3,
+  "category_name": "Dance (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Arms Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Bboy Hip Hop Move",
+      "description": ""
+    },
+    {
+      "name": "Bboy Uprock",
+      "description": ""
+    },
+    {
+      "name": "Bellydancing",
+      "description": ""
+    },
+    {
+      "name": "Booty Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Break 1990 1",
+      "description": ""
+    },
+    {
+      "name": "Break 1990 2",
+      "description": ""
+    },
+    {
+      "name": "Break 1990 3",
+      "description": ""
+    },
+    {
+      "name": "Break Ending 1",
+      "description": ""
+    },
+    {
+      "name": "Break Ending 2",
+      "description": ""
+    },
+    {
+      "name": "Break Ending 3",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork 1",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork 2",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork 3",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork To Freeze",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork To Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Break Footwork To Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Break Freeze Var 1",
+      "description": ""
+    },
+    {
+      "name": "Break Freeze Var 2",
+      "description": ""
+    },
+    {
+      "name": "Break Freeze Var 3",
+      "description": ""
+    },
+    {
+      "name": "Break Freeze Var 4",
+      "description": ""
+    },
+    {
+      "name": "Break Freezes",
+      "description": ""
+    },
+    {
+      "name": "Break Ready",
+      "description": ""
+    },
+    {
+      "name": "Break Swipes",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock To Ground 1",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock To Ground 2",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock Var 1 End",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock Var 1 Start",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock Var 1",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock Var 2",
+      "description": ""
+    },
+    {
+      "name": "Break Uprock",
+      "description": ""
+    },
+    {
+      "name": "Brooklyn Uprock",
+      "description": ""
+    },
+    {
+      "name": "Can Can",
+      "description": ""
+    },
+    {
+      "name": "Chicken",
+      "description": ""
+    },
+    {
+      "name": "Crossleg Freeze",
+      "description": ""
+    },
+    {
+      "name": "Dancing 1",
+      "description": ""
+    },
+    {
+      "name": "Dancing 2",
+      "description": ""
+    },
+    {
+      "name": "Dancing 3",
+      "description": ""
+    },
+    {
+      "name": "Dancing 4",
+      "description": ""
+    },
+    {
+      "name": "Dancing 5",
+      "description": ""
+    },
+    {
+      "name": "Dancing Running Man",
+      "description": ""
+    },
+    {
+      "name": "Flair 1",
+      "description": ""
+    },
+    {
+      "name": "Flair 2",
+      "description": ""
+    },
+    {
+      "name": "Flair 3",
+      "description": ""
+    },
+    {
+      "name": "Gangnam Style",
+      "description": ""
+    },
+    {
+      "name": "Head Spinning",
+      "description": ""
+    },
+    {
+      "name": "Headspin End",
+      "description": ""
+    },
+    {
+      "name": "Headspin Start",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 1",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 2",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 3",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 4",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 5",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 6",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 7",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 8",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 9",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 10",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 11",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 12",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 13",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 14",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 15",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 16",
+      "description": ""
+    },
+    {
+      "name": "Hip Hop 17",
+      "description": ""
+    },
+    {
+      "name": "Hokey Pokey",
+      "description": ""
+    },
+    {
+      "name": "House 1",
+      "description": ""
+    },
+    {
+      "name": "House 2",
+      "description": ""
+    },
+    {
+      "name": "House 3",
+      "description": ""
+    },
+    {
+      "name": "Jazz 1",
+      "description": ""
+    },
+    {
+      "name": "Jazz 2",
+      "description": ""
+    },
+    {
+      "name": "Jazz 3",
+      "description": ""
+    },
+    {
+      "name": "Jazz 4",
+      "description": ""
+    },
+    {
+      "name": "Jazz 5",
+      "description": ""
+    },
+    {
+      "name": "Locking Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Macarena",
+      "description": ""
+    },
+    {
+      "name": "Maraschino Step",
+      "description": ""
+    },
+    {
+      "name": "Moonwalk",
+      "description": ""
+    },
+    {
+      "name": "Northern Soul Floor Combo",
+      "description": ""
+    },
+    {
+      "name": "Northern Soul Floor Spin",
+      "description": ""
+    },
+    {
+      "name": "Northern Soul Spin Combo",
+      "description": ""
+    },
+    {
+      "name": "Northern Soul Spin",
+      "description": ""
+    },
+    {
+      "name": "Northern Soul",
+      "description": ""
+    },
+    {
+      "name": "Robot Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Rumba Dancing",
+      "description": ""
+    },
+    {
+      "name": "Salsa 1",
+      "description": ""
+    },
+    {
+      "name": "Salsa 2",
+      "description": ""
+    },
+    {
+      "name": "Salsa 3",
+      "description": ""
+    },
+    {
+      "name": "Salsa 4",
+      "description": ""
+    },
+    {
+      "name": "Salsa 5",
+      "description": ""
+    },
+    {
+      "name": "Salsa 6",
+      "description": ""
+    },
+    {
+      "name": "Salsa 7",
+      "description": ""
+    },
+    {
+      "name": "Salsa 8",
+      "description": ""
+    },
+    {
+      "name": "Salsa 9",
+      "description": ""
+    },
+    {
+      "name": "Salsa 10",
+      "description": ""
+    },
+    {
+      "name": "Samba 1",
+      "description": ""
+    },
+    {
+      "name": "Samba 2",
+      "description": ""
+    },
+    {
+      "name": "Samba 3",
+      "description": ""
+    },
+    {
+      "name": "Samba 4",
+      "description": ""
+    },
+    {
+      "name": "Samba 5",
+      "description": ""
+    },
+    {
+      "name": "Samba 6",
+      "description": ""
+    },
+    {
+      "name": "Samba 7",
+      "description": ""
+    },
+    {
+      "name": "Samba 8",
+      "description": ""
+    },
+    {
+      "name": "Shopping Cart",
+      "description": ""
+    },
+    {
+      "name": "Shuffling",
+      "description": ""
+    },
+    {
+      "name": "Silly 1",
+      "description": ""
+    },
+    {
+      "name": "Silly 2",
+      "description": ""
+    },
+    {
+      "name": "Slide Hip Hop Walk",
+      "description": ""
+    },
+    {
+      "name": "Slide Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Snake Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Step Hip Hop",
+      "description": ""
+    },
+    {
+      "name": "Swing 1",
+      "description": ""
+    },
+    {
+      "name": "Swing 2",
+      "description": ""
+    },
+    {
+      "name": "Swing 3",
+      "description": ""
+    },
+    {
+      "name": "Swing 4",
+      "description": ""
+    },
+    {
+      "name": "Swing 5",
+      "description": ""
+    },
+    {
+      "name": "Thriller Idle",
+      "description": ""
+    },
+    {
+      "name": "Thriller Part 1",
+      "description": ""
+    },
+    {
+      "name": "Thriller Part 2",
+      "description": ""
+    },
+    {
+      "name": "Thriller Part 3",
+      "description": ""
+    },
+    {
+      "name": "Thriller Part 4",
+      "description": ""
+    },
+    {
+      "name": "Tut Hip Hop 1",
+      "description": ""
+    },
+    {
+      "name": "Tut Hip Hop 2",
+      "description": ""
+    },
+    {
+      "name": "Twerk",
+      "description": ""
+    },
+    {
+      "name": "Twist",
+      "description": ""
+    },
+    {
+      "name": "Wave Hip Hop 1",
+      "description": ""
+    },
+    {
+      "name": "Wave Hip Hop 2",
+      "description": ""
+    },
+    {
+      "name": "Wave Hip Hop 3",
+      "description": ""
+    },
+    {
+      "name": "YMCA",
+      "description": ""
+    }
+  ]
+}

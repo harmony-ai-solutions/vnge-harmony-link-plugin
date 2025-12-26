@@ -1,0 +1,20 @@
+{
+  "group_id": 6,
+  "group_name": "Special H",
+  "category_id": 175,
+  "category_name": "Toilet Peeping",
+  "animation_items": [
+    {
+      "name": "Loop Start",
+      "description": ""
+    },
+    {
+      "name": "Loop",
+      "description": ""
+    },
+    {
+      "name": "Loop End",
+      "description": ""
+    }
+  ]
+}

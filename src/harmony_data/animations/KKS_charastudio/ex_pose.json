@@ -1,0 +1,24 @@
+{
+  "group_id": 25,
+  "group_name": "EX",
+  "category_id": 1,
+  "category_name": "Pose",
+  "animation_items": [
+    {
+      "name": "Basic 1",
+      "description": ""
+    },
+    {
+      "name": "Basic 2",
+      "description": ""
+    },
+    {
+      "name": "Basic 3",
+      "description": ""
+    },
+    {
+      "name": "Basic 4",
+      "description": ""
+    }
+  ]
+}

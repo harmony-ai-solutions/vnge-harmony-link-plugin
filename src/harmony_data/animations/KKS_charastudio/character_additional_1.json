@@ -1,0 +1,120 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 60,
+  "category_name": "Additional 1",
+  "animation_items": [
+    {
+      "name": "Standing Pose 1",
+      "description": "Standing with legs widely separated, one foot forward and knee slightly bent. Torso upright, head facing directly ahead without tilt. Right hand raised high above head with arm fully extended, left hand positioned near the mouth with fingers partially clenched. Minimal movement observed; posture remains stable across all frames indicating a sustained static pose."
+    },
+    {
+      "name": "Standing Pose 2",
+      "description": "Standing on left leg, right foot lifted vertically with knee bent and toes pointed outward. Left hand raised near chest, fingers partially closed and thumb extended. Right hand extended forward, palm open with fingers separated. Head maintained neutral alignment, facing directly ahead without tilt. Balanced stance created through slight pelvic rotation and firm grounding of supported leg."
+    },
+    {
+      "name": "Standing Pose 3",
+      "description": "Jumping, one leg fully extended forward with toes pointed, the opposing leg bent at the knee to lift the heel off the ground. Both arms raised high above the head, elbows flexed at roughly ninety degrees, fists clenched firmly. Hands positioned centrally aligned with the spinal column. Head oriented upright, gaze directed straight ahead without tilt. Stance demonstrates balanced suspension mid-leap, conveying energetic engagement or celebratory intent."
+    },
+    {
+      "name": "Standing Pose 4",
+      "description": "Upright standing, barefoot, weight evenly distributed on both feet. Hands positioned on upper torso with fingers curled inward, applying light pressure against the surface of the garment covering the chest. Head oriented forward with no tilt. Neutral facial expression indicating calm demeanor."
+    },
+    {
+      "name": "Standing Pose 5",
+      "description": "Standing upright with feet parallel and evenly spaced, body aligned vertically. Hands are clasped together in front of the lower abdomen, fingers interlaced with thumbs extended outward. Head remains level, eyes directed straight forward without tilts or turns. The pose displays zero dynamic movement across all frames, maintaining absolute stillness throughout the sequence."
+    },
+    {
+      "name": "Standing Pose 6",
+      "description": "standing, feet spaced shoulder-width apart, heels grounded and toes pointed slightly outwards. Arms crossed loosely over midsection, palms facing downwards towards hips. Left hand rests on lower abdominal region, fingertips aligned vertically along hip bone; right hand mirrors position symmetrically. Shoulders remain square and balanced, spine erect. Head oriented squarely forward with gaze fixed directly ahead, no lateral tilt detected. Minimal upper-body tension evident throughout stance."
+    },
+    {
+      "name": "Standing Pose 7",
+      "description": "standing, barefoot, feet positioned shoulder-width apart with equal weight distribution. Upright torso maintained. From character's perspective, both hands start at chest height with fingers curled inward and thumbs pressing against the skin near the clavicular region. Upon rotating left, the right hand lifts toward the jawline while the left hand settles on the abdominal area; rotating right reverses this positioning, with the left hand ascending to the jawline and the right hand descending to the abdomen. Minimal head movement, gaze directed forward without tilt. Neutral facial expression evident from absence of pronounced mouth or eye alterations."
+    },
+    {
+      "name": "Standing Pose 8",
+      "description": "Static standing pose with feet parallel and evenly weighted. Left hand rests on hip, fingers curved along the outer hip contour. Right hand raises with index finger extended upward and thumb splayed outward. Head remains upright without tilt, gaze directed forward. No discernible movement observed, conveying stable and confident posture through consistent limb positioning."
+    },
+    {
+      "name": "Standing Pose 9",
+      "description": "The character stands upright with feet spaced evenly apart, maintaining a balanced posture. Both arms raise steadily toward the head, fingers interlacing to gather hair sections near the temples and crown, creating a cohesive pull-back gesture. Subtle torso rotation transitions between viewing angles while preserving spinal alignment, allowing hands to reposition consistently behind the head. Facial expression remains neutral, head fixed forward without tilt. Minor shifts suggest deliberate styling motion focused solely on hair management, conveying composed self-preparation."
+    },
+    {
+      "name": "Standing Pose 10",
+      "description": "Standing with varying postural alignments across three angles. Central perspective shows right hand gripping fabric above chest while left hand rests on hip. Left-angle view demonstrates right arm elevating to adjust strap, and right-angle view exhibits a slight forward lean with right hand lowered to hip and left arm raised. Head remains upright without tilt throughout, emphasizing controlled adjustments to chest coverings."
+    },
+    {
+      "name": "Standing Pose 11",
+      "description": "The character executes a repeating jump sequence featuring alternating lateral leg extensions and overhead arm movements. From the frontal perspective, knees are deeply flexed with toes pointed, and arms rise overhead with fingers splayed. During each phase, one leg extends horizontally while the opposing knee bends further, shifting weight dynamically. Arm positions adjust synchronously with leg movements, creating fluid momentum. The head remains steadily directed forward without tilt throughout the motion, conveying focused energy and control."
+    },
+    {
+      "name": "Standing Pose 12",
+      "description": "standing, weight supported predominantly on the right foot with the left foot lifted high off the ground, knee bent and toes pointed upward. Both arms extend horizontally outward from the torso, palms facing upward with fingers splayed open. Head remains level and facing directly forward without tilt. The stance demonstrates stable balance with symmetrical arm positioning, conveying deliberate control and composed readiness."
+    },
+    {
+      "name": "Standing Pose 13",
+      "description": "The character maintains a static standing pose with weight distributed on the left leg; the right leg is lifted high with knee bent, foot suspended off the ground. Right hand extends forward with an open palm, fingers relaxed; left hand rests over the upper chest, fingers gently curved along the collarbone region. Head faces directly forward without tilt, maintaining neutral eye contact. The stance exhibits controlled balance with minimal physical tension, conveying stability and poised readiness."
+    },
+    {
+      "name": "Standing Pose 14",
+      "description": "Standing upright with feet parallel and heels together, spine vertical and shoulders square. Both hands positioned anteriorly over the pubic region with fingers curled inward toward the body's core, palms facing dorsally. Head tilted downward, chin lowered, gaze directed inferiorly. Stance reflects a contained, modest presentation."
+    },
+    {
+      "name": "Standing Pose 15",
+      "description": "The character stands with legs straight and feet closely spaced, trunk bent forward deeply enough for the forehead to approach the ground level. Both hands press firmly onto the gluteal muscles, fingers splayed and flattened against the flesh. The head tilts downward, chin drawn toward the chest, sustaining a focused forward lean. All frames depict a stationary pose with no discernible movement, maintained via rigid ankle engagement and evenly distributed weight across the insteps. The stance demonstrates intentional control over core alignment and muscular engagement without additional contextual props or interactive elements."
+    },
+    {
+      "name": "Sitting 1",
+      "description": "crouching with knees bent approximately ninety degrees, toes pointing forward, feet flat on ground. Hands positioned symmetrically on inner thighs with fingertips curled upward toward pelvic bones, palms facing medially. Shoulders square and spine erect. Head oriented neutrally forward without tilts or turns. Stance maintains consistent balance point between hips and ankles throughout all perspectives."
+    },
+    {
+      "name": "Sitting 2",
+      "description": "Kneeling with knees firmly planted on the ground, feet drawn backward and pointed, spine maintained upright. One hand consistently touches the head near the temples while the opposing hand extends outward in a soft waving motion, fingers loosely parted. Throughout the sequence, the head remains oriented forward with minimal tilt, emphasizing controlled upper-body gestures against a stable lower stance. No discernible emotional expression is present."
+    },
+    {
+      "name": "Sitting 3",
+      "description": "kneeling with legs widely parted, knees bent and feet firmly planted on the ground. Both hands positioned over the lower abdominal area, palms down with fingertips lightly resting atop the groin region. Upper body maintained upright, head facing directly forward without tilt. Static pose conveying a neutral stance with no discernible movement or external objects present."
+    },
+    {
+      "name": "Sitting 4",
+      "description": "Sitting with legs bent and knees raised toward the torso, feet grounded with toes spread outward. Hands clasped together anteriorly on the lower abdomen, fingers interlinked with thumbs aligned along fingertips. Head tilted downward, chin resting toward the midsection. Static pose exhibiting no directional movement or significant changes in limb position."
+    },
+    {
+      "name": "Sitting 5",
+      "description": "Sitting cross-legged with legs folded beneath the torso, knees bent and feet tucked inward toward the inner thighs. Both hands rest symmetrically on the lower abdomen, palms open and fingers relaxed. Head remains level, facing directly forward without tilt. No noticeable movement occurs throughout the sequence, maintaining consistent posture and alignment."
+    },
+    {
+      "name": "Sitting 6",
+      "description": "Sitting with legs bent at the knees, feet together. Hands rest on the ground beside hips, fingers splayed. Head upright, gaze directed forward. Balanced posture supports stable seating."
+    },
+    {
+      "name": "Sitting 7",
+      "description": "The character kneels with bent knees and feet securely grounded, stabilized by hands placed palms-down on the surface anterior to the torso. From the character's perspective, both hands lie symmetrically in front of the body with fingers fully extended and splayed. The torso curves forward, elevating the pelvic region, while the head faces directly forward without tilt. The pose remains completely static with no observable movement across the displayed frames, indicating a maintained stance."
+    },
+    {
+      "name": "Sitting 8",
+      "description": "Sitting with legs splayed wide, knees bent deeply, and feet grounded flat. Arms raised behind the head with fingers interlocked and palms oriented upward. Head held upright without tilt, eyes directed forward. Stance maintains consistency across perspectives, expressing calm composure."
+    },
+    {
+      "name": "Laying 1",
+      "description": "Lying supine on bed with eyes closed, displaying calm repose. Both arms extend horizontally alongside the body, fingers loosely fanned. Legs bend at hips and knees, feet angled upward toward the ceiling. Head tilts minimally backward, maintaining neutral gaze direction. Stance reflects serene rest without active movement or emotional display."
+    },
+    {
+      "name": "Laying 2",
+      "description": "Sitting on bed, knees drawn up to chest with legs flexed and feet flat on matress surface. Arms wrapped around lower torso, hands clasped together near hips with fingers intertwined. Head bowed downward, face partially obscured by knees. Body angled inward, shoulders rounded, conveying a withdrawn or distressed posture. No noticeable movement detected. Stance suggests vulnerability or quiet contemplation."
+    },
+    {
+      "name": "Laying 3",
+      "description": "Lying prone on the ground, upper body supported by forearms with hands placed on the surface in front of the chest, palms facing upward. Knees bent at approximately ninety degrees, feet raised vertically toward the ceiling. Static pose with no discernible movement, head resting steadily on hands with gaze directed downward."
+    },
+    {
+      "name": "Laying 4",
+      "description": "Lying supine on a bed, upper body elevated with elbows bent and hands resting on the mattress. Left hand positioned closer to the chest, right hand slightly farther toward the midsection, fingers gently curled. Head tilted laterally to the left, eyes closed. Legs bent at knees with feet pointed outward. No movement detected across frames. Stance conveys quiet restfulness."
+    },
+    {
+      "name": "Laying 5",
+      "description": "Sitting on a bed, legs spread apart with knees bent and feet flat on the mattress. Back angled slightly forward, arms wrapped around the lower torso with hands resting low on the hips or lower back. Head tilted downward, eyes closed, facing the bed surface. Genitals fully exposed. Consent assumed for depiction of nude form and exposure of genitalia. Posture conveys relaxed repose, possibly indicative of sleep or restfulness. No significant movement observed."
+    }
+  ]
+}

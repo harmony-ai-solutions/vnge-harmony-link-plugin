@@ -1,0 +1,260 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 4,
+  "category_name": "Exercise (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Air Squat Bent Arms",
+      "description": ""
+    },
+    {
+      "name": "Air Squat",
+      "description": ""
+    },
+    {
+      "name": "Arm Stretching",
+      "description": ""
+    },
+    {
+      "name": "Back Squat 1",
+      "description": ""
+    },
+    {
+      "name": "Back Squat 2",
+      "description": ""
+    },
+    {
+      "name": "Back Squat 3",
+      "description": ""
+    },
+    {
+      "name": "Bicep Curl",
+      "description": ""
+    },
+    {
+      "name": "Bicycle Crunch",
+      "description": ""
+    },
+    {
+      "name": "Burpee End",
+      "description": ""
+    },
+    {
+      "name": "Burpee",
+      "description": ""
+    },
+    {
+      "name": "Circle Crunch",
+      "description": ""
+    },
+    {
+      "name": "Clean And Jerk",
+      "description": ""
+    },
+    {
+      "name": "Cross Jumps",
+      "description": ""
+    },
+    {
+      "name": "Cross Jumps Rotation",
+      "description": ""
+    },
+    {
+      "name": "End Bicycle Sit Up",
+      "description": ""
+    },
+    {
+      "name": "End Plank",
+      "description": ""
+    },
+    {
+      "name": "Floating 1",
+      "description": ""
+    },
+    {
+      "name": "Floating 2",
+      "description": ""
+    },
+    {
+      "name": "Floating 3",
+      "description": ""
+    },
+    {
+      "name": "Floating 4",
+      "description": ""
+    },
+    {
+      "name": "Floating 5",
+      "description": ""
+    },
+    {
+      "name": "Front Raises",
+      "description": ""
+    },
+    {
+      "name": "Idle To Push Up",
+      "description": ""
+    },
+    {
+      "name": "Idle To Situp",
+      "description": ""
+    },
+    {
+      "name": "Jump Push Up",
+      "description": ""
+    },
+    {
+      "name": "Jumping Jacks",
+      "description": ""
+    },
+    {
+      "name": "Jumping Rope 1",
+      "description": ""
+    },
+    {
+      "name": "Jumping Rope 2",
+      "description": ""
+    },
+    {
+      "name": "Jumping Rope 3",
+      "description": ""
+    },
+    {
+      "name": "Kettlebell Swing 1",
+      "description": ""
+    },
+    {
+      "name": "Kettlebell Swing 2",
+      "description": ""
+    },
+    {
+      "name": "Overhead Squat 1",
+      "description": ""
+    },
+    {
+      "name": "Overhead Squat 2",
+      "description": ""
+    },
+    {
+      "name": "Overhead Squat 3",
+      "description": ""
+    },
+    {
+      "name": "Pike Walk",
+      "description": ""
+    },
+    {
+      "name": "Pistol To Idle",
+      "description": ""
+    },
+    {
+      "name": "Pistol",
+      "description": ""
+    },
+    {
+      "name": "Plank",
+      "description": ""
+    },
+    {
+      "name": "Punching Bag",
+      "description": ""
+    },
+    {
+      "name": "Push Up",
+      "description": ""
+    },
+    {
+      "name": "Push Up To Idle",
+      "description": ""
+    },
+    {
+      "name": "Quick Steps",
+      "description": ""
+    },
+    {
+      "name": "Situp Start",
+      "description": ""
+    },
+    {
+      "name": "Situp To Idle",
+      "description": ""
+    },
+    {
+      "name": "Situps",
+      "description": ""
+    },
+    {
+      "name": "Snatch",
+      "description": ""
+    },
+    {
+      "name": "Speedbag",
+      "description": ""
+    },
+    {
+      "name": "Start Bicycle Sit Up",
+      "description": ""
+    },
+    {
+      "name": "Start Plank",
+      "description": ""
+    },
+    {
+      "name": "Sumo High Pull 1",
+      "description": ""
+    },
+    {
+      "name": "Sumo High Pull 2",
+      "description": ""
+    },
+    {
+      "name": "Sumo High Pull 3",
+      "description": ""
+    },
+    {
+      "name": "Swimming 1",
+      "description": ""
+    },
+    {
+      "name": "Swimming 2",
+      "description": ""
+    },
+    {
+      "name": "Swimming 3 In Place",
+      "description": ""
+    },
+    {
+      "name": "Swimming 4 In Place",
+      "description": ""
+    },
+    {
+      "name": "Swimming To Edge",
+      "description": ""
+    },
+    {
+      "name": "Treading Water 1",
+      "description": ""
+    },
+    {
+      "name": "Treading Water 2",
+      "description": ""
+    },
+    {
+      "name": "Treading Water 3",
+      "description": ""
+    },
+    {
+      "name": "Treadmill Running",
+      "description": ""
+    },
+    {
+      "name": "Warming Up 1",
+      "description": ""
+    },
+    {
+      "name": "Warming Up 2",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "group_id": 10,
+  "group_name": "Outdoors",
+  "category_id": 63,
+  "category_name": "Moving Around",
+  "animation_items": [
+    {
+      "name": "Moving Around 1",
+      "description": ""
+    },
+    {
+      "name": "Moving Around 2",
+      "description": ""
+    },
+    {
+      "name": "Moving Around 3",
+      "description": ""
+    },
+    {
+      "name": "Moving Around 4",
+      "description": ""
+    },
+    {
+      "name": "Moving Around 5",
+      "description": ""
+    }
+  ]
+}

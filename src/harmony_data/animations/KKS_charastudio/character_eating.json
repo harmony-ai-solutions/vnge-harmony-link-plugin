@@ -1,0 +1,36 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 9,
+  "category_name": "Eating",
+  "animation_items": [
+    {
+      "name": "Eating A1",
+      "description": "Sitting with one knee elevated and feet grounded, the character holds palms-up, finger-curved hands extended laterally. Transitioning to a standing position with legs splayed apart, the character continues sweeping arms outward in sync with subtle hip rotations. Maintaining eye contact forward without tilts, the repetition of crouching and standing motions implies active participation in eating\u2014a behavior suggested by the sustained horizontal hand positioning and cyclical weight-shifting between seated and upright stances."
+    },
+    {
+      "name": "Eating A2",
+      "description": "seated with legs widely separated, knees bent, and feet planted firmly on ground. Both hands rise upward toward chest region, fingers curved inward, then pull down toward mouth in repeating cycles simulating biting and swallowing. Body remains stationary except for minimal upper-body adjustments accompanying hand movements. Head faces straight ahead without tilts or turns."
+    },
+    {
+      "name": "Eating A3",
+      "description": "seated with legs widely separated, knees bent and feet firmly planted on the ground. Both hands perform a cyclic motion: right hand lifts toward mouth with fingers curled as if gripping food, immediately followed by left hand mirroring the gesture; hands return slowly after contact with mouth. Head stays erect without tilt, gaze directed forward consistently. Movement reflects deliberate, methodical ingestion of sustenance through oral consumption."
+    },
+    {
+      "name": "Eating B1",
+      "description": "The character performs a multi-angle eating sequence. Beginning in a seated position (left angle), the character\u2019s right hand lifts toward the mouth while the left hand rests on the abdomen. Transitioning to a standing stance (center angle), both arms draw to chest level before moving toward the mouth. Resuming a seated position (right angle), the right hand continues elevation toward the mouth and the left hand shifts to rest on the hip. Throughout the animation, the head tilts downward to maintain focus on the eating action."
+    },
+    {
+      "name": "Eating B2",
+      "description": "Sitting with legs parted, knees bent, and feet grounded; standing upright with balanced weight distribution. Right hand repeatedly elevates from adjacent regions toward mouth to deposit food into oral cavity, fingers curled around invisible item. Left hand rests on hip or thigh. Head tilts slightly forward to align hand movement with mouth during each intake phase. Neutral posture reflects concentrated effort on sustaining regular consumption patterns."
+    },
+    {
+      "name": "Eating C1",
+      "description": "seated, legs extended with feet flat on ground, body aligned neutrally. From character\u2019s perspective, right hand raises slowly toward midsection while left hand lowers toward thigh; hands perform cyclic motion of lifting toward mouth followed by brief pause before resetting position. Movement reflects deliberate gestures associated with consuming food, maintaining neutral head alignment and lack of significant body lean."
+    },
+    {
+      "name": "Eating C2",
+      "description": "The character displays alternating seated and standing stances across three camera angles: left-profile, front-center, and right-profile. Throughout the animation, hands repeatedly raise from resting positions to grasp near the mouth in a cyclical motion, suggesting ingestion of food. Fingers curl inward toward the lips, forming loose fists as hands approach the mouth. Lower body remains largely static, with minor positional adjustments in leg arrangement between frames. Head stays oriented forward without tilt, maintaining focus on the eating action."
+    }
+  ]
+}

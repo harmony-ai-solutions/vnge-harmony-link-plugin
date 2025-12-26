@@ -1,0 +1,72 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 14,
+  "category_name": "Male",
+  "animation_items": [
+    {
+      "name": "Idle",
+      "description": "Standing upright with feet shoulder-width apart, weight evenly distributed. Hands hang relaxed at sides, palms facing forward with fingers gently curved. Head maintains a level position, eyes directed straight ahead. Complete stillness observed across all frames, confirming a static idle pose with no movement or change in stance."
+    },
+    {
+      "name": "Walking",
+      "description": "walking, legs alternating in smooth steps with feet extending forward and retracting, arms swinging naturally at sides with elbows slightly bent and fingers loosely curled. Head remains upright and facing forward without tilt. Motion depicts steady, balanced locomotion."
+    },
+    {
+      "name": "Running",
+      "description": "Running with a steady gait, the male character executes symmetrical arm and leg movements. From the frontal perspective, fists remain clenched at waist height, swinging forward and backward in unison with leg motion; the lead foot lands softly while the trailing foot extends backward. Upper body maintains an upright posture with negligible lean, head oriented straight ahead without tilt. Motion reflects controlled pacing through consistent biomechanics suited for sustained locomotion."
+    },
+    {
+      "name": "Taking A Knee",
+      "description": "The character executes a deep squat stance with knees bent at sharp angles, feet firmly planted on the ground. From the left-angled perspective, the character\u2019s left knee is elevated higher than the right, with the left hand resting on the left thigh and the right hand positioned lower toward the mid-thigh. In the frontal view, both knees maintain equal elevation, the left hand lies along the left thigh, and the right hand rests near the groin area. The right-angled perspective mirrors the left, showcasing the right knee raised higher, right hand on the right thigh, and left hand lowered. The head faces forward without tilt, suggesting concentration. Stance demonstrates controlled weight distribution across the lower body while emphasizing stability."
+    },
+    {
+      "name": "Crouch-Walking",
+      "description": "A male character executes a crouch-walking motion, maintaining a deep squat with knees bent and feet spaced shoulder-width apart. He shifts weight between legs while advancing one leg forward and drawing the trailing leg back, preserving the crouched posture. Arms swing rhythmically in opposition to leg movement, elbows bent at roughly ninety degrees, with hands relaxed at the sides. Head remains upright and focused forward, conveying controlled momentum without noticeable tilt or rotation. The stance emphasizes stability and fluidity during the low-profile walking cycle."
+    },
+    {
+      "name": "Talking",
+      "description": "Standing upright with feet shoulder-width apart, arms initially resting at the sides. While engaged in talking, lifts both hands to chest height, palms open and fingers slightly curved, occasionally extending one hand forward while keeping gaze directed forward. Maintains balanced posture with minimal lean or shift in weight. Head stays level and facing straight ahead, reflecting focused attention during conversation."
+    },
+    {
+      "name": "Calling Someone",
+      "description": "Standing, feet spaced comfortably apart with weight evenly distributed. The right arm ascends smoothly from the side to shoulder height, palm open and fingers extended outward in a welcoming gesture. The left arm remains relaxed by the thigh. The head holds firm alignment, gaze directed forward without tilt. This fluid motion captures the act of deliberately summoning attention through a classic waving motion, conveyed consistently across multiple viewing angles to emphasize clarity and intent."
+    },
+    {
+      "name": "Reading Book 1",
+      "description": "Standing upright, right hand (character's right) grasps the spine of an unseen book with thumb extended along the bottom edge, left hand (character's left) positioned above to guide page-flipping. Head tilted slightly downward, gaze directed toward the book, reflecting concentrated reading effort. Minimal forward lean maintains balanced posture."
+    },
+    {
+      "name": "Reading Book 2",
+      "description": "A stationary standing pose with feet shoulder-width apart, body fully erect. Hands are positioned symmetrically near the ribcage, fingers curled inward with thumbs extended vertically. Head is held upright and forward-facing, demonstrating alertness suitable for attentive reading."
+    },
+    {
+      "name": "Flapping",
+      "description": "Standing with feet shoulder-width apart, knees softly bent, maintaining a balanced stance. Left hand rests near groin area while right hand extends outward with palm facing up. Torso holds a gentle forward lean throughout, complemented by small, repeating hip rotations and occasional lifting of one leg. Head remains level, eyes directed toward lower torso. Smooth, rhythmic movements suggest slow-paced application of oral-genital stimulation technique known as lapping."
+    },
+    {
+      "name": "Squatting",
+      "description": "Squatting, legs widely separated with knees bent deeply, feet planted firmly on ground. Hands positioned at sides, palms facing downward. Head oriented forward without tilt. Stance maintains stable balance with minimal upper-body movement."
+    },
+    {
+      "name": "Stretching",
+      "description": "Standing with feet apart wider than shoulder width, knees bent deeply, toes flared outward. Hands rest on opposing thighs (right hand on left thigh, left hand on right thigh) with fingers relaxed and palms upward. Upper body leans forward, torso nearly horizontal to the ground, promoting gentle tension in posterior leg muscles. Weight shifts smoothly between legs in a cyclical manner, emphasizing a sustained stretch targeting hamstrings and gluteal areas. Head remains upright with minimal tilt, eyes directed downward. Movement consists of slow, controlled transitions between leg positions to maintain stability and deepen the stretch."
+    },
+    {
+      "name": "Shadowboxing",
+      "description": "The male character performs shadowboxing in a dynamic combat stance. Standing with feet shoulder-width apart and knees slightly bent, he maintains a low, balanced base. From the frontal viewpoint, his fists are clenched tightly near the jawline, elbows bent inward to create a protective guard. Throughout the sequence, he alternately thrusts one fist forward in a sharp jabbing motion while retracting the opposite arm across the torso to sustain balance. His upper body shifts fluidly between attack and defense postures, keeping gaze fixed forward. Head remains upright without tilt, emphasizing concentration on the imagined opponent. Movements convey controlled aggression characteristic of sparring practice."
+    },
+    {
+      "name": "Shaking Hips",
+      "description": "A male character stands with legs widely separated, knees bent, and feet firmly grounded. Both hands are positioned behind the head, fingers resting along the base of the skull. The hips shift rapidly side-to-side in rhythmic motion, generating distinct pressure shifts across the thighs and glutes while the upper body remains stationary."
+    },
+    {
+      "name": "Studying",
+      "description": "Squatting with legs wide apart, knees bent sharply downward, feet firmly planted. Head tilted downward, gaze directed toward lower torso. Left hand rests on inner thigh, fingers relaxed; right hand presses gently onto abdominal skin. Minimal lateral weight shifts occur between frames, maintaining stable posture while conveying intense focus. No emotional indicators present."
+    },
+    {
+      "name": "Sitting",
+      "description": "Maleside seated position, legs splayed widely with knees bent, feet flat on surface. Hands rest on upper thighs, palms facing downward toward mid-thigh region. Head is upright and face-forward, indicating focused posture. Overall stance exhibits balance with symmetric leg separation."
+    }
+  ]
+}

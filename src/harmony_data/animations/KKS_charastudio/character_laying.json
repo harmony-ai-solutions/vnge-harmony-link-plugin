@@ -1,0 +1,48 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 12,
+  "category_name": "Laying",
+  "animation_items": [
+    {
+      "name": "About To Turn Over",
+      "description": "Reclining supine on bed with head resting on pillow, right arm fully extended upward with palm facing outward, left arm positioned along torso with fingers relaxed. Legs maintained straight and parallel, feet slightly splayed. Body prepared for rotational adjustment indicating imminent rollover toward left side without significant displacement."
+    },
+    {
+      "name": "Turning Over",
+      "description": "Lying supine, initiates turning over to the right side by rotating body clockwise. Elevation of left arm upward provides momentum while right arm draws toward abdomen. Head maintains gentle alignment with spine during rotation. Completes movement into stable right-side-lying position with left arm curving along torso and right arm resting beside hip. Motion exhibits controlled transitional dynamics consistent with deliberate reorientation."
+    },
+    {
+      "name": "Laying",
+      "description": "Lying on side with head resting on a pillow, upper body slightly elevated. Hands positioned near the cheeks, palms facing inward with fingers spread widely and thumbs resting on temples. Head tilted backward toward the ceiling, eyes closed. Posture conveys deep relaxation or somnolence without significant movement. Body weight distributed evenly along the hip joint, legs bent at the knee with feet tucked close to the torso. Minimal muscular engagement throughout the form."
+    },
+    {
+      "name": "Sleeping At Desk",
+      "description": "Sitting upright yet leaning forward with torso bent deeply, supported by arms folded across chest, hands interlocking gently. Head tilted downward and resting upon arms, obscuring facial features. Legs bent at hip joints with feet flattened on ground, toes oriented outward. Stance conveys profound weariness and relaxation characteristic of sleep."
+    },
+    {
+      "name": "Sleeping In Chair",
+      "description": "Sitting in chair with back supported against chairback, eyes closed tightly shut. Both hands placed flat on upper thigh areas, fingers relaxed and unfingered. Head rests evenly on upper chest, chin slightly elevated yet face oriented downward. Entire body exhibits soft muscle tension indicative of light sleep."
+    },
+    {
+      "name": "Sleeping On Bench 1",
+      "description": "Lying supine on a bench with eyes closed, exhibiting a peaceful sleep-like state. Upper body reclined with arms resting symmetrically on the abdominal region; hands positioned with palms facing downward, fingers gently curled yet relaxed. Lower body extends straight with legs aligned parallel, feet together and toes angled upward. Head remains neutrally positioned without tilting, maintaining a natural resting posture. Entirely stationary with no observable movement or change in stance throughout the duration. Expression conveys quiet repose consistent with deep sleep."
+    },
+    {
+      "name": "Sleeping On Bench 2",
+      "description": "Reclined laterally on a plush chaise lounge, body angled with head resting on folded left arm and right hand draped gently over the abdomen. Eyes closed, head tilted downward toward the surface, maintaining natural spinal alignment. Limbs extend straight with moderate separation between legs, feet relaxed and toes slightly flexed. Stance exhibits complete tranquility, reflecting deep, unbroken sleep without discernible movement or external stimuli."
+    },
+    {
+      "name": "Sleeping Together 1",
+      "description": "Lying on side atop a couch, head rested against a pillow with right shoulder elevated. Eyes closed, face conveying tranquil repose. Both hands positioned over the abdomen, fingers curled inward. Legs extended straight with feet pointing upward. Static pose reflecting undisturbed slumber. Presence of a second party suggested by the \"together\" descriptor in the filename, even though no additional figures are depicted."
+    },
+    {
+      "name": "Sleeping Together 2",
+      "description": "lying face-down with elbows bent and hands positioned beneath the chin, palms upward and fingers interlaced gently. Upper body supported by forearm pressure against cushioned support surface. Lower body extends horizontally with legs straightened, feet pointed outward. Head rests on folded armrest or pillow, oriented towards the direction of the viewer. Stance maintains consistent alignment throughout observed sequence. Position exhibits natural relaxation indicative of restorative sleep state."
+    },
+    {
+      "name": "Sleeping Together 3",
+      "description": "lying prone on a bed, upper body supported by elbow on mattress surface, head resting on forearm, eyes closed. Left leg extended straight, right knee gently flexed. Undergarments worn; no discernible external objects interacting with subject. Appears deeply asleep, exhibiting signs of restfulness. Based on filename context, suggested presence of co-sleeper adjacent within bedding area despite partial visibility constraints."
+    }
+  ]
+}

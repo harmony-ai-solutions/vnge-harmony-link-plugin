@@ -43,33 +43,36 @@ class ActionRegistry:
         self._load_actions()
     
     def _load_actions(self):
-        """Load actions from actions.json file"""
-        actions_file = os.path.join(
-            os.path.dirname(__file__), 
-            '../harmony_data', 
-            'actions.json'
+        """Load actions from individual JSON files in the actions folder"""
+        actions_dir = os.path.join(
+            os.path.dirname(__file__),
+            '../harmony_data',
+            'actions'
         )
-        
+
+        if not os.path.exists(actions_dir):
+            logger.error("Actions directory not found at %s", actions_dir)
+            raise RuntimeError("Actions directory not found. Cannot initialize movement system.")
+
         try:
-            with open(actions_file, 'r') as f:
-                action_list = json.load(f)
-            
-            if not isinstance(action_list, list):
-                raise ValueError("actions.json must contain a list of action definitions")
-            
-            for action in action_list:
-                self._register_action(action)
-                
-            logger.info("Loaded %d actions from actions.json", len(self.actions))
-            
-        except FileNotFoundError:
-            logger.error("actions.json not found at %s", actions_file)
-            raise RuntimeError("Action definitions file (actions.json) not found. Cannot initialize movement system.")
-        except json.JSONDecodeError as e:
-            logger.error("Invalid JSON in actions.json: %s", e)
-            raise RuntimeError("Invalid JSON in actions.json: {0}".format(e))
+            count = 0
+            for filename in os.listdir(actions_dir):
+                if filename.endswith('.json'):
+                    file_path = os.path.join(actions_dir, filename)
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            action_def = json.load(f)
+                        self._register_action(action_def)
+                        count += 1
+                    except json.JSONDecodeError as e:
+                        logger.error("Invalid JSON in %s: %s", filename, e)
+                    except Exception as e:
+                        logger.error("Error loading %s: %s", filename, e)
+
+            logger.info("Loaded %d actions from %s", count, actions_dir)
+
         except Exception as e:
-            logger.error("Error loading actions.json: %s", e)
+            logger.error("Error scanning actions directory: %s", e)
             raise RuntimeError("Failed to load action definitions: {0}".format(e))
     
     def _register_action(self, action_def):

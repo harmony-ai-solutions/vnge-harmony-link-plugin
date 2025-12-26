@@ -1,0 +1,1448 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 0,
+  "category_name": "Action (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Teeter 1",
+      "description": ""
+    },
+    {
+      "name": "Teeter 2",
+      "description": ""
+    },
+    {
+      "name": "Tender Placement 1",
+      "description": ""
+    },
+    {
+      "name": "Tender Placement 2",
+      "description": ""
+    },
+    {
+      "name": "Throw Object",
+      "description": ""
+    },
+    {
+      "name": "Throw",
+      "description": ""
+    },
+    {
+      "name": "Throwing Dice",
+      "description": ""
+    },
+    {
+      "name": "Throwing",
+      "description": ""
+    },
+    {
+      "name": "Tripping 1",
+      "description": ""
+    },
+    {
+      "name": "Tripping 2",
+      "description": ""
+    },
+    {
+      "name": "Turn To Knocked Unconscious",
+      "description": ""
+    },
+    {
+      "name": "Turning Right",
+      "description": ""
+    },
+    {
+      "name": "Turning",
+      "description": ""
+    },
+    {
+      "name": "Typing",
+      "description": ""
+    },
+    {
+      "name": "Using A Fax Machine",
+      "description": ""
+    },
+    {
+      "name": "Using A Filing Cabinet",
+      "description": ""
+    },
+    {
+      "name": "Using An Inhaler",
+      "description": ""
+    },
+    {
+      "name": "Vampiric Bite",
+      "description": ""
+    },
+    {
+      "name": "Vault Over Box",
+      "description": ""
+    },
+    {
+      "name": "Wall Crash",
+      "description": ""
+    },
+    {
+      "name": "Wall Run",
+      "description": ""
+    },
+    {
+      "name": "Watering",
+      "description": ""
+    },
+    {
+      "name": "Weight Shift Gesture",
+      "description": ""
+    },
+    {
+      "name": "Weight Shift",
+      "description": ""
+    },
+    {
+      "name": "Wheelbarrow Dump",
+      "description": ""
+    },
+    {
+      "name": "Wobbling",
+      "description": ""
+    },
+    {
+      "name": "Working On Device",
+      "description": ""
+    },
+    {
+      "name": "Writhing In Pain",
+      "description": ""
+    },
+    {
+      "name": "Yawn",
+      "description": ""
+    },
+    {
+      "name": "Administering Cpr",
+      "description": ""
+    },
+    {
+      "name": "Aerial Evade",
+      "description": ""
+    },
+    {
+      "name": "Bartending",
+      "description": ""
+    },
+    {
+      "name": "Being Carried 1",
+      "description": ""
+    },
+    {
+      "name": "Being Carried 2",
+      "description": ""
+    },
+    {
+      "name": "Being Carried 3",
+      "description": ""
+    },
+    {
+      "name": "Big Body Blow",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Drop",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Hop Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Hop Left",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Hop Right In Place",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Hop Up",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang Shimmy",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang To Crouch",
+      "description": ""
+    },
+    {
+      "name": "Braced Hang",
+      "description": ""
+    },
+    {
+      "name": "Button Pushing",
+      "description": ""
+    },
+    {
+      "name": "Calling",
+      "description": ""
+    },
+    {
+      "name": "Cards 1",
+      "description": ""
+    },
+    {
+      "name": "Cards 2",
+      "description": ""
+    },
+    {
+      "name": "Cards 3",
+      "description": ""
+    },
+    {
+      "name": "Carrying Turn",
+      "description": ""
+    },
+    {
+      "name": "Cartwheel",
+      "description": ""
+    },
+    {
+      "name": "Checking Dice",
+      "description": ""
+    },
+    {
+      "name": "Climbing 1",
+      "description": ""
+    },
+    {
+      "name": "Climbing 2",
+      "description": ""
+    },
+    {
+      "name": "Climbing 3",
+      "description": ""
+    },
+    {
+      "name": "Climbing 4",
+      "description": ""
+    },
+    {
+      "name": "Climbing 5",
+      "description": ""
+    },
+    {
+      "name": "Climbing 6",
+      "description": ""
+    },
+    {
+      "name": "Climbing 7",
+      "description": ""
+    },
+    {
+      "name": "Climbing A Rope 1",
+      "description": ""
+    },
+    {
+      "name": "Climbing A Rope 2",
+      "description": ""
+    },
+    {
+      "name": "Climbing Down 1",
+      "description": ""
+    },
+    {
+      "name": "Climbing Down 2",
+      "description": ""
+    },
+    {
+      "name": "Climbing Down Wall In Place",
+      "description": ""
+    },
+    {
+      "name": "Climbing Down Wall",
+      "description": ""
+    },
+    {
+      "name": "Climbing Ladder In Place",
+      "description": ""
+    },
+    {
+      "name": "Climbing Ladder",
+      "description": ""
+    },
+    {
+      "name": "Climbing To Top",
+      "description": ""
+    },
+    {
+      "name": "Climbing Up Wall In Place",
+      "description": ""
+    },
+    {
+      "name": "Climbing Up Wall",
+      "description": ""
+    },
+    {
+      "name": "Closing A Lid",
+      "description": ""
+    },
+    {
+      "name": "Convulsing",
+      "description": ""
+    },
+    {
+      "name": "Corkscrew Evade",
+      "description": ""
+    },
+    {
+      "name": "Corkscrew Kip Up",
+      "description": ""
+    },
+    {
+      "name": "Cover To Stand 1",
+      "description": ""
+    },
+    {
+      "name": "Cover To Stand 2",
+      "description": ""
+    },
+    {
+      "name": "Cover To Stand 3",
+      "description": ""
+    },
+    {
+      "name": "Cow Milking",
+      "description": ""
+    },
+    {
+      "name": "Crouch Cover Turn",
+      "description": ""
+    },
+    {
+      "name": "Crouch Look Around Corner",
+      "description": ""
+    },
+    {
+      "name": "Crouch To Stand 1",
+      "description": ""
+    },
+    {
+      "name": "Crouch To Stand 3",
+      "description": ""
+    },
+    {
+      "name": "Crouch Turn Left 90",
+      "description": ""
+    },
+    {
+      "name": "Crouch Turn To Stand",
+      "description": ""
+    },
+    {
+      "name": "Crouching",
+      "description": ""
+    },
+    {
+      "name": "Descending Stairs",
+      "description": ""
+    },
+    {
+      "name": "Diagonal Wall Run",
+      "description": ""
+    },
+    {
+      "name": "Dig And Plant Seeds",
+      "description": ""
+    },
+    {
+      "name": "Digging",
+      "description": ""
+    },
+    {
+      "name": "Dive Roll",
+      "description": ""
+    },
+    {
+      "name": "Dodge While Sitting",
+      "description": ""
+    },
+    {
+      "name": "Dodging Back",
+      "description": ""
+    },
+    {
+      "name": "Dodging Right",
+      "description": ""
+    },
+    {
+      "name": "Drinking",
+      "description": ""
+    },
+    {
+      "name": "Drinking Fountain",
+      "description": ""
+    },
+    {
+      "name": "Driving",
+      "description": ""
+    },
+    {
+      "name": "Drop To Freehang",
+      "description": ""
+    },
+    {
+      "name": "Ducking",
+      "description": ""
+    },
+    {
+      "name": "Dying 1",
+      "description": ""
+    },
+    {
+      "name": "Dying 2",
+      "description": ""
+    },
+    {
+      "name": "Dying 3",
+      "description": ""
+    },
+    {
+      "name": "Dying 4",
+      "description": ""
+    },
+    {
+      "name": "Dying 5",
+      "description": ""
+    },
+    {
+      "name": "Dying 6",
+      "description": ""
+    },
+    {
+      "name": "Dying 7",
+      "description": ""
+    },
+    {
+      "name": "Edge Slip",
+      "description": ""
+    },
+    {
+      "name": "Entering Code",
+      "description": ""
+    },
+    {
+      "name": "Evading A Threat",
+      "description": ""
+    },
+    {
+      "name": "Exiting Car",
+      "description": ""
+    },
+    {
+      "name": "Fall A Land To Standing Idle 02",
+      "description": ""
+    },
+    {
+      "name": "Fall A Loop",
+      "description": ""
+    },
+    {
+      "name": "Fall B Land To Standing Idle",
+      "description": ""
+    },
+    {
+      "name": "Fall B Loop",
+      "description": ""
+    },
+    {
+      "name": "Fall Flat",
+      "description": ""
+    },
+    {
+      "name": "Falling 1",
+      "description": ""
+    },
+    {
+      "name": "Falling 2",
+      "description": ""
+    },
+    {
+      "name": "Falling 3",
+      "description": ""
+    },
+    {
+      "name": "Falling 4",
+      "description": ""
+    },
+    {
+      "name": "Falling 5",
+      "description": ""
+    },
+    {
+      "name": "Falling 6",
+      "description": ""
+    },
+    {
+      "name": "Falling 7",
+      "description": ""
+    },
+    {
+      "name": "Falling Back Death 1",
+      "description": ""
+    },
+    {
+      "name": "Falling Back Death 2",
+      "description": ""
+    },
+    {
+      "name": "Falling Down",
+      "description": ""
+    },
+    {
+      "name": "Falling Flat Impact 1",
+      "description": ""
+    },
+    {
+      "name": "Falling Flat Impact 2",
+      "description": ""
+    },
+    {
+      "name": "Falling Forward Death",
+      "description": ""
+    },
+    {
+      "name": "Falling From Losing Balance",
+      "description": ""
+    },
+    {
+      "name": "Falling Into Pool 1",
+      "description": ""
+    },
+    {
+      "name": "Falling Into Pool 2",
+      "description": ""
+    },
+    {
+      "name": "Falling To Landing",
+      "description": ""
+    },
+    {
+      "name": "Falling To Roll 1",
+      "description": ""
+    },
+    {
+      "name": "Falling To Roll 2",
+      "description": ""
+    },
+    {
+      "name": "Finding",
+      "description": ""
+    },
+    {
+      "name": "Fishing Cast",
+      "description": ""
+    },
+    {
+      "name": "Fist Pump",
+      "description": ""
+    },
+    {
+      "name": "Flying 1",
+      "description": ""
+    },
+    {
+      "name": "Flying 2",
+      "description": ""
+    },
+    {
+      "name": "Flying 3",
+      "description": ""
+    },
+    {
+      "name": "Flying 4",
+      "description": ""
+    },
+    {
+      "name": "Flying 5",
+      "description": ""
+    },
+    {
+      "name": "Flying 6",
+      "description": ""
+    },
+    {
+      "name": "Flying 7",
+      "description": ""
+    },
+    {
+      "name": "Flying Back Death",
+      "description": ""
+    },
+    {
+      "name": "Flying Bicycle Kick",
+      "description": ""
+    },
+    {
+      "name": "Free Hang Climb",
+      "description": ""
+    },
+    {
+      "name": "Free Hang Drop",
+      "description": ""
+    },
+    {
+      "name": "Free Hang Hop Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Free Hang Hop Left",
+      "description": ""
+    },
+    {
+      "name": "Free Hang Hop Right In Place",
+      "description": ""
+    },
+    {
+      "name": "Free Hang To Braced",
+      "description": ""
+    },
+    {
+      "name": "Frisbee Throw",
+      "description": ""
+    },
+    {
+      "name": "Gaming",
+      "description": ""
+    },
+    {
+      "name": "Getting Bit",
+      "description": ""
+    },
+    {
+      "name": "Getting Up 1",
+      "description": ""
+    },
+    {
+      "name": "Getting Up 2",
+      "description": ""
+    },
+    {
+      "name": "Grenade Throw 1",
+      "description": ""
+    },
+    {
+      "name": "Grenade Throw 2",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 1",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 2",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 3",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 4",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 5",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 6",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 7",
+      "description": ""
+    },
+    {
+      "name": "Guitar Playing 8",
+      "description": ""
+    },
+    {
+      "name": "Hanging",
+      "description": ""
+    },
+    {
+      "name": "Hard Landing 1",
+      "description": ""
+    },
+    {
+      "name": "Hard Landing 2",
+      "description": ""
+    },
+    {
+      "name": "Harvesting",
+      "description": ""
+    },
+    {
+      "name": "Hiding",
+      "description": ""
+    },
+    {
+      "name": "Hit By Car",
+      "description": ""
+    },
+    {
+      "name": "Hit On Legs",
+      "description": ""
+    },
+    {
+      "name": "Hit On Side Of Body 1",
+      "description": ""
+    },
+    {
+      "name": "Hit On Side Of Body 2",
+      "description": ""
+    },
+    {
+      "name": "Hit On Side Of Head",
+      "description": ""
+    },
+    {
+      "name": "Hit On The Back",
+      "description": ""
+    },
+    {
+      "name": "Hit To Head",
+      "description": ""
+    },
+    {
+      "name": "Hit To Side Of Body",
+      "description": ""
+    },
+    {
+      "name": "Hit To The Legs",
+      "description": ""
+    },
+    {
+      "name": "Honking Horn",
+      "description": ""
+    },
+    {
+      "name": "Idle To Braced Hang",
+      "description": ""
+    },
+    {
+      "name": "Jostled Passenger",
+      "description": ""
+    },
+    {
+      "name": "Jumping Out Of A Plane",
+      "description": ""
+    },
+    {
+      "name": "Kicking Out",
+      "description": ""
+    },
+    {
+      "name": "Kip Up",
+      "description": ""
+    },
+    {
+      "name": "Kneeling Down",
+      "description": ""
+    },
+    {
+      "name": "Kneeling Inspecting",
+      "description": ""
+    },
+    {
+      "name": "Knocked Unconscious",
+      "description": ""
+    },
+    {
+      "name": "Landing 1",
+      "description": ""
+    },
+    {
+      "name": "Landing 2",
+      "description": ""
+    },
+    {
+      "name": "Laying 1",
+      "description": ""
+    },
+    {
+      "name": "Laying 2",
+      "description": ""
+    },
+    {
+      "name": "Laying Mild Cough",
+      "description": ""
+    },
+    {
+      "name": "Laying Seizure",
+      "description": ""
+    },
+    {
+      "name": "Laying Severe Cough",
+      "description": ""
+    },
+    {
+      "name": "Laying Shrugging",
+      "description": ""
+    },
+    {
+      "name": "Laying Vomiting",
+      "description": ""
+    },
+    {
+      "name": "Leaning 1",
+      "description": ""
+    },
+    {
+      "name": "Leaning 2",
+      "description": ""
+    },
+    {
+      "name": "Leaning On A Wall 1",
+      "description": ""
+    },
+    {
+      "name": "Leaning On A Wall 2",
+      "description": ""
+    },
+    {
+      "name": "Left Shimmy",
+      "description": ""
+    },
+    {
+      "name": "Lifting Object",
+      "description": ""
+    },
+    {
+      "name": "Lifting",
+      "description": ""
+    },
+    {
+      "name": "Listening To Music",
+      "description": ""
+    },
+    {
+      "name": "Look Around 1",
+      "description": ""
+    },
+    {
+      "name": "Look Around 2",
+      "description": ""
+    },
+    {
+      "name": "Look Around 3",
+      "description": ""
+    },
+    {
+      "name": "Look Over Shoulder",
+      "description": ""
+    },
+    {
+      "name": "Looking Behind",
+      "description": ""
+    },
+    {
+      "name": "Looking Right",
+      "description": ""
+    },
+    {
+      "name": "Looking Through Files Low",
+      "description": ""
+    },
+    {
+      "name": "Looking",
+      "description": ""
+    },
+    {
+      "name": "Lying Down",
+      "description": ""
+    },
+    {
+      "name": "Moving Object",
+      "description": ""
+    },
+    {
+      "name": "Moving While Hanging 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Moving While Hanging 1",
+      "description": ""
+    },
+    {
+      "name": "Moving While Hanging 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Neck Stretching",
+      "description": ""
+    },
+    {
+      "name": "Nervously Look Around",
+      "description": ""
+    },
+    {
+      "name": "Open Door Outwards",
+      "description": ""
+    },
+    {
+      "name": "Opening A Filing Cabinet",
+      "description": ""
+    },
+    {
+      "name": "Opening Door Inwards",
+      "description": ""
+    },
+    {
+      "name": "Paddling",
+      "description": ""
+    },
+    {
+      "name": "Peek Around Corner",
+      "description": ""
+    },
+    {
+      "name": "Petting Animal 1",
+      "description": ""
+    },
+    {
+      "name": "Petting Animal 2",
+      "description": ""
+    },
+    {
+      "name": "Petting Animal 3",
+      "description": ""
+    },
+    {
+      "name": "Petting",
+      "description": ""
+    },
+    {
+      "name": "Piano Playing 1",
+      "description": ""
+    },
+    {
+      "name": "Piano Playing 2",
+      "description": ""
+    },
+    {
+      "name": "Piano Playing 3",
+      "description": ""
+    },
+    {
+      "name": "Pick Fruit 1",
+      "description": ""
+    },
+    {
+      "name": "Pick Fruit 2",
+      "description": ""
+    },
+    {
+      "name": "Picking Up Object",
+      "description": ""
+    },
+    {
+      "name": "Pilot Flips Switches 1",
+      "description": ""
+    },
+    {
+      "name": "Pilot Flips Switches 2",
+      "description": ""
+    },
+    {
+      "name": "Piloting",
+      "description": ""
+    },
+    {
+      "name": "Plant A Plant",
+      "description": ""
+    },
+    {
+      "name": "Playing Drums 1",
+      "description": ""
+    },
+    {
+      "name": "Playing Drums 2",
+      "description": ""
+    },
+    {
+      "name": "Playing The Violin",
+      "description": ""
+    },
+    {
+      "name": "Pull Pilot From Seat",
+      "description": ""
+    },
+    {
+      "name": "Pull Plant 1",
+      "description": ""
+    },
+    {
+      "name": "Pulled From Seat",
+      "description": ""
+    },
+    {
+      "name": "Pulling A Rope 1",
+      "description": ""
+    },
+    {
+      "name": "Pulling A Rope 2",
+      "description": ""
+    },
+    {
+      "name": "Push Start",
+      "description": ""
+    },
+    {
+      "name": "Push Stop",
+      "description": ""
+    },
+    {
+      "name": "Push",
+      "description": ""
+    },
+    {
+      "name": "Push In Place",
+      "description": ""
+    },
+    {
+      "name": "Pushing 1",
+      "description": ""
+    },
+    {
+      "name": "Pushing 2",
+      "description": ""
+    },
+    {
+      "name": "Putting Down",
+      "description": ""
+    },
+    {
+      "name": "Quick Roll To Run",
+      "description": ""
+    },
+    {
+      "name": "Rallying",
+      "description": ""
+    },
+    {
+      "name": "Rapping 1",
+      "description": ""
+    },
+    {
+      "name": "Rapping 2",
+      "description": ""
+    },
+    {
+      "name": "Reaching Down",
+      "description": ""
+    },
+    {
+      "name": "Reaching Out",
+      "description": ""
+    },
+    {
+      "name": "Reacting",
+      "description": ""
+    },
+    {
+      "name": "Receiving Cpr",
+      "description": ""
+    },
+    {
+      "name": "Release Hostage Hostage",
+      "description": ""
+    },
+    {
+      "name": "Release Hostage Villain",
+      "description": ""
+    },
+    {
+      "name": "Removing Driver",
+      "description": ""
+    },
+    {
+      "name": "Roar",
+      "description": ""
+    },
+    {
+      "name": "Rope Swinging",
+      "description": ""
+    },
+    {
+      "name": "Rummaging",
+      "description": ""
+    },
+    {
+      "name": "Run To Dive",
+      "description": ""
+    },
+    {
+      "name": "Run To Flip",
+      "description": ""
+    },
+    {
+      "name": "Run To Rolling",
+      "description": ""
+    },
+    {
+      "name": "Searching Files High",
+      "description": ""
+    },
+    {
+      "name": "Searching Pockets",
+      "description": ""
+    },
+    {
+      "name": "Sending Fax",
+      "description": ""
+    },
+    {
+      "name": "Shake Gesture",
+      "description": ""
+    },
+    {
+      "name": "Shaking Dice",
+      "description": ""
+    },
+    {
+      "name": "Shaking It Off",
+      "description": ""
+    },
+    {
+      "name": "Shoulder Hit And Fall",
+      "description": ""
+    },
+    {
+      "name": "Shoulder Rubbing",
+      "description": ""
+    },
+    {
+      "name": "Shove Reaction",
+      "description": ""
+    },
+    {
+      "name": "Shoved Reaction With Spin",
+      "description": ""
+    },
+    {
+      "name": "Shoved",
+      "description": ""
+    },
+    {
+      "name": "Singing 1",
+      "description": ""
+    },
+    {
+      "name": "Singing 2",
+      "description": ""
+    },
+    {
+      "name": "Singing 3",
+      "description": ""
+    },
+    {
+      "name": "Sit To Stand",
+      "description": ""
+    },
+    {
+      "name": "Sitting 1",
+      "description": ""
+    },
+    {
+      "name": "Sitting 2",
+      "description": ""
+    },
+    {
+      "name": "Sitting 3",
+      "description": ""
+    },
+    {
+      "name": "Sitting 4",
+      "description": ""
+    },
+    {
+      "name": "Sitting 5",
+      "description": ""
+    },
+    {
+      "name": "Sitting 6",
+      "description": ""
+    },
+    {
+      "name": "Sitting 7",
+      "description": ""
+    },
+    {
+      "name": "Sitting Dazed",
+      "description": ""
+    },
+    {
+      "name": "Sitting Dodges",
+      "description": ""
+    },
+    {
+      "name": "Sitting Drinking",
+      "description": ""
+    },
+    {
+      "name": "Sitting Rubbing Arm",
+      "description": ""
+    },
+    {
+      "name": "Sitting Weapon Strike",
+      "description": ""
+    },
+    {
+      "name": "Sitting",
+      "description": ""
+    },
+    {
+      "name": "Skinning Test",
+      "description": ""
+    },
+    {
+      "name": "Slipping",
+      "description": ""
+    },
+    {
+      "name": "Smoking 1",
+      "description": ""
+    },
+    {
+      "name": "Smoking 2",
+      "description": ""
+    },
+    {
+      "name": "Spat In Face",
+      "description": ""
+    },
+    {
+      "name": "Spin In Place",
+      "description": ""
+    },
+    {
+      "name": "Spinning",
+      "description": ""
+    },
+    {
+      "name": "Sprint To Backslide",
+      "description": ""
+    },
+    {
+      "name": "Sprint To Wall Climb",
+      "description": ""
+    },
+    {
+      "name": "Stand Cover To Look",
+      "description": ""
+    },
+    {
+      "name": "Stand To Cover 1",
+      "description": ""
+    },
+    {
+      "name": "Stand To Cover 2",
+      "description": ""
+    },
+    {
+      "name": "Stand To Freehang",
+      "description": ""
+    },
+    {
+      "name": "Stand To Roll",
+      "description": ""
+    },
+    {
+      "name": "Stand Up 1",
+      "description": ""
+    },
+    {
+      "name": "Stand Up 2",
+      "description": ""
+    },
+    {
+      "name": "Sprinting Forward Roll",
+      "description": ""
+    },
+    {
+      "name": "Sprinting Forward Roll In Place",
+      "description": ""
+    },
+    {
+      "name": "Stand",
+      "description": ""
+    },
+    {
+      "name": "Standing Cover Turn",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Backward 01 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Backward 01 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Forward 01",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Forward 02",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Left 01",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Left 02",
+      "description": ""
+    },
+    {
+      "name": "Standing Death Right 01",
+      "description": ""
+    },
+    {
+      "name": "Standing Dive Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Dodge Backward",
+      "description": ""
+    },
+    {
+      "name": "Standing Dodge Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Dodge Left",
+      "description": ""
+    },
+    {
+      "name": "Standing Dodge Right",
+      "description": ""
+    },
+    {
+      "name": "Standing Taunt Battlecry",
+      "description": ""
+    },
+    {
+      "name": "Standing To Crouched",
+      "description": ""
+    },
+    {
+      "name": "Standing Up 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Up 2",
+      "description": ""
+    },
+    {
+      "name": "Standing Using Touchscreen Tablet",
+      "description": ""
+    },
+    {
+      "name": "Standing",
+      "description": ""
+    },
+    {
+      "name": "Start Climbing Ladder",
+      "description": ""
+    },
+    {
+      "name": "Start Swinging",
+      "description": ""
+    },
+    {
+      "name": "Stomp",
+      "description": ""
+    },
+    {
+      "name": "Stomping",
+      "description": ""
+    },
+    {
+      "name": "Strong Gesture",
+      "description": ""
+    },
+    {
+      "name": "Struck In Head",
+      "description": ""
+    },
+    {
+      "name": "Stumble Backwards",
+      "description": ""
+    },
+    {
+      "name": "Stumbling",
+      "description": ""
+    },
+    {
+      "name": "Stylish Flip",
+      "description": ""
+    },
+    {
+      "name": "Swatting Bugs",
+      "description": ""
+    },
+    {
+      "name": "Sweep Fall",
+      "description": ""
+    },
+    {
+      "name": "Swing Into Wall",
+      "description": ""
+    },
+    {
+      "name": "Swing To Land 1",
+      "description": ""
+    },
+    {
+      "name": "Swing To Land 2",
+      "description": ""
+    },
+    {
+      "name": "Swing To Land 3",
+      "description": ""
+    },
+    {
+      "name": "Swing To Land 4",
+      "description": ""
+    },
+    {
+      "name": "Swing To Land 5",
+      "description": ""
+    },
+    {
+      "name": "Swinging 1",
+      "description": ""
+    },
+    {
+      "name": "Swinging 2",
+      "description": ""
+    },
+    {
+      "name": "Taken Hostage Victim",
+      "description": ""
+    },
+    {
+      "name": "Taken Hostage Villain",
+      "description": ""
+    },
+    {
+      "name": "Taking Item",
+      "description": ""
+    }
+  ]
+}

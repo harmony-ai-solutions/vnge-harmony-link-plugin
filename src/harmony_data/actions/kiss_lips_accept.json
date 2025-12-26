@@ -1,0 +1,16 @@
+{
+  "name": "kiss_lips_accept",
+  "description": "accepts the other chara's kiss",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} blushes and enjoys the kissing with {{other_character}}",
+    "{{character}} returns the kiss",
+    "{{character}} sighs contentedly after the kiss",
+    "{{character}} smiles at {{other_character}} after the kiss",
+    "{{character}} wraps their arms around {{other_character}} during the kiss"
+  ],
+  "trigger_conditions": [
+    "kiss_lips"
+  ]
+}

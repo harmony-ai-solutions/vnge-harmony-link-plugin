@@ -1,0 +1,17 @@
+{
+  "name": "caress_head_accept",
+  "description": "accepts caress head of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} purrs contentedly under your touch",
+    "{{character}} sighs pleasantly as you stroke their hair",
+    "{{character}} smiles warmly at your gentle gesture",
+    "{{character}} relaxes visibly in your comforting presence",
+    "{{character}} leans into your touch, seeking more connection",
+    "{{character}} nuzzles closer to you, enjoying the moment"
+  ],
+  "trigger_conditions": [
+    "caress_head"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "retrieve_item_failure",
+  "description": "retrieve item from pocket / inventory into hand",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{object}} not found in {{character}}'s possession",
+    "{{object}} stuck in {{character}}'s pocket",
+    "{{object}} broken or damaged beyond repair"
+  ],
+  "trigger_conditions": [
+    "retrieve_item"
+  ]
+}

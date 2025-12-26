@@ -1,0 +1,40 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 22,
+  "category_name": "Dancing",
+  "animation_items": [
+    {
+      "name": "Pole Dance",
+      "description": "Performing a pole dance sequence, the person starts with the left hand gripping the pole vertically near shoulder level while the right arm extends horizontally to maintain balance. Progressively rotating clockwise, the torso leans forward, decreasing hip elevation toward the pole base while keeping core engagement. The right leg lifts high, heel pressing gently against the pole surface for leverage, showcasing controlled momentum. Head aligns neutrally with spine, gaze oriented forward, reflecting concentrated precision throughout the smooth transitional movement."
+    },
+    {
+      "name": "Dance 1",
+      "description": "A gentle sway initiates the dance sequence starting with arms partially extended from the chest. The character proceeds with broad horizontal arm sweeps, fingers loose and relaxed, while pivoting on the balls of their feet. Sequential steps occur with the right foot lifting and placing forward smoothly, maintaining balance through a stable core alignment. Head orientation remains consistently forward-facing, showcasing confident yet restrained grace throughout the motion."
+    },
+    {
+      "name": "Dance 2",
+      "description": "Standing with feet shoulder-width apart, weight balanced evenly. Arms begin raised high with closed fists, transitioning through a smooth arc where the left hand descends to shoulder height while the right hand remains elevated before syncing back to symmetry. Fists gradually soften into loose grip as arms reset. Head holds steady alignment forward, no significant tilt observed. Dynamic upper-body flow emphasizes rhythmic coordination inherent in structured dance sequences, reflecting engaged, lively movement."
+    },
+    {
+      "name": "Dance 3",
+      "description": "Standing with feet shoulder-width apart, executing a dynamic dance sequence. Alternate arm movements sweep outward and upward in fluid arcs, beginning with the right arm raised toward the forehead before transitioning to horizontal extension; the left arm mirrors this motion symmetrically. Weight shifts subtly between feet during controlled pivoting, maintaining stable footing. Both hands display loose finger curls, palms oriented outward. Head remains upright and fixed forward, reflecting concentrated engagement with the choreographed flow of the dance."
+    },
+    {
+      "name": "Dance 4",
+      "description": "standing, left hand resting on hip, right hand raised overhead initially. turns counterclockwise while maintaining balance, left hand remaining stationary on hip throughout rotation. right hand lowers gradually then extends upward in a pointing gesture. head remains level initially, then tilts slightly as body rotates. motion exhibits smooth, deliberate movement characteristic of a structured dance routine, conveying confident control over form and flow."
+    },
+    {
+      "name": "Dance 5",
+      "description": "Standing, balancing on both feet with legs spaced comfortably apart. Arms rise simultaneously in flowing arcs above the head\u2014one arm bent at the elbow with fingers closed tightly into fists, the other arm extended straight upward with fingers splayed widely. During movement cycles, the torso rotates minimally clockwise while maintaining spinal alignment, causing gentle sway in the hips. Head remains fixed directly forward without tilt or turn, conveying consistent concentration. Movements exhibit deliberate precision indicative of structured choreographic practice. Emotion conveyed through poised posture suggests self-assured confidence during performance execution."
+    },
+    {
+      "name": "Dance 6",
+      "description": "A dancer performs a graceful sequence with controlled arm and leg movements. Beginning with a side-lean stance, right arm extended forward and left arm pulled back, the movement transitions seamlessly into a central pose with arms raised overhead and legs slightly parted. It concludes with a forward step, right leg lifted and arms curving in synchrony. Throughout the routine, the dancer maintains stability through deliberate weight shifts and anchored foot placements, demonstrating fluid coordination between upper and lower body motions."
+    },
+    {
+      "name": "Dance 7",
+      "description": "A dancer executes a side-kicking motion with smooth lateral weight transfer. From the left-profile view, the left leg extends upward with toes pointed, while the right foot grounds steadily. Both arms stretch horizontally outward with palms angled inward, fingertips relaxed. Shifting to a frontal stance, the hips pivot gently while maintaining vertical alignment, emphasizing balanced momentum. In the final right-profile shot, the right leg mirrors the initial kick with the left foot fixed, showcasing symmetrical movement flow. Head remains neutrally aligned with eyes forward-facing, reflecting disciplined control of upper-body stability alongside coordinated lower-limb articulation."
+    }
+  ]
+}

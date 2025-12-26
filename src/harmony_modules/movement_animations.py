@@ -7,6 +7,7 @@ import json
 import os
 import random
 
+from vngameengine import get_engine_id2
 from harmony_modules.logging import get_logger
 
 # Initialize logger for this module
@@ -171,36 +172,75 @@ class AnimationDurationDetector:
 
 # AnimationDatabase - loads and provides access to animation definitions
 class AnimationDatabase:
-    def __init__(self, game_type='kks'):
-        self.game_type = game_type
+    def __init__(self, game_type=None):
+        # Determine game type from engine if not provided
+        if game_type is None:
+            try:
+                self.game_type = get_engine_id2()
+            except:
+                self.game_type = 'KKS_charastudio' # Default fallback
+        else:
+            self.game_type = game_type
+            
         self.animation_database = self._load_animation_database()
         self.animations_by_name = {}  # name -> definition mapping
         self._build_animation_definitions()
 
     def _load_animation_database(self):
-        """Load animation database from animation_list_short.json"""
-        animation_db_path = os.path.join(os.path.dirname(__file__), '../harmony_data', 'animation_list_wip.json')
+        """Load animation database from individual files in the animations subfolders (game-specific)"""
+        animations_root = os.path.join(os.path.dirname(__file__), '../harmony_data', 'animations')
 
-        if not os.path.exists(animation_db_path):
+        if not os.path.exists(animations_root):
             raise RuntimeError(
-                "Animation database not found at {0}. This file is required for movement system initialization.".format(animation_db_path))
-        try:
-            with open(animation_db_path, 'r') as f:
-                database = json.load(f)
+                "Animations root directory not found at {0}. This folder is required for movement system initialization.".format(animations_root))
 
-            # Validate database structure
-            if not isinstance(database, dict):
-                raise RuntimeError("Animation database must be a dictionary")
+        # Determine which game folder to load from
+        game_dir = os.path.join(animations_root, self.game_type)
+        
+        if not os.path.exists(game_dir):
+            logger.warning("Animations directory for game type '%s' not found at %s. Falling back to root.", self.game_type, game_dir)
+            game_dir = animations_root
+
+        database = {}
+        try:
+            count = 0
+            for filename in os.listdir(game_dir):
+                if filename.endswith('.json'):
+                    file_path = os.path.join(game_dir, filename)
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            cat_data = json.load(f)
+                        
+                        group_id = str(cat_data.get('group_id'))
+                        group_name = cat_data.get('group_name')
+                        category_id = str(cat_data.get('category_id'))
+                        category_name = cat_data.get('category_name')
+                        animation_items = cat_data.get('animation_items', [])
+
+                        if group_id not in database:
+                            database[group_id] = {
+                                "name": group_name,
+                                "categories": {}
+                            }
+                        
+                        database[group_id]["categories"][category_id] = {
+                            "name": category_name,
+                            "animation_items": animation_items
+                        }
+                        count += 1
+                    except json.JSONDecodeError as e:
+                        logger.error("Invalid JSON in %s: %s", filename, e)
+                    except Exception as e:
+                        logger.error("Error loading %s: %s", filename, e)
 
             if not database:
-                raise RuntimeError("Animation database is empty")
+                raise RuntimeError("Animation database is empty (no files found in %s)" % game_dir)
 
-            logger.info("Successfully loaded animation database with %d groups", len(database))
+            logger.info("Successfully loaded %d animation categories from %s", count, game_dir)
             return database
 
-        except json.JSONDecodeError as e:
-            raise RuntimeError("Invalid JSON in animation database: {0}".format(e))
         except Exception as e:
+            logger.error("Error scanning animations directory %s: %s", game_dir, e)
             raise RuntimeError("Error loading animation database: {0}".format(e))
 
     def _build_animation_definitions(self):

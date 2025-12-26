@@ -1,0 +1,16 @@
+{
+  "name": "kiss_hand_decline",
+  "description": "declines kiss hand of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} pulls their hand away",
+    "{{character}} looks uncomfortable",
+    "{{character}} steps back from {{other_character}}",
+    "{{character}} avoids eye contact",
+    "{{character}} clears their throat awkwardly"
+  ],
+  "trigger_conditions": [
+    "kiss_hand"
+  ]
+}

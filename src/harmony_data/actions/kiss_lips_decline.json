@@ -1,0 +1,13 @@
+{
+  "name": "kiss_lips_decline",
+  "description": "declines the other chara's kiss",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} turns their head away from the kiss",
+    "{{character}} pulls back abruptly"
+  ],
+  "trigger_conditions": [
+    "kiss_lips"
+  ]
+}

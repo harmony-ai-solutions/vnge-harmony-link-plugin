@@ -1,0 +1,28 @@
+{
+  "group_id": 8,
+  "group_name": "Battle",
+  "category_id": 47,
+  "category_name": "Male: Sword And Shield",
+  "animation_items": [
+    {
+      "name": "Attack 1",
+      "description": ""
+    },
+    {
+      "name": "Attack 2",
+      "description": ""
+    },
+    {
+      "name": "Attack 3",
+      "description": ""
+    },
+    {
+      "name": "Blocking",
+      "description": ""
+    },
+    {
+      "name": "Knocked Down",
+      "description": ""
+    }
+  ]
+}

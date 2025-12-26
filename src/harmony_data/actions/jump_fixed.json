@@ -1,0 +1,20 @@
+{
+  "name": "jump_fixed",
+  "description": "jump at current position",
+  "category": "simple_action",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} jumps in place",
+    "{{character}} leaps up from {{object}}",
+    "{{character}} springs into the air",
+    "{{character}} makes a vertical jump",
+    "{{character}} jumps straight up",
+    "{{character}} launches off {{object}}",
+    "{{character}} bounces upwards",
+    "{{character}} performs a standing jump",
+    "{{character}} executes a quick hop",
+    "{{character}} does a small lift",
+    "{{character}} makes a tiny leap"
+  ],
+  "trigger_conditions": []
+}

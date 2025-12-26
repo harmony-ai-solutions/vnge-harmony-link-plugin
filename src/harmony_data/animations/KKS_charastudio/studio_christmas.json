@@ -1,0 +1,16 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 69,
+  "category_name": "Christmas",
+  "animation_items": [
+    {
+      "name": "Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Pose 2",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "pick_up_right_hand_failure",
+  "description": "pick up an object with right hand failed",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{object}} is too heavy for {{character}}'s right hand",
+    "{{object}} slips out of {{character}}'s right hand",
+    "{{character}}'s right hand cannot hold {{object}}"
+  ],
+  "trigger_conditions": [
+    "pick_up_right_hand"
+  ]
+}

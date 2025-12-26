@@ -1,0 +1,180 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 10,
+  "category_name": "Soccer (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Chip",
+      "description": ""
+    },
+    {
+      "name": "Dribble",
+      "description": ""
+    },
+    {
+      "name": "Goalie Throw",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Body Block 1",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Body Block 2",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Catch 1",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Catch 2",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Catch 3",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Directing",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Diving Save 1",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Diving Save 2",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Drop Kick",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Miss",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Overhand Throw",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Pass",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Placing Ball",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Scoop",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Sidestep 1",
+      "description": ""
+    },
+    {
+      "name": "Goalkeeper Sidestep 2",
+      "description": ""
+    },
+    {
+      "name": "Header Soccerball 1",
+      "description": ""
+    },
+    {
+      "name": "Header Soccerball 2",
+      "description": ""
+    },
+    {
+      "name": "Kneeing Soccerball",
+      "description": ""
+    },
+    {
+      "name": "Offensive Idle",
+      "description": ""
+    },
+    {
+      "name": "Receive Soccerball",
+      "description": ""
+    },
+    {
+      "name": "Receive",
+      "description": ""
+    },
+    {
+      "name": "Roll Kicking",
+      "description": ""
+    },
+    {
+      "name": "Scissor Kick",
+      "description": ""
+    },
+    {
+      "name": "Soccer Header 1",
+      "description": ""
+    },
+    {
+      "name": "Soccer Header 2",
+      "description": ""
+    },
+    {
+      "name": "Soccer Idle",
+      "description": ""
+    },
+    {
+      "name": "Soccer Pass",
+      "description": ""
+    },
+    {
+      "name": "Soccer Penalty Kick",
+      "description": ""
+    },
+    {
+      "name": "Soccer Spin",
+      "description": ""
+    },
+    {
+      "name": "Soccer Tackle 1",
+      "description": ""
+    },
+    {
+      "name": "Soccer Tackle 2",
+      "description": ""
+    },
+    {
+      "name": "Soccer Tackle 3",
+      "description": ""
+    },
+    {
+      "name": "Soccer Trip",
+      "description": ""
+    },
+    {
+      "name": "Stall Soccerball 1",
+      "description": ""
+    },
+    {
+      "name": "Stall Soccerball 2",
+      "description": ""
+    },
+    {
+      "name": "Strike Foward Jog",
+      "description": ""
+    },
+    {
+      "name": "Throw In",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "kiss_cheek",
+  "description": "kiss cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} leans towards {{other_character}} and kisses {{other_character}}'s cheek",
+    "{{character}} gently plants a kiss on {{other_character}}'s cheek",
+    "{{character}} softly presses lips against {{other_character}}'s cheek",
+    "{{character}} approaches {{other_character}}, smiling, then kisses {{other_character}}'s cheek",
+    "{{character}} whispers something sweet into {{other_character}}'s ear before kissing {{other_character}}'s cheek",
+    "{{character}} reaches out and affectionately kisses {{other_character}}'s cheek",
+    "{{character}} warmly embraces {{other_character}} and kisses {{other_character}}'s cheek",
+    "{{character}} comfortingly wraps arm around {{other_character}} and tenderly kisses {{other_character}}'s cheek",
+    "{{character}} appreciatively thanks {{other_character}} with a gentle kiss on the cheek"
+  ]
+}

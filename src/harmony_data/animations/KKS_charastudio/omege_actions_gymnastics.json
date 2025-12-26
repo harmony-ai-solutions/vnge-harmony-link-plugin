@@ -1,0 +1,48 @@
+{
+  "group_id": 60,
+  "group_name": "Omege Actions",
+  "category_id": 4001,
+  "category_name": "Gymnastics",
+  "animation_items": [
+    {
+      "name": "On floor full 1",
+      "description": ""
+    },
+    {
+      "name": "Double spin end 1",
+      "description": ""
+    },
+    {
+      "name": "Double spin start 1",
+      "description": ""
+    },
+    {
+      "name": "Single spin 1",
+      "description": ""
+    },
+    {
+      "name": "On floor start 1",
+      "description": ""
+    },
+    {
+      "name": "On floor full 2",
+      "description": ""
+    },
+    {
+      "name": "Double spin start 2",
+      "description": ""
+    },
+    {
+      "name": "Double spin end 2",
+      "description": ""
+    },
+    {
+      "name": "Sprint 1",
+      "description": ""
+    },
+    {
+      "name": "Float serve",
+      "description": ""
+    }
+  ]
+}

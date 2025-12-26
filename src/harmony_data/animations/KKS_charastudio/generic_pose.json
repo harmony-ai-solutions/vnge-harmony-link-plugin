@@ -1,0 +1,76 @@
+{
+  "group_id": 12,
+  "group_name": "Generic",
+  "category_id": 1,
+  "category_name": "Pose",
+  "animation_items": [
+    {
+      "name": "Basic 1",
+      "description": ""
+    },
+    {
+      "name": "Basic 2",
+      "description": ""
+    },
+    {
+      "name": "Basic 3",
+      "description": ""
+    },
+    {
+      "name": "Basic 4",
+      "description": ""
+    },
+    {
+      "name": "Basic 5",
+      "description": ""
+    },
+    {
+      "name": "Basic 6",
+      "description": ""
+    },
+    {
+      "name": "Basic 7",
+      "description": ""
+    },
+    {
+      "name": "Basic 8",
+      "description": ""
+    },
+    {
+      "name": "Basic 9",
+      "description": ""
+    },
+    {
+      "name": "Basic 10",
+      "description": ""
+    },
+    {
+      "name": "Sitting 1",
+      "description": ""
+    },
+    {
+      "name": "Sitting 2",
+      "description": ""
+    },
+    {
+      "name": "Yoga 1",
+      "description": ""
+    },
+    {
+      "name": "Yoga 2",
+      "description": ""
+    },
+    {
+      "name": "Yoga 3",
+      "description": ""
+    },
+    {
+      "name": "Yoga 4",
+      "description": ""
+    },
+    {
+      "name": "Yoga 5",
+      "description": ""
+    }
+  ]
+}

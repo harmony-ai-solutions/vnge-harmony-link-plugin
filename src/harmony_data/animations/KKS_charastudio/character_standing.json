@@ -1,0 +1,108 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 4,
+  "category_name": "Standing",
+  "animation_items": [
+    {
+      "name": "Idle 1",
+      "description": "Standing upright, feet approximately shoulder-width apart with toes directed forward. Spinal column maintained in vertical alignment, knees minimally flexed. Arms rest naturally at the sides, elbows relaxed, fingers softly curved. Left hand positioned adjacent to the left thigh, right hand beside the right thigh. Head faces directly forward without lateral tilt. Subtle postural adjustments include minute shifts in weight distribution across the lower body and controlled oscillation of the torso, consistent with a passive state of readiness. Neutral facial expression observed."
+    },
+    {
+      "name": "Idle 2",
+      "description": "Standing upright with feet shoulder-width apart, balanced evenly on both feet. Left hand hangs loosely beside the left thigh, fingers relaxed and slightly spread; right hand matches the left side\u2019s position symmetrically. Shoulders remain level, arms suspended vertically at the sides with minimal tension. Head aligns squarely with the spine, eyes directing straight ahead without tilting or turning. Subtle oscillations occur in weight distribution between feet and faint wrist movements corresponding to shallow respiration, conveying a tranquil yet alert stance."
+    },
+    {
+      "name": "Idle 3",
+      "description": "Standing with feet shoulder-width apart and knees softly bent, the character maintains a balanced stance. Both hands are raised to chest level, fingers pressing gently against the upper torso. Slight variations in hand position indicate minimal movement, emphasizing stability. Head remains upright and oriented forward."
+    },
+    {
+      "name": "Searching For Book",
+      "description": "Standing, feet spaced evenly apart with weight balanced. One hand rises smoothly to chest height, index finger fully extended vertically while other fingers curve inward; the opposite hand stays relaxed near the hip. Head gently tilts toward the finger's direction, eyes fixed upward to track potential locations. Deliberate, measured movements suggest systematic scanning of elevated surfaces during an intentional search for a book."
+    },
+    {
+      "name": "Looking At Book",
+      "description": "Standing, body rotated progressively left, central, and right while maintaining direct visual fixation on a book or object resting atop hands. Hands stay consistently positioned near the midsection with palms facing inward toward the torso. Head is slightly tilted downward to align gaze with the book\u2019s or objects location, conveying concentrated attention. Minimal movement occurs beyond gradual directional adjustments, emphasizing stable postural control during prolonged engagement with the text material."
+    },
+    {
+      "name": "Looking At Smartphone",
+      "description": "Standing, barefoot with feet flat on the ground. Head tilted downward, face directed toward a smartphone held in front of the body. Right hand extends outward with palm open; left hand rests against the torso. Subtle shifts in hand placement occur throughout the animation, suggesting engagement with the device. Posture maintains attentiveness, conveying concentration on the displayed content."
+    },
+    {
+      "name": "Swiping Smartphone Screen",
+      "description": "Standing with feet shoulder-width apart, spine straight. Left hand slides horizontally across chest-level space in repetitive swiping motions while right hand remains stationary at hip height for support. Head stays upright with neutral tilt, eyes fixed forward. Stance mirrors consistent engagement with handheld device interactions via controlled hand movements."
+    },
+    {
+      "name": "Listening To Music",
+      "description": "Standing upright with feet parallel and weight evenly distributed. Both hands raised symmetrically to the sides of the head, fingers curving gently as if adjusting headphone placement. Subtle positional shifts between frames indicate smooth, intentional adjustments. Head remains level, facing forward without tilt, conveying attentiveness appropriate for engaging with auditory stimuli. No discernible emotional cues present in the postures."
+    },
+    {
+      "name": "Preparing For Selfie",
+      "description": "Standing with feet parallel and weight evenly distributed. Right hand begins elevated near shoulder height, fingers spread outward, then smoothly descends toward upper torso to rest lightly on chest. Left hand simultaneously moves from a natural position to press gently against opposite side of chest. Head remains aligned forward without tilt throughout the motion. This controlled sequence demonstrates deliberate posture adjustment as preparation for capturing a personal photograph."
+    },
+    {
+      "name": "Taking Selfie",
+      "description": "Standing upright, left hand extends upward to hold a handheld device while right hand initially rests at hip level. Progresses to elevate both arms overhead to reposition the device for optimal framing, maintaining balanced posture with minimal head tilt. Hand placements shift gradually across frames, emphasizing controlled adjustment of the device to achieve desired photographic composition."
+    },
+    {
+      "name": "About To Drink",
+      "description": "Standing, feet spaced evenly with knees straight and weight balanced. Left hand rests at hip level, right arm extended with hand elevated toward mouth holding a cup at lower chest level. Head faces directly ahead with no significant tilt. Body maintains gentle forward inclination consistent with preparatory motion for consuming liquid. Minimal upper-body movement emphasizes readiness to bring the cup to lips. No discernible emotional cues beyond neutral engagement with the act of drinking."
+    },
+    {
+      "name": "Drinking",
+      "description": "Standing with feet shoulder-width apart, spine erect. Initially arms extend laterally with palms up. Progressively raises right hand toward the face: right hand lifts to mouth height with fingers curved as if gripping a drinking vessel, left arm hanging down with fingers spread relaxed. Motion involves repeated upward reaches of the right hand to mouth level, accompanied by minimal head adjustments to orient gaze toward an implied drink source. No significant body rotation or lateral leaning observed. Stance maintains balance throughout the gesture cycle."
+    },
+    {
+      "name": "Looking Outside",
+      "description": "Standing, legs straight, feet flat on ground. From the character's perspective, right hand extends outward with palm open in the left-view angle, both hands lift to shoulder height with palms facing outward in the frontal view, and left hand presses onto the upper chest while right hand lowers to the side in the right-view angle. Head faces forward with no tilt, suggesting attentive observation of an external scene. No discernible emotional expression present."
+    },
+    {
+      "name": "Stretching",
+      "description": "Standing with feet spaced comfortably apart and aligned neutrally. Gradually elevate arms from shoulder height to full overhead extension, fists clenched with knuckles drawn inward. Both hands travel vertically along the central axis of the body, maintaining tension in the forearms. Lower limbs remain fixed, heels anchored and toes slightly separated. Spine stays engaged without leaning or twisting, allowing smooth vertical motion of the arms while sustaining equilibrium."
+    },
+    {
+      "name": "Fixing Hair",
+      "description": "Standing upright with feet parallel and weight evenly distributed. Alternately raises right and left hands to adjust hair along the forehead and temples, fingers splayed through strands with palms angling toward the head. Maintains direct gaze forward with minimal head tilt, occasionally glancing at adjusted areas via mirror. Hand movements consist of gentle pinching and sliding motions to settle loose strands. Stance reflects neutral concentration without visible emotional cues."
+    },
+    {
+      "name": "Examining Self",
+      "description": "standing, feet firmly grounded shoulder-width apart. Starts facing front with arms extended horizontally to the sides, fingers relaxed and splayed. Transitions through smooth lateral rotations to display left and right profile views while keeping core stable. Head maintains consistent downward tilt throughout, directing gaze toward midsection for close scrutiny. Fingers apply soft pressure along anatomical landmarks, implying systematic review of bodily proportions without significant limb displacement."
+    },
+    {
+      "name": "Distributing Leaflets",
+      "description": "standing, balanced on two feet with weight equally distributed. Torso erect, spine vertical. Both arms extend forward in unison with palms fully exposed and fingers separated to guide delivery of printed materials. Minor adjustments between frames rotate upper body to optimize visibility while keeping eyes fixed ahead. Minimal hip sway maintains stability during repetition of the gesture. Expression denotes focused professionalism, emphasizing clarity of communication without physical strain."
+    },
+    {
+      "name": "About To Sweep",
+      "description": "standing, feet positioned shoulder-width apart, spine vertical. Left hand extends horizontally with palm open, fingers curled around broom or similar item used for sweeping; right hand extends similar but holds the item at a little higher spot. Head faces forward without tilt. Posture conveys preparedness to initiate a sweeping motion, emphasizing controlled arm extension and balanced stance."
+    },
+    {
+      "name": "Sweeping",
+      "description": "standing, feet evenly spaced and grounded. Both arms execute a smooth, repeating sweeping motion across the torso: right hand begins near the ribcage and sweeps outward toward the right hip, while left hand mirrors the path symmetrically. Fingers remain slightly curled throughout the movement. Head maintains a level alignment with a slight downward gaze. The coordinated arm action simulates the systematic removal of debris using a handheld tool."
+    },
+    {
+      "name": "Idling On Broom",
+      "description": "Standing upright with feet shoulder-width apart, lower torso stabilized against a horizontal broom handle. Both hands clasped together in front of the chest, fingers overlapping to press gently against mammary tissue. Head maintained directly forward without tilt or turn. Motionless posture reflecting calm attentiveness with no discernible shifts in weight or limb positioning."
+    },
+    {
+      "name": "Wiping Desk",
+      "description": "Standing with torso bent forward, leaning toward an unseen desk. Hands extend outward, fingers splayed to press against the desk surface as they glide horizontally. Head tilted downward, gaze fixed on the desk. Gradual adjustment of posture maintains consistent contact with the desk throughout the wiping motion."
+    },
+    {
+      "name": "Wiping Window",
+      "description": "Standing with feet shoulder-width apart, weight evenly distributed. Performing sequential horizontal wiping motions on an unseen window surface. From the left-angle perspective, the character lifts their right hand to glide smoothly across the upper section of the window. In the frontal view, both hands engage simultaneously, extending outward in parallel horizontal arcs to clean the entire surface. The right-angle shot displays the left hand repeating the same motion. All hand movements feature fully extended fingers with palms slightly curved, maintaining steady pressure during each stroke. Head remains aligned directly toward the window without tilt or shift, conveying focused engagement in the task. No additional physical or emotional states are observable beyond the intentional wiping action."
+    },
+    {
+      "name": "Leaning On Wall 1",
+      "description": "Standing with back pressed against a vertical surface, leaning slightly forward. Left hand and right hand positioned behind back with fingers interlocked, thumbs extended upward toward cervical spine. Head remains level without tilt, gaze directed straight ahead. Symmetric weight distribution across both legs ensures stable footing against the support structure. No discernible emotional cues present in stance."
+    },
+    {
+      "name": "Leaning On Wall 2",
+      "description": "standing, feet spaced evenly apart with toes pointed outward, weight distributed equally on both legs. Left hand extends slightly forward and touches an unseen wall for support, fingers spread and relaxed; right hand hangs naturally beside the body. Upper body tilts minimally backward against the wall, maintaining equilibrium with shoulders square. Head faces directly ahead without tilt, conveying stable balance while leaning against an object or wall. Stance reflects controlled relaxation with no visible signs of exertion or emotion."
+    },
+    {
+      "name": "Leaning On Wall 3",
+      "description": "Standing, leaning against a wall, arms crossed with right hand resting over left hand on the abdomen. Fingers are gently curved and close together. Head is tilted downward, directing gaze toward the floor. Stance maintains balance with weight distributed evenly between feet."
+    }
+  ]
+}

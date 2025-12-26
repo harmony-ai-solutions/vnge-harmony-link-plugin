@@ -1,0 +1,18 @@
+{
+  "name": "pick_up_both_hands",
+  "description": "pick up an object with both hands",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{character}} reaches for {{object}} with both hands",
+    "{{character}} grabs {{object}} using both hands",
+    "{{character}} lifts {{object}} with both hands",
+    "{{character}} carefully picks up {{object}} with both hands",
+    "{{character}} positions both hands to lift {{object}}",
+    "{{character}} readies both hands to pick up {{object}}",
+    "{{character}} uses both hands to securely hold {{object}}",
+    "{{character}} brings both hands together to pick up {{object}}",
+    "{{character}} gathers both hands around {{object}} to lift it",
+    "{{character}} interlocks fingers to lift {{object}}"
+  ]
+}

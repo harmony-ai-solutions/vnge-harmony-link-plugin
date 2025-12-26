@@ -1,0 +1,14 @@
+{
+  "name": "pick_up_left_hand_failure",
+  "description": "pick up an object with left hand failed",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{object}} is too heavy for {{character}}'s left hand",
+    "{{object}} slips out of {{character}}'s left hand",
+    "{{character}}'s left hand cannot hold {{object}}"
+  ],
+  "trigger_conditions": [
+    "pick_up_left_hand"
+  ]
+}

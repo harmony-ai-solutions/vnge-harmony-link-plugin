@@ -1,0 +1,16 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 5,
+  "category_name": "Conversation",
+  "animation_items": [
+    {
+      "name": "Sitting Conversation Right",
+      "description": ""
+    },
+    {
+      "name": "Sitting conversation left",
+      "description": ""
+    }
+  ]
+}

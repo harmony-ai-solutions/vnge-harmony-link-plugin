@@ -1,0 +1,32 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 13,
+  "category_name": "Live Concert",
+  "animation_items": [
+    {
+      "name": "Scene 1",
+      "description": "Standing, weight evenly distributed on both feet, toes pointed forward. Right hand initially raised near face, fingers gently brushing cheek before extending outward in a broad wave motion; left hand lifts to mid-torso, fingertips pointing toward collarbone. Midway, both hands transition toward chest, palms facing upward, forming a gentle clasp. Head stays oriented directly forward with minimal tilt. The stance conveys lively engagement characteristic of a performer connecting with an audience during a live musical performance."
+    },
+    {
+      "name": "Scene 2",
+      "description": ""
+    },
+    {
+      "name": "Scene 3",
+      "description": ""
+    },
+    {
+      "name": "Scene 4",
+      "description": ""
+    },
+    {
+      "name": "Scene 5",
+      "description": ""
+    },
+    {
+      "name": "Loop",
+      "description": "starting with a grounded stance featuring crossed legs, left hand resting on upper chest area. transitioning to extending the right arm fully outward with fingers spread. concluding with the right hand brought toward the mouth, fingers gently curved. dynamic shifts convey lively engagement through expressive hand movements suited for connecting with an audience during a musical performance."
+    }
+  ]
+}

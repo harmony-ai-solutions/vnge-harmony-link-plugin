@@ -1,0 +1,27 @@
+{
+  "name": "move",
+  "description": "normal walking",
+  "category": "movement",
+  "duration": 3.0,
+  "examples": [
+    "{{character}} starts walking",
+    "{{character}} starts moving",
+    "{{character}} walks over to {{other_character}}",
+    "{{character}} walks over to {{object}}",
+    "{{character}} walks past {{object}} to {{other_object}}",
+    "{{character}} walks past {{other_character}} to {{other_object}}",
+    "{{character}} walks past {{other_character}} to {{character_group}}",
+    "{{character}} walks past {{character_group}} to {{other_character_group}}",
+    "{{character}} walks past {{object}} to {{other_character}}",
+    "{{character}} takes a step forward",
+    "{{character}} strides towards {{object}}",
+    "{{character}} strolls around {{object}}",
+    "{{character}} marches towards {{other_character}}",
+    "{{character}} saunters towards the {{object_collection}}",
+    "{{character}} advances toward {{character_group}}",
+    "{{character}} tip-toes closer to {{other_character}}",
+    "{{character}} quietly sneaks up on {{other_character}}",
+    "{{character}} tiptoes toward {{object}}"
+  ],
+  "trigger_conditions": []
+}

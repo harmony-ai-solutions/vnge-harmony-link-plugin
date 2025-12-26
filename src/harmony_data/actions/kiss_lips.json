@@ -1,0 +1,19 @@
+{
+  "name": "kiss_lips",
+  "description": "kiss the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} leans in and kisses {{other_character}} on the lips",
+    "{{character}} presses their lips against {{other_character}}'s lips",
+    "{{character}} and {{other_character}} share a passionate kiss",
+    "{{character}} initiates a tender kiss with {{other_character}}",
+    "{{character}} softly brushes their lips against {{other_character}} mouth",
+    "{{character}} pulls {{other_character}} in for a deep kiss",
+    "{{character}} and {{other_character}} exchange a quick peck on the lips",
+    "{{character}} can't help but steal a kiss from {{other_character}}",
+    "{{character}} plants a gentle kiss on {{other_character}}'s lips",
+    "{{character}} and {{other_character}} engage in a lingering kiss",
+    "{{character}} whispers sweet nothings as they kiss {{other_character}}"
+  ]
+}

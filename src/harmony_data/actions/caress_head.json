@@ -1,0 +1,22 @@
+{
+  "name": "caress_head",
+  "description": "caress head of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} gently strokes {{other_character}}'s hair",
+    "{{character}} caresses {{other_character}}'s head",
+    "{{character}} runs fingers through {{other_character}}'s hair",
+    "{{character}} softly combs {{other_character}}'s hair with fingers",
+    "{{character}} tenderly touches {{other_character}}'s forehead",
+    "{{character}} sweetly scratches {{other_character}}'s temple",
+    "{{character}} leans in and lovingly tucks {{other_character}}'s hair behind their ear",
+    "{{character}} delicately traces patterns on {{other_character}}'s head with fingertips",
+    "{{character}} affectionately ruffles {{other_character}}'s hair",
+    "{{character}} kindly soothes {{other_character}}'s temples",
+    "{{character}} carefully brushes back {{other_character}}'s bangs",
+    "{{character}} playfully messes up {{other_character}}'s hairstyle",
+    "{{character}} curiously examines {{other_character}}'s hair texture",
+    "{{character}} lovingly embraces {{other_character}}'s head against their chest"
+  ]
+}

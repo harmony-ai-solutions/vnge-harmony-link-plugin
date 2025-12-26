@@ -1,0 +1,17 @@
+{
+  "name": "push_away_avoid",
+  "description": "avoids getting pushed away the other chara",
+  "category": "character_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} resists the push",
+    "{{character}} grabs onto something nearby to keep standing",
+    "{{character}} braces themselves against the impact",
+    "{{character}} resists the attempt and remains steady",
+    "{{character}} sidesteps the push easily",
+    "{{character}} counters with a push of their own"
+  ],
+  "trigger_conditions": [
+    "push_away"
+  ]
+}

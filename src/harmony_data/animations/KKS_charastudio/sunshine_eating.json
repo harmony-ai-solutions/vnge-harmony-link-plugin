@@ -1,0 +1,20 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 9,
+  "category_name": "Eating",
+  "animation_items": [
+    {
+      "name": "Eating skewers 1",
+      "description": ""
+    },
+    {
+      "name": "Eating skewers2",
+      "description": ""
+    },
+    {
+      "name": "Making skewers",
+      "description": ""
+    }
+  ]
+}

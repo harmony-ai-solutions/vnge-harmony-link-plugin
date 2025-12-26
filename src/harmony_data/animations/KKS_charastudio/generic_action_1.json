@@ -1,0 +1,52 @@
+{
+  "group_id": 12,
+  "group_name": "Generic",
+  "category_id": 66,
+  "category_name": "Action 1",
+  "animation_items": [
+    {
+      "name": "Woman waving penlight",
+      "description": ""
+    },
+    {
+      "name": "Woman masturbation",
+      "description": ""
+    },
+    {
+      "name": "Man waving penlight",
+      "description": ""
+    },
+    {
+      "name": "Man performing gag",
+      "description": ""
+    },
+    {
+      "name": "Waving",
+      "description": ""
+    },
+    {
+      "name": "Waiting",
+      "description": ""
+    },
+    {
+      "name": "Scavenge the shelf",
+      "description": ""
+    },
+    {
+      "name": "Going through a drawer",
+      "description": ""
+    },
+    {
+      "name": "Water drainage",
+      "description": ""
+    },
+    {
+      "name": "Catch",
+      "description": ""
+    },
+    {
+      "name": "High laughter",
+      "description": ""
+    }
+  ]
+}

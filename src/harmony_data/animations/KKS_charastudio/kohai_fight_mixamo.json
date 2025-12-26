@@ -1,0 +1,608 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 5,
+  "category_name": "Fight (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Punching 1",
+      "description": ""
+    },
+    {
+      "name": "Punching 2",
+      "description": ""
+    },
+    {
+      "name": "Quad Punch",
+      "description": ""
+    },
+    {
+      "name": "Receive Uppercut To The Face",
+      "description": ""
+    },
+    {
+      "name": "Receiving A Big Uppercut",
+      "description": ""
+    },
+    {
+      "name": "Receiving An Uppercut",
+      "description": ""
+    },
+    {
+      "name": "Rib Hit",
+      "description": ""
+    },
+    {
+      "name": "Right Hook",
+      "description": ""
+    },
+    {
+      "name": "Right Pivot",
+      "description": ""
+    },
+    {
+      "name": "Rockin Shackle Aggressor",
+      "description": ""
+    },
+    {
+      "name": "Rockin Shackle Victim",
+      "description": ""
+    },
+    {
+      "name": "Roundhouse Kick 1",
+      "description": ""
+    },
+    {
+      "name": "Roundhouse Kick 2",
+      "description": ""
+    },
+    {
+      "name": "Shoulder Throw Aggressor",
+      "description": ""
+    },
+    {
+      "name": "Shoulder Throw Victim",
+      "description": ""
+    },
+    {
+      "name": "Side Kick",
+      "description": ""
+    },
+    {
+      "name": "Spin Flip Kick",
+      "description": ""
+    },
+    {
+      "name": "Stealth Assassination",
+      "description": ""
+    },
+    {
+      "name": "Stealth Assassination Victim",
+      "description": ""
+    },
+    {
+      "name": "Strangling",
+      "description": ""
+    },
+    {
+      "name": "Stunned",
+      "description": ""
+    },
+    {
+      "name": "Superhuman Choke Lift",
+      "description": ""
+    },
+    {
+      "name": "Surprise Uppercut 1",
+      "description": ""
+    },
+    {
+      "name": "Surprise Uppercut 2",
+      "description": ""
+    },
+    {
+      "name": "Taking Punch",
+      "description": ""
+    },
+    {
+      "name": "Uppercut Jab",
+      "description": ""
+    },
+    {
+      "name": "Uppercut",
+      "description": ""
+    },
+    {
+      "name": "Walking 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Walking Backwards",
+      "description": ""
+    },
+    {
+      "name": "Action Idle To Fight Idle",
+      "description": ""
+    },
+    {
+      "name": "Back Flip To Uppercut",
+      "description": ""
+    },
+    {
+      "name": "Being Electrocuted",
+      "description": ""
+    },
+    {
+      "name": "Being Strangled",
+      "description": ""
+    },
+    {
+      "name": "Beta_Joints",
+      "description": ""
+    },
+    {
+      "name": "Big Hit To Head 1",
+      "description": ""
+    },
+    {
+      "name": "Big Hit To Head 2",
+      "description": ""
+    },
+    {
+      "name": "Big Kidney Hit",
+      "description": ""
+    },
+    {
+      "name": "Big Side Hit",
+      "description": ""
+    },
+    {
+      "name": "Big Stomach Hit",
+      "description": ""
+    },
+    {
+      "name": "Body Block",
+      "description": ""
+    },
+    {
+      "name": "Boxing 1",
+      "description": ""
+    },
+    {
+      "name": "Boxing 2",
+      "description": ""
+    },
+    {
+      "name": "Boxing 3",
+      "description": ""
+    },
+    {
+      "name": "Boxing 4",
+      "description": ""
+    },
+    {
+      "name": "Boxing 5",
+      "description": ""
+    },
+    {
+      "name": "Boxing 6",
+      "description": ""
+    },
+    {
+      "name": "Brutal Assassination 1",
+      "description": ""
+    },
+    {
+      "name": "Brutal Assassination 2",
+      "description": ""
+    },
+    {
+      "name": "Center Block",
+      "description": ""
+    },
+    {
+      "name": "Defender",
+      "description": ""
+    },
+    {
+      "name": "Dodging In Place",
+      "description": ""
+    },
+    {
+      "name": "Dodging",
+      "description": ""
+    },
+    {
+      "name": "Double Leg Takedown Attacker 1",
+      "description": ""
+    },
+    {
+      "name": "Double Leg Takedown Attacker 2",
+      "description": ""
+    },
+    {
+      "name": "Double Leg Takedown Victim 1",
+      "description": ""
+    },
+    {
+      "name": "Double Leg Takedown Victim 2",
+      "description": ""
+    },
+    {
+      "name": "Drop Kick",
+      "description": ""
+    },
+    {
+      "name": "Elbow Punch 1",
+      "description": ""
+    },
+    {
+      "name": "Elbow Punch 2",
+      "description": ""
+    },
+    {
+      "name": "Elbow Uppercut Combo",
+      "description": ""
+    },
+    {
+      "name": "Entry 1",
+      "description": ""
+    },
+    {
+      "name": "Entry 2",
+      "description": ""
+    },
+    {
+      "name": "Entry 3",
+      "description": ""
+    },
+    {
+      "name": "Entry 4",
+      "description": ""
+    },
+    {
+      "name": "Fight Idle",
+      "description": ""
+    },
+    {
+      "name": "Fighting Idle",
+      "description": ""
+    },
+    {
+      "name": "Fist Fight A",
+      "description": ""
+    },
+    {
+      "name": "Fist Fight B",
+      "description": ""
+    },
+    {
+      "name": "Flip Kick 1",
+      "description": ""
+    },
+    {
+      "name": "Flip Kick 2",
+      "description": ""
+    },
+    {
+      "name": "Flying Kick",
+      "description": ""
+    },
+    {
+      "name": "Flying Knee Punch Combo",
+      "description": ""
+    },
+    {
+      "name": "Flying Shoulder Throw",
+      "description": ""
+    },
+    {
+      "name": "Getting Smashed",
+      "description": ""
+    },
+    {
+      "name": "Getting Thrown",
+      "description": ""
+    },
+    {
+      "name": "Grab And Slam",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 1",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 2",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 3",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 4",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 5",
+      "description": ""
+    },
+    {
+      "name": "Head Hit 6",
+      "description": ""
+    },
+    {
+      "name": "Headbutt",
+      "description": ""
+    },
+    {
+      "name": "Header",
+      "description": ""
+    },
+    {
+      "name": "Hell Slammer A",
+      "description": ""
+    },
+    {
+      "name": "Hell Slammer B",
+      "description": ""
+    },
+    {
+      "name": "Hit To Body 1",
+      "description": ""
+    },
+    {
+      "name": "Hit To Body 2",
+      "description": ""
+    },
+    {
+      "name": "Hold Off Assailant",
+      "description": ""
+    },
+    {
+      "name": "Hook 1",
+      "description": ""
+    },
+    {
+      "name": "Hook 2",
+      "description": ""
+    },
+    {
+      "name": "Hook 3",
+      "description": ""
+    },
+    {
+      "name": "Hook 4",
+      "description": ""
+    },
+    {
+      "name": "Hook 5",
+      "description": ""
+    },
+    {
+      "name": "Hook 6",
+      "description": ""
+    },
+    {
+      "name": "Hook Punch",
+      "description": ""
+    },
+    {
+      "name": "Hurricane Kick",
+      "description": ""
+    },
+    {
+      "name": "Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Illegal Elbow Punch 1",
+      "description": ""
+    },
+    {
+      "name": "Illegal Elbow Punch 2",
+      "description": ""
+    },
+    {
+      "name": "Illegal Knee",
+      "description": ""
+    },
+    {
+      "name": "Inside Crescent Kick",
+      "description": ""
+    },
+    {
+      "name": "Inverted Double Kick To Kip Up",
+      "description": ""
+    },
+    {
+      "name": "Jab Cross",
+      "description": ""
+    },
+    {
+      "name": "Jab To Elbow Punch",
+      "description": ""
+    },
+    {
+      "name": "Jumping Over Into Combat",
+      "description": ""
+    },
+    {
+      "name": "Kick To The Groin 1",
+      "description": ""
+    },
+    {
+      "name": "Kick To The Groin 2",
+      "description": ""
+    },
+    {
+      "name": "Kick To The Groin 3",
+      "description": ""
+    },
+    {
+      "name": "Kicking 1",
+      "description": ""
+    },
+    {
+      "name": "Kicking 2",
+      "description": ""
+    },
+    {
+      "name": "Kicking 3",
+      "description": ""
+    },
+    {
+      "name": "Kicking 4",
+      "description": ""
+    },
+    {
+      "name": "Kicking 5",
+      "description": ""
+    },
+    {
+      "name": "Kicking 6",
+      "description": ""
+    },
+    {
+      "name": "Kicking 7",
+      "description": ""
+    },
+    {
+      "name": "Knee Jab",
+      "description": ""
+    },
+    {
+      "name": "Knee Jabs To Uppercut",
+      "description": ""
+    },
+    {
+      "name": "Knock Off Assailant",
+      "description": ""
+    },
+    {
+      "name": "Knocked Out 1",
+      "description": ""
+    },
+    {
+      "name": "Knocked Out 2",
+      "description": ""
+    },
+    {
+      "name": "Lead Jab 1",
+      "description": ""
+    },
+    {
+      "name": "Lead Jab 2",
+      "description": ""
+    },
+    {
+      "name": "Lead Jab 3",
+      "description": ""
+    },
+    {
+      "name": "Lead Jab 4",
+      "description": ""
+    },
+    {
+      "name": "Left Block",
+      "description": ""
+    },
+    {
+      "name": "Left Pivot",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 1",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 2",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 3",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 4",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 5",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 6",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 7",
+      "description": ""
+    },
+    {
+      "name": "Leg Sweep 8",
+      "description": ""
+    },
+    {
+      "name": "Light Hit To Head",
+      "description": ""
+    },
+    {
+      "name": "Livershot Knockdown",
+      "description": ""
+    },
+    {
+      "name": "Medium Hit To Head",
+      "description": ""
+    },
+    {
+      "name": "Mma Idle",
+      "description": ""
+    },
+    {
+      "name": "Mma Kick 1",
+      "description": ""
+    },
+    {
+      "name": "Mma Kick 2",
+      "description": ""
+    },
+    {
+      "name": "Mma Kick 3",
+      "description": ""
+    },
+    {
+      "name": "Mma Kick 4",
+      "description": ""
+    },
+    {
+      "name": "Mma Kick 5",
+      "description": ""
+    },
+    {
+      "name": "Mutant Jump Attack",
+      "description": ""
+    },
+    {
+      "name": "Outward Block",
+      "description": ""
+    },
+    {
+      "name": "Pivot",
+      "description": ""
+    },
+    {
+      "name": "Punch Combo",
+      "description": ""
+    },
+    {
+      "name": "Punch To Elbow Combo",
+      "description": ""
+    }
+  ]
+}

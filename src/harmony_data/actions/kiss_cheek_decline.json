@@ -1,0 +1,17 @@
+{
+  "name": "kiss_cheek_decline",
+  "description": "declines kiss cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} awkwardly pulls back and avoids eye contact",
+    "{{character}} hesitates before taking a step back, looking uncomfortable",
+    "{{character}} tries to maintain distance and politely declines",
+    "{{character}} raises a hand in protest, creating some space between them and {{other_character}}",
+    "{{character}} ducks away while averting {{other_character}}'s gaze, displaying discomfort",
+    "{{character}} frowns and steps aside, signaling that they aren't interested in such gestures"
+  ],
+  "trigger_conditions": [
+    "kiss_cheek"
+  ]
+}

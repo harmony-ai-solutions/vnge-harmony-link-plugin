@@ -1,0 +1,32 @@
+{
+  "group_id": 8,
+  "group_name": "Battle",
+  "category_id": 45,
+  "category_name": "Male: Energy Bullet",
+  "animation_items": [
+    {
+      "name": "Attack 1",
+      "description": ""
+    },
+    {
+      "name": "Attack 2",
+      "description": ""
+    },
+    {
+      "name": "Attack 3",
+      "description": ""
+    },
+    {
+      "name": "Attack 4",
+      "description": ""
+    },
+    {
+      "name": "Blocking",
+      "description": ""
+    },
+    {
+      "name": "Knocked Down",
+      "description": ""
+    }
+  ]
+}

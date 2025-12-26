@@ -6,10 +6,10 @@ This folder contains data definitions used by some of the modules of the VNGE Pl
 will encounter issues when loading the files
 
 ## Action Definitions
-File: `actions.json`
+Folder: `actions/`
 
-This file contains action definitions and roleplay examples for the specified action.
-The VNGE Plugin will only execute actions defined in this list.
+This folder contains individual JSON files for each action.
+The VNGE Plugin will load all `.json` files in this directory.
 
 An action definition looks like this:
 
@@ -31,22 +31,22 @@ example_action = {
     # a trigger condition can either be a character's own action, or an action executed by another character 
     "trigger_conditions": [
         "push_away"
-    ],
+    ]
 }
 ```
 
 
 ## List of available ingame Animations
-File: `animation_list.kks.json`
-Sample: `animation_list.sample.json`
+Folder: `animations/`
 
-This file contains animations detected from ingame assets.
-These Actions have no proper description, so they need to be manually or dynamically mapped to action definitions.
+This folder contains game-specific subfolders (e.g., `KKS_charastudio/`) containing JSON files for animation Group + Category combinations.
 
-These animations have been loaded from Koikatsu Sunshine and may contain different names for actions than other Illusion
+These animations have been loaded from the game engine at runtime and may contain different names for actions than other Illusion
 games, as well as animations from mod files. We'll look into providing individual lists for all supported games in the future.
 
-A new animation list for your game can be generated when starting the plugin with `debug_mode = 2` set in `harmony.ini`.
+Sample: `animation_list.sample.json`
+
+A new animation list for your game can be generated in a single file (see sample file) when starting the plugin with `debug_mode = 2` set in `harmony.ini`, which can then be split using `split_data.py`.
 
 The structure of `animation_list.sample.kks.json` is as follows:
 
@@ -80,17 +80,43 @@ The structure of `animation_list.sample.kks.json` is as follows:
     - `name`: A string that provides the name of the individual animation (e.g., "T-Pose", "Idle").
     - `description`: A string that can contain a description of the animation, but is often empty in the sample data.
 
+
+The structure of a processed animation category file is as follows:
+
+```json
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 0,
+  "category_name": "Basic",
+  "animation_items": [
+    {
+      "name": "T-Pose",
+      "description": "T-Pose, debug animation"
+    }
+  ]
+}
+```
+
 VNGE uses a simple ID based mapping in it's animate2 function, therefore the VNGE Plugin and Harmony Link Entity modules referencing animations require descriptions to be provided, so they are aware of the actual behaviour performed when executing an animation.
 
 This may be extended with a more sophisticated per-frame analysis at a later point, to make the Plugin capable of performing more precise and directed movement.
 
-## Updating Animation Descriptions
+## Splitting and Updating Data
 
-File: `update_animations.py`
+### split_data.py
+This script splits the legacy `actions.json` and `animation_list_wip.json` into the new folder structure.
+
+Usage:
+```bash
+python split_data.py
+```
+
+### `update_animations.py`
 
 This script updates animation descriptions in the animation list from KKS format.
 
-### Usage
+#### Usage
 
 Run the script with default files:
 
@@ -104,7 +130,7 @@ Or specify custom file paths:
 python update_animations.py --descriptions custom_descriptions.json --animation-list custom_list.json
 ```
 
-### Command Line Options
+#### Command Line Options
 
 - `--descriptions`: Path to the source descriptions JSON file (default: `animation_descriptions_kks.json`)
 - `--animation-list`: Path to the target animation list JSON file (default: `animation_list_updated.json`)

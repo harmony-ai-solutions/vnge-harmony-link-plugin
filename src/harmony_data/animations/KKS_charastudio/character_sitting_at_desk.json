@@ -1,0 +1,84 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 7,
+  "category_name": "Sitting At Desk",
+  "animation_items": [
+    {
+      "name": "About To Read Book 1",
+      "description": "Sitting upright at a desk, spine aligned vertically with hips square to the workspace. Left hand rests on the left thigh, fingers relaxed and spread; right hand mirrors on the right thigh. Head tilted downward, eyes fixed on the desk surface. Minimal shift in finger alignment observed across frames, reflecting anticipatory adjustment for handling reading material. Posture communicates sustained focus and preparedness for engaging with written content."
+    },
+    {
+      "name": "Changing Posture 1",
+      "description": "Seated at a desk, legs positioned with knees bent and feet flat on the surface. Left hand transitions from resting on the lap to tracing the jawline, while the right hand ascends to cradle the forehead. Head tilts slightly toward the left shoulder, eyes fixed downward. Gradual redistributions of weight convey mindful posture adjustments during sustained sitting."
+    },
+    {
+      "name": "About To Read Book 2",
+      "description": "Seated at a desk, body oriented forward with minor forward lean. Right hand extends toward desk surface, fingers curled as if gripping a book; left hand maintains similar position opposite side. Head tilts downward, maintaining direct visual focus on desk area. Subtle weight-shifting between frames indicates gradual settling into reading-ready posture. Expression conveys quiet attentiveness without overt emotional cues."
+    },
+    {
+      "name": "Changing Posture 2",
+      "description": "Seated on a chair with implied desk proximity, the character transitions through three sequential postural adjustments while maintaining continuous engagement with the environment. Starting in a leftward-oriented position, the left hand rests along the outer thigh with fingers relaxed, while the right hand raises to lightly graze the temple area. Progressing to a frontal stance, both hands rest symmetrically on the abdominal region with palms flattened against the skin, wrists aligned neutrally. Concluding in a rightward orientation, the right hand lowers to press against the anterior hip crease, and the left hand ascends to adjust hair near the nape. Smooth rotational shifts occur without abrupt movements, featuring subtle weight redistribution and maintained head-level alignment with minimal lateral nodding. The entire sequence demonstrates controlled, intentional posture modification suitable for ergonomics-focused behavior."
+    },
+    {
+      "name": "About To Study",
+      "description": "Seated upright at a desk, spine aligned vertically with balanced weight distribution across pelvic region. Left hand rests along inner thigh with palm facing forward, fingers softly curled; right hand transitions slowly from mid-chest level toward lower abdominal area, thumb extending slightly outward. Head tilts minimally downward, eyes directed toward unseen materials, suggesting focused intent. Shoulders maintain square alignment throughout subtle shifts in posture, reflecting composed preparation for scholarly engagement without overt physical tension. Movements convey quiet anticipation as the character settles into position before commencing intellectual work."
+    },
+    {
+      "name": "Studying",
+      "description": "sitting at a desk, upper body leaning forward with head low over written material. Both hands hold a writing instrument close to the page, fingers wrapped securely around its handle. Wrists bend slightly to maintain control while drawing lines. Knees are bent beneath the body, feet planted steadily on the floor. Periodic small lifts of the head reveal brief pauses for thought, returning immediately to focused posture. The overall stance conveys quiet concentration during academic study."
+    },
+    {
+      "name": "About to Draw",
+      "description": "seated, legs bent with feet flat on ground, body balanced neutrally. Left hand rests near lower torso while right hand manipulates small object close to pelvic area. Head tilted downward, gaze directed toward midsection. Hands move slowly between frames, adjusting grip on object and stabilizing position for drawing preparation. Stance reflects concentrated effort to settle into optimal posture before beginning artwork."
+    },
+    {
+      "name": "Drawing",
+      "description": "seated, legs bent with feet flat on ground, body facing forward. Begins with head bowed low, hair covering face; hands grip fabric near chest region, fingers curved inward. Transitionally lifts head steadily, revealing a slight smile; shifts hands to rest on lower abdomen, palms facing upward. Maintains upright spinal alignment throughout, reflecting preparedness for drawing-focused tasks."
+    },
+    {
+      "name": "Looking At Smartphone",
+      "description": "The character sits with knees bent and feet grounded, maintaining a stable seated posture. Left hand rests on the hip with palm facing upward, while the right hand stays near the chest with fingers curled inward. The head remains forward-facing without tilt, eyes directed downward toward a presumed handheld electronic device. Slight adjustments occur in hand positioning and body balance throughout the animation, reflecting natural engagement with the device. No significant shifts in stance or orientation take place, emphasizing consistent focus on the unseen smartphone."
+    },
+    {
+      "name": "Swiping Smartphone Screen",
+      "description": "Sitting with legs widely spaced, knees bent and feet grounded. Upper body slightly inclined forward, hands positioned in front of the lower torso with fingers curled and thumbs executing repeated lateral sweeps across an imagined smartphone screen. Head directed downward toward the device, maintaining focus during the swiping motion. Subtle shifts in hand position accompany the wrist-driven movements, reflecting intentional engagement with the handheld device. No visible emotional expression beyond concentration."
+    },
+    {
+      "name": "Listening To Music",
+      "description": "sitting, legs bent at knees with feet flat on ground, upper body slightly leaning forward. right hand raised to ear with fingers curving along the outer ear, left hand resting on the leg. head maintained level and facing forward. subtle movements observed in the hand near the ear, lifting and lowering minimally while remaining engaged."
+    },
+    {
+      "name": "About To Drink",
+      "description": "Sitting at desk, legs extended forward, torso upright with spine aligned. Right hand gripping a cup near its base, fingers wrapped around the exterior with thumb supported against the inner curve, elevating it toward the mouth. Left hand resting palm-down on the desk surface beside the cup. Head tilted slightly downward, gaze fixed on the cup. Neutral posture reflects preparedness to consume liquid, with minor forward lean emphasizing readiness for ingestion."
+    },
+    {
+      "name": "Drinking",
+      "description": "Sitting at a desk, upper body oriented forward. Right hand gradually rises from a resting position to lift a cup toward the mouth, fingers encircling the cup's base with the thumb stabilizing the rim. Left hand stays lowered on the lap or thigh. Head remains upright and directed straight ahead without tilt. The motion conveys slow, deliberate sips taken from the cup while maintaining stable posture."
+    },
+    {
+      "name": "About To Examine Self",
+      "description": "Sitting with legs bent and feet flat on a supportive surface, the character shifts weight slightly to maintain balance. Hands start positioned near the hips, then move gently toward the lower torso, applying light pressure along the abdominal and pelvic areas. Head lowers steadily to direct visual focus onto the inspected region, conveying concentrated attention. The motion reflects deliberate self-assessment without external involvement."
+    },
+    {
+      "name": "Examining Self",
+      "description": "Sitting at a desk with knees bent and feet grounded, the character begins with hands resting near the abdomen. Gradually, both hands rise vertically toward the head, fingers splaying to gently touch the hairline or temples. The head tilts slightly downward, directing gaze toward a reflective surface assumed to be nearby. This measured motion reflects concentrated self-scrutiny consistent with the \"Examining-self\" animation."
+    },
+    {
+      "name": "Legs To Side",
+      "description": "Sitting on the ground, legs positioned wide apart with knees bent and feet flat. Upper body rotates steadily clockwise from left-facing to front-facing to right-facing, maintaining seated stability. Hands rest consistently on inner thighs, palms down, fingers slightly curled throughout the rotation. Head aligns with body orientation, tracking the directional shift without noticeable tilt. Motion focuses on lateral separation of legs while preserving core posture."
+    },
+    {
+      "name": "Sitting On Desk",
+      "description": "Seated on a desk, spine maintained upright with torso balanced. Legs bent at knees, feet flat on the desk surface. Arms hang vertically along the thighs, right hand positioned adjacent to the right thigh and left hand adjacent to the left thigh, both hands open with relaxed fingers. Head faces directly forward without tilt or turning. Static pose reflecting a neutral seated posture with no active movement or dynamic gestures."
+    },
+    {
+      "name": "Leaning On Desk",
+      "description": "sitting at a desk, leaning forward with upper body supported by desk surface. Legs are bent at knees with feet flat on ground, spaced evenly. Both hands rest on desk, palms open and facing upward. Head is tilted slightly downward, eyes focused toward desk. Stance combines relaxed posture with controlled balance while maintaining direct contact with desk support."
+    },
+    {
+      "name": "Pretending To Sleep",
+      "description": "Seated with legs parted, knees bent, feet grounded. Hands positioned to cradle the head, fingers curved beneath the chin. Head tilted forward, chin resting on hands. Static pose expressing calm fatigue characteristic of pretended sleep."
+    }
+  ]
+}

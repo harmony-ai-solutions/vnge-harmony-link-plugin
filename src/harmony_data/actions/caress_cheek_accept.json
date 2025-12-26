@@ -1,0 +1,16 @@
+{
+  "name": "caress_cheek_accept",
+  "description": "accepts caress cheek of the other chara",
+  "category": "character_interaction",
+  "duration": 2.5,
+  "examples": [
+    "{{character}} leans into the touch",
+    "{{character}} closes their eyes",
+    "{{character}} smiles",
+    "{{character}} blushes",
+    "{{character}} sighs contentedly"
+  ],
+  "trigger_conditions": [
+    "caress_cheek"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 23,
+  "category_name": "Fantasy",
+  "animation_items": [
+    {
+      "name": "Pose 1",
+      "description": "Airborne character performs a dynamic pose sequence with synchronized leg lifts and arm extensions. From the frontal perspective, both hands raise to shoulder height with fingers splayed and palms lateral. Weight alternates between legs during mid-stride jumps, complemented by reciprocal arm sweeps. Head remains vertical with direct gaze, conveying poised control. The sequence emphasizes fluid athleticism suitable for expressive storytelling within a fantasy theme."
+    },
+    {
+      "name": "Pose 2",
+      "description": "Sitting, legs bent upward with knees drawn close to chest, feet suspended mid-air. From the centered perspective, right hand rests near chest with fingers curled inward, left hand extended outward with fingers splayed. Head faces directly forward without tilt. Stance maintains symmetrical balance across all viewing angles, emphasizing fluidity and controlled elegance characteristic of studio-focused aesthetic posing."
+    },
+    {
+      "name": "Pose 3",
+      "description": "Standing with feet hip-width apart, toes slightly angled outward. Both arms raise to chest height, hands positioned symmetrically beside the clavicles with fingers spread horizontally across the suprasternal notch. Head faces directly forward, chin maintained neutrally aligned. Weight balanced evenly between both feet. Pose presents symmetrical control ideal for staged photographic composition."
+    },
+    {
+      "name": "Pose 4",
+      "description": "Static standing pose with left leg advanced and right leg trailing, feet flat on ground. Left arm extended horizontally outward with fingers splayed; right arm relaxed along torso. Head upright, facing directly forward without tilt. Balanced stance expressing poised readiness for aesthetic presentation in a fantasy-themed context."
+    },
+    {
+      "name": "Animations",
+      "description": "The character performs a graceful, cyclical motion across three perspectives, showcasing fluid lateral shifts. From a left-profile view, she lifts her left foot high while raising her right arm overhead, keeping elbows bent. Transitioning to a frontal stance, both arms relax at her sides with fingertips slightly curved, balancing weight evenly. Finally, in a right-profile pose, her left arm extends forward and right leg lifts mid-stride. All movements maintain an upright head position with direct gaze forward, conveying composed elegance without abrupt transitions."
+    }
+  ]
+}

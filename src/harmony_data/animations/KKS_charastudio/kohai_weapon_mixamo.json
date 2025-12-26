@@ -1,0 +1,228 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 15,
+  "category_name": "Weapon (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Standing Aim Walk Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Aim Walk Left In Place",
+      "description": ""
+    },
+    {
+      "name": "Standing Aim Walk Left",
+      "description": ""
+    },
+    {
+      "name": "Standing Disarm Bow",
+      "description": ""
+    },
+    {
+      "name": "Standing Disarm Over Shoulder",
+      "description": ""
+    },
+    {
+      "name": "Standing Equip Bow",
+      "description": ""
+    },
+    {
+      "name": "Standing Jump Running To Run Forward",
+      "description": ""
+    },
+    {
+      "name": "Standing Melee Attack 360 Low",
+      "description": ""
+    },
+    {
+      "name": "Standing Melee Attack Horizontal",
+      "description": ""
+    },
+    {
+      "name": "Standing Melee Combo Attack Ver 1",
+      "description": ""
+    },
+    {
+      "name": "Standing Melee Run Jump Attack",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Attack 1",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Attack 2",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Attack 3",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Casting",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Death",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Kick",
+      "description": ""
+    },
+    {
+      "name": "Sword And Shield Power Up",
+      "description": ""
+    },
+    {
+      "name": "Thrust Slash",
+      "description": ""
+    },
+    {
+      "name": "Two Hand Sword Combo",
+      "description": ""
+    },
+    {
+      "name": "Two Handed Sword Death",
+      "description": ""
+    },
+    {
+      "name": "Upward Thrust",
+      "description": ""
+    },
+    {
+      "name": "Withdrawing Sword",
+      "description": ""
+    },
+    {
+      "name": "Dual Weapon Combo",
+      "description": ""
+    },
+    {
+      "name": "Great Sword 180 Turn",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Crouching",
+      "description": ""
+    },
+    {
+      "name": "Great Sword High Spin Attack",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Idle 1",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Idle 2",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Jump Attack",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Kick 1",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Kick 2",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Power Up",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Run In Place",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Run",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Slash 1",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Slash 2",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Slide Attack",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Strafe",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Walk 1 In Place",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Walk 1",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Walk 2 In Place",
+      "description": ""
+    },
+    {
+      "name": "Great Sword Walk 2",
+      "description": ""
+    },
+    {
+      "name": "Run With Sword In Place",
+      "description": ""
+    },
+    {
+      "name": "Run With Sword",
+      "description": ""
+    },
+    {
+      "name": "Sheathing Sword",
+      "description": ""
+    },
+    {
+      "name": "Shooting Arrow 1",
+      "description": ""
+    },
+    {
+      "name": "Shooting Arrow 2",
+      "description": ""
+    },
+    {
+      "name": "Shooting Arrow 3",
+      "description": ""
+    },
+    {
+      "name": "Slash Advance",
+      "description": ""
+    },
+    {
+      "name": "Smash",
+      "description": ""
+    },
+    {
+      "name": "Stabbing L",
+      "description": ""
+    },
+    {
+      "name": "Stabbing R",
+      "description": ""
+    },
+    {
+      "name": "Standing Aim Idle 01",
+      "description": ""
+    },
+    {
+      "name": "Standing Aim Walk Forward In Place",
+      "description": ""
+    }
+  ]
+}

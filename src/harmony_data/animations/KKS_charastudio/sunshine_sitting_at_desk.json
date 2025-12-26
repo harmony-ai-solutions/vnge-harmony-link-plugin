@@ -1,0 +1,36 @@
+{
+  "group_id": 17,
+  "group_name": "Sunshine",
+  "category_id": 7,
+  "category_name": "Sitting At Desk",
+  "animation_items": [
+    {
+      "name": "Worrying with my face away",
+      "description": ""
+    },
+    {
+      "name": "Putting color on with brush",
+      "description": ""
+    },
+    {
+      "name": "Color with brush Confirmation",
+      "description": ""
+    },
+    {
+      "name": "Taking a break while worrying",
+      "description": ""
+    },
+    {
+      "name": "Clay shaping in",
+      "description": ""
+    },
+    {
+      "name": "Clay shaping loop",
+      "description": ""
+    },
+    {
+      "name": "Clay Shaping Out",
+      "description": ""
+    }
+  ]
+}

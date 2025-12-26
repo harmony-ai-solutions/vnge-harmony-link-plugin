@@ -1,0 +1,88 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 10,
+  "category_name": "Action",
+  "animation_items": [
+    {
+      "name": "Sneezing",
+      "description": "Standing upright with arms relaxed at sides. Initially, hands rise swiftly to form a cup shape over the mouth and nasal passage, fingers curled inward while maintaining contact with the skin around the jawline. Head remains aligned vertically without tilt. Following the expulsive motion, hands gradually lower back to the original resting position. Stance demonstrates a rapid, instinctual response consistent with sneezing, reflecting temporary physiological disruption."
+    },
+    {
+      "name": "Yawning",
+      "description": "Standing, weight balanced equally on both feet with toes pointed forward. During the yawning motion, both hands ascend smoothly toward the mouth, fingers slightly curved and relaxed. Mouth opens widely, eyes gradually close entirely. Head tilts gently backward, facilitating cervical spine extension. The stance embodies a natural reflexive action tied to fatigue, conveyed through prolonged oral opening and complete ocular closure."
+    },
+    {
+      "name": "Hot",
+      "description": "Standing upright with feet planted squarely apart. Initiate motion by smoothly raising the right arm overhead in a gentle arc, extending fingers openly with palms facing upward. Concurrently, tilt the head upward and backward, directing gaze toward the ceiling. Maintain rigid spinal alignment throughout the movement. Gradually reverse the action, lowering the right arm symmetrically back to its original position beside the body. The entire sequence exhibits deliberate, continuous flow without additional physical contact or environmental context."
+    },
+    {
+      "name": "Waving",
+      "description": "Standing with feet parallel and evenly spaced. Initial pose features arms lowered straight down along the sides, palms facing downward. During the animation, the right arm rises vertically overhead until fully extended, with the hand maintaining an open-palm orientation pointed outward. The left arm stays stationary alongside the torso. Head remains level and facing forward with no tilt. Motion involves a controlled upward sweep of the right upper extremity from a resting position to full elevation, characteristic of a traditional greeting wave."
+    },
+    {
+      "name": "About To Use Lip Balm",
+      "description": "Standing upright with feet shoulder-width apart, weight evenly distributed. From the central perspective, the right hand holds the lip balm tube horizontally at chest height, fingers encircling the cylinder with the thumb stabilizing the base. The left hand approaches the mouth, fingertips curved toward the lips, palms facing upward and aligned with the jawline. Head stays erect with chin slightly lifted, eyes focused forward without tilt. Subtle hand repositioning occurs across views, signaling pre-application adjustment. Minimal torso shift emphasizes deliberate stillness preceding the act of applying lip balm."
+    },
+    {
+      "name": "Using Lip Balm",
+      "description": "Standing with feet parallel and evenly spaced. Right hand rises smoothly to the face, fingers curving gently toward the upper lip to apply lip balm. Left hand stays relaxed alongside the leg. Head holds neutral alignment with direct eye contact, remaining stable through the motion. The gesture emphasizes deliberate, controlled application of the product to the lips."
+    },
+    {
+      "name": "Putting Up Poster",
+      "description": "The character stands upright with feet spaced shoulder-width apart, maintaining a neutral torso alignment. From the central perspective, both hands rise smoothly to shoulder height, fingers gently curled inward as though gripping an imagined poster's edges. Subtle positional shifts occur across frames, indicating delicate realignment efforts to secure the poster correctly. The head stays fixed forward without tilt, expressing quiet concentration on precisely placing the poster against a presumed surface. No emotional cues are evident in the posture."
+    },
+    {
+      "name": "About To Cheer",
+      "description": "standing, feet planted firmly apart with weight evenly distributed. Both hands rest securely on hips, fingers relaxed and slightly curled toward the lower abdomen. Head maintains direct eye contact forward without tilt. Stance reflects poised readiness and focused anticipation, consistent with preparing to initiate an enthusiastic celebratory gesture."
+    },
+    {
+      "name": "Cheerleader Practice 1",
+      "description": "beginning with right hand on hip and left arm raised high, the character executes a jump with arms extended horizontally, feet momentarily airborne. upon landing, the stance resets to left hand on hip and right arm raised. head remains directed forward without tilt throughout the motion, reflecting coordinated cheerleading drill mechanics."
+    },
+    {
+      "name": "Cheerleader Practice 2",
+      "description": "Standing with feet shoulder-width apart, weight evenly distributed. Performing a repeating arm-motion sequence: initiating with arms drawn close to the body, then forcefully extending horizontally outward with palms facing posteriorly; immediately reversing direction to pull arms back toward the core in rapid succession. Throughout the cycle, hands maintain firm closure with knuckles prominently visible. Head consistently directed forward without tilt. Movements convey vigorous effort and practiced precision characteristic of rehearsing synchronized cheerleading maneuvers. The stance embodies concentrated readiness appropriate for formal team preparation."
+    },
+    {
+      "name": "About To Practice Dancing",
+      "description": "Standing with arms raised, fists clenched at shoulder height. Transitioning to arms extended horizontally outward with fists maintained. Right leg lifted high toward hip level, knee bent. Head remains upright and facing forward without tilt. Stance reflects preparedness for dance practice through deliberate upper-body and lower-extremity coordination."
+    },
+    {
+      "name": "Practicing Dancing",
+      "description": "Standing with feet grounded and weight evenly distributed, the character executes a dance warm-up sequence featuring fluid arm movements. Arms lift symmetrically in alternating patterns, rising high above the head with palms open and fingers relaxed. Each arm extends independently in a sweeping arc before lowering, accompanied by subtle shifts in weight between feet to maintain balance. The head remains upright and stationary, focusing forward without tilt. Movements emphasize controlled coordination between upper body extension and lower body stability."
+    },
+    {
+      "name": "Stretching 1",
+      "description": "standing, feet parallel and grounded. Starting with arms at sides, shifts to raise right arm across chest with palm facing inward, left hand gripping right wrist. Transitions to fully extending arms horizontally, palms down, fingers slightly curved. Head remains upright, face forward without tilt. Movement emphasizes gradual muscle elongation in upper body via controlled arm sweeps. Stance maintains balanced posture throughout."
+    },
+    {
+      "name": "Stretching 2",
+      "description": "Standing initially with arms extended laterally at shoulder height, palms open and facing forward. Progressively lifts both arms smoothly upward until elbows form approximately ninety-degree angles, reaching toward the upper spine area. Maintains balanced stance with feet hip-width apart, toes pointing forward. Gradually bends torso posteriorly while keeping hips stable, creating gentle tension along the spine. Arms remain elevated and clasped loosely behind the neck region, fingertips nearly meeting. Head tilts minimally backward relative to spine curvature, eyes directed toward lower abdomen. Entire movement involves controlled flexion without excessive twisting or lateral shifting. Weight distributed evenly across both feet, demonstrating deliberate muscle engagement typical of spinal elongation exercises."
+    },
+    {
+      "name": "Stretching 3",
+      "description": "standing, feet shoulder-width apart, body erect. arms begin extended laterally with palms down, fingers loose. gradual upward sweep raises arms overhead, palms meeting briefly above head. completes motion by lowering arms symmetrically back to start position. head remains upright and neutral without tilt. movement flows continuously across three angles: initiated from left-side view, completed centrally, and concluded from right-side perspective. stance reflects intentional flexibility training without additional"
+    },
+    {
+      "name": "Stretching 4",
+      "description": "Performing a dynamic stretching sequence begins with a kneeling stance: left leg extended forward, right knee grounded, and right hand securely gripping left foot heel. Torso leans gently forward to engage hamstrings while maintaining spinal alignment. The movement flows seamlessly into a seated cross-legged position, hands resting softly on inner thighs. Throughout, head remains upright without tilt, emphasizing controlled breath and gradual muscular release. The transition showcases intentional flexibility practice without abrupt gestures or external objects."
+    },
+    {
+      "name": "Swimming Front Crawl",
+      "description": "The character begins in an inverted position with the head oriented downward, legs fully extended vertically upward, and arms splayed horizontally with palms facing downward. As the animation progresses, the body rotates clockwise toward a horizontal alignment, shifting weight forward while arms draw inward toward the torso. Hands remain open throughout the motion, maintaining a natural grip-free posture. The head stays fixed downward, directing gaze toward the implied target point for water entry. The fluid movement demonstrates controlled rotational momentum consistent with initiating a dive into aquatic space."
+    },
+    {
+      "name": "Sitting Poolside 1",
+      "description": "Sitting with legs widely spaced, knees bent at approximately ninety degrees, feet flat on the ground. Hands positioned on the inner thighs with palms facing upwards and fingers relaxed. Back straight, spine aligned vertically, head oriented directly forward without tilt. Posture maintains stability and comfort typical of a relaxed seated position."
+    },
+    {
+      "name": "Sitting Poolside 2",
+      "description": "Sitting on a chair or poolside ledge, legs extended straight with feet flat on the supporting surface. Both hands rest on the upper thighs, palms oriented downward. Head faces directly ahead without tilting. Stance appears relaxed and stationary, indicating a posed rest position."
+    },
+    {
+      "name": "Sitting Poolside 3",
+      "description": "Seated on poolside surface, head bowed with eyes closed. From left angle: legs extended with knees bent, feet splayed outward; hands rest along inner thighs. Frontal view: legs straightened, hands placed on hips. Right angle: legs crossed at ankles, hands resting on thighs. Gentle movements include slight shifts in leg positioning and minimal hand adjustments. Stance reflects a relaxed, tranquil mood."
+    }
+  ]
+}

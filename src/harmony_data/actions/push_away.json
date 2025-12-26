@@ -1,0 +1,17 @@
+{
+  "name": "push_away",
+  "description": "push away the other chara",
+  "category": "character_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} forcefully pushes {{other_character}} away",
+    "{{character}} pushes {{other_character}} with both hands",
+    "{{character}} shoves {{other_character}} aside",
+    "{{character}} nudges {{other_character}} out of the way",
+    "{{character}} elbows {{other_character}} out of the way",
+    "{{character}} forcefully moves {{other_character}} backwards",
+    "{{character}} makes {{other_character}} stumble back",
+    "{{character}} sends {{other_character}} flying with a powerful push",
+    "{{character}} uses their arm to push {{other_character}} back"
+  ]
+}

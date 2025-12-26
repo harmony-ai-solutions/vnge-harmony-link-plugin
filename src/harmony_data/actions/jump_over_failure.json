@@ -1,0 +1,15 @@
+{
+  "name": "jump_over_failure",
+  "description": "jump over an object",
+  "category": "simple_action",
+  "duration": 1.2,
+  "examples": [
+    "{{character}} doesn't make it over {{object}}",
+    "{{character}} fails to jump over {{object}}",
+    "{{character}} fails to jump over {{object}} and falls",
+    "{{character}} trips over {{object}} while trying to jump over it"
+  ],
+  "trigger_conditions": [
+    "jump_over"
+  ]
+}

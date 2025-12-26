@@ -1,0 +1,168 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 2,
+  "category_name": "Emotions",
+  "animation_items": [
+    {
+      "name": "Happy 1",
+      "description": "static standing, leaning forward slightly from the waist, with both arms spread behind the back, hands clasped with palms together. The fingers are gently touching. The head is slightly tilted to the left, and the gaze is directed forward. The stance may express a welcoming or open emotion."
+    },
+    {
+      "name": "Happy 2",
+      "description": "Static standing, both arms bent at the elbow, hands pressed together in front of the chest, slightly tilted to the left in front of the head, fingers extended and gently touching. The head is slightly tilted to the right and facing forward. The stance seems to express happy anticipation or expectation."
+    },
+    {
+      "name": "Happy 3",
+      "description": "The character is in a static standing pose with both arms raised straight above the head, palms facing forward, and fingers slightly spread. The head is tilted slightly upward and facing forward. The stance may express a sense of stretching, reaching, or perhaps a cheerful or open emotion."
+    },
+    {
+      "name": "Happy 4",
+      "description": "Static standing position. Both arms are bent at the elbow, with hands clasped together, the fingers are gently touching in front of the mouth. The head is facing forward. The stance may express surprise or cheerful chuckling."
+    },
+    {
+      "name": "Happy 5",
+      "description": "Static standing, both arms bent at the elbow and raised, hands positioned near the chest with fingers curled into soft fists. The head is not tilted and is facing forward. The stance may express readiness or a hint of playfulness."
+    },
+    {
+      "name": "Happy 6",
+      "description": "Static standing, both arms bent at the elbow, hands resting on the hips with fingers gently spread and thumbs pointing forward. The head is slightly tilted to the right and facing forward, expressing a pleasant emotion."
+    },
+    {
+      "name": "Happy 7",
+      "description": "Static standing position. The left arm is bent at the elbow, with the hand raised to about shoulder height, fingers gently curled with thumb pointing away as if holding something small or gesturing delicately. The right arm is relaxed, with the hand positioned around hip level, fingers similarly to the other hand. The head is slightly tilted to the left and facing forward. The stance may be expressing a carefree and happy emotion."
+    },
+    {
+      "name": "Happy 8",
+      "description": "Static standing with both arms raised and bent at the elbow, hands behind the head, with fingers interlocked. The head is not tilted and is facing forward. The stance may express relaxation."
+    },
+    {
+      "name": "Happy 9",
+      "description": "Static standing, both arms bent at the elbow, hands clasped together at chest level, with fingers intertwined. The head is facing forward. The stance seems to express happy anticipation or expectation."
+    },
+    {
+      "name": "Happy 10",
+      "description": "Static standing. The right arm is bent, with the hand gently touching the right side of the face, fingers slightly spread and resting against the cheek. The left arm hangs low, with the hand in front of the lower abdomen, fingers slightly curled. The head is slightly tilted towards the right hand and is facing forward. The stance appears to be a reaction to something cute like a baby, a puppy or a romantic gesture."
+    },
+    {
+      "name": "Angry 1",
+      "description": "Static standing with light bent forward from the waist. Arms bent at the elbow, hands formed into fists with knuckles pointing forward, held in front of the lower abdomen. The head is not tilted and is facing forward. The stance may express anger or annoyance."
+    },
+    {
+      "name": "Angry 2",
+      "description": "Static standing pose. Both arms are bent at the elbow, with hands raised to chest level and formed into fists with knuckles, as if engaging in a fistfight. The head is tilted slightly downwards and facing forward. The stance seems to express anger or a fighting stance."
+    },
+    {
+      "name": "Angry 3",
+      "description": "Static standing with arms crossed in front of the chest, right arm over the left. Both hands are gripping the opposite upper arm, with fingers curled. The head is not tilted and is facing slightly to the left, with the eyes looking to the right. The stance may express anger or annoyance."
+    },
+    {
+      "name": "Angry 4",
+      "description": "The character is in a static standing pose. The right arm is bent at the elbow, with the hand raised to touch the side of the head, fingers gently curled. The left arm is bent at the elbow, with the hand resting on the hip, fingers slightly spread. The head is tilted slightly to the right and facing forward. The stance may express anger or annoyance."
+    },
+    {
+      "name": "Angry 5",
+      "description": "Static standing. The left arm is bent, with the hand gently resting on the chest. The fingers are slightly curled. The right arm is bent, and the hand is positioned over the waist, with fingers softly placed against the back of the hand. The head is tilted slightly downwards and facing forward. The stance may express sadness or disappointment."
+    },
+    {
+      "name": "Angry 6",
+      "description": "The character is in a static standing position, with both arms bent at the elbow and hands placed behind the back. The fingers on both hands are gently curled, suggesting a subtle clench or light grip. The head is not tilted and is facing forward, while the eyes are looking slightly downwards. The stance, combined with the downward gaze, may express a degree of disappointment, discomfort, or possibly a reserved demeanor."
+    },
+    {
+      "name": "Angry 7",
+      "description": "Static standing position. The left arm is bent at the elbow, with the hand raised and fingers gently touching the side of the head or stroking the hair. The right hand is resting on the hip, with fingers slightly spread. The head is tilted slightly to the left and facing forward. The stance may express mild irritation, pouting or arrogance."
+    },
+    {
+      "name": "Angry 8",
+      "description": "Static standing pose. Both arms are lightly bent at the elbow, held slightly away from the body, with hands forming loose fists at waist level. The head is tilted slightly down and to the left, with the gaze directed forward. The overall stance may express a contemplative or slightly displeased emotion."
+    },
+    {
+      "name": "Angry 9",
+      "description": "static standing pose, with both arms bent at the elbows and raised to the sides. The hands are open, palms facing upwards, and fingers are slightly spread. The head is tilted slightly to the left and is facing forward, expressing an emotion of bewilderment or questioning during a discussion."
+    },
+    {
+      "name": "Angry 10",
+      "description": "Static standing position. The left arm is bent at the elbow, hand forming a soft fist resting on the hip. The right arm is bent at the elbow, hand also forming a soft fist but held slightly away from the body. The head is not tilted and is facing forward. The stance may express a confident or ready emotion."
+    },
+    {
+      "name": "Sad 1",
+      "description": "Static standing position. Both arms are bent at the elbow, with hands clasped together in front of the lower abdomen. Fingers are gently intertwined. The upper body is tilted slightly forward. The stance may express sadness or a displeasant emotion."
+    },
+    {
+      "name": "Sad 2",
+      "description": "Static standing. The right arm is bent at the elbow, with the hand resting against the upper right arm. The left arm is bent at the elbow, and the hand is placed over the lower abdomen, with fingers gently splayed. The head is not tilted and faces forward. The stance may express reservedness."
+    },
+    {
+      "name": "Sad 3",
+      "description": "Static standing, both arms bent at the elbow, hands slightly above chest level, fingers curled into gentle fists. The head is not tilted and is facing forward. The stance may express a subtle sense of determination during an argument."
+    },
+    {
+      "name": "Sad 4",
+      "description": "Static standing. Both arms are bent at the elbow. The left hand is placed over the chest, with fingers gently grasping the cloth. The right hand is positioned above the stomach. The head and glance are tilted downwards. The stance may express sadness or dealing with some emotional pain."
+    },
+    {
+      "name": "Sad 5",
+      "description": "Static standing position. Both arms are bent at the elbow, and the forearms are angled inwards, with the hands meeting in front of the lower waist. The fingers are gently curled inward, and the hands appear to be clasped or softly pressed together. The head is tilted downward, facing the ground. The stance may sadnes or strong disappointment."
+    },
+    {
+      "name": "Sad 6",
+      "description": "Static standing position. The left arm is bent at the elbow, with the hand raised to the side of the head, fingers slightly curled as if adjusting hair. The right arm hangs loosely at the side, fingers slightly spread. The head is slightly tilted to the right and facing forward, suggesting a pleasant or thoughtful expression."
+    },
+    {
+      "name": "Sad 7",
+      "description": "Static standing. The left arm is bent at the elbow, with the hand brought up to the face, covering the mouth and nose with the palm and fingers. The right arm hangs low, with the hand positioned over the groin area. The head is slightly tilted down and facing forward. The stance may express shyness or embarrassment."
+    },
+    {
+      "name": "Sad 8",
+      "description": "static standing pose. The left arm is bent at the elbow, with the hand raised and fingers slightly curled, as if in a gesture of greeting or light inquiry. The right arm is bent, with the hand resting on the hip, fingers gently spread. The head is not tilted and is facing forward. The stance may express complaining or scolding someone."
+    },
+    {
+      "name": "Sad 9",
+      "description": "Static standing, with both arms bent at the elbow and hands forming soft fists, held in front of the upper thighs. The head is slightly tilted downwards and facing forward. The stance may express a subdued or contemplative emotion with slight anger."
+    },
+    {
+      "name": "Sad 10",
+      "description": "Static standing pose with both arms behind the back, hands clasped together, forming fists. The head is slightly tilted down to the left, eyes glancing downwards. The stance may express anger or refusal."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 1",
+      "description": "Standing, left hand positioned over upper chest region with fingers slightly curled inward, right hand resting low near hip area. Head oriented downward and slightly turned away from viewer, displaying a restrained posture indicative of unexpected discomfort or social embarrassment consistent with expressions of surprise or shame."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 2",
+      "description": "standing, feet shoulder-width apart with minimal shift in balance. hands raised to chest height, palms facing inward with fingers curved gently, positioned to press against upper torso. head tilted downward and turned slightly away, gaze directed toward ground. subtle body tremors evident in limbs and trunk, conveying internal distress linked to unexpected exposure or social awkwardness."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 3",
+      "description": "Standing with feet shoulder-width apart, body fully upright. Both hands press against the mouth region, fingers curled inward toward the cheeks, palms facing outward. Head remains level without tilt, eyes focused directly forward. The stance conveys immediate shock or embarrassment, blending visible signs of surprise with hidden discomfort suggestive of social anxiety or unintended disclosure."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 4",
+      "description": "The character stands upright with arms fully extended to either side, palms facing outward and fingers relaxed. Both hands rest at approximately waist-level, thumbs pointed downward. Head faces directly forward with no tilt or turn. The stance conveys a mixture of surprise and shame, characterized by unwavering posture and absence of protective gestures typically linked to heightened anxiety or social awkwardness."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 5",
+      "description": "Standing, barefoot. Both hands raised to the face, positioned symmetrically on either side of the nose and mouth, fingers slightly parted with palms facing outward. Head maintains a direct forward gaze with no tilt. Posture reflects an emotional response consistent with surprise or shame, characterized by facial concealment through hand placement."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 6",
+      "description": "Standing, weight balanced equally on both feet. Right hand presses softly against the lower abdomen; left hand rests loosely alongside the body. Head is tilted downward, gaze fixed on the floor, reflecting cautiousness or embarrassment. Shoulders stay aligned yet subtly tense, creating a restrained posture indicative of surprise or shame. No visible upper-body movement occurs within this stationary stance."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 7",
+      "description": "Standing with minimal hip sway creating subtle lateral shifts in weight distribution across frames. Both hands raised to ear level, palms facing inward towards the face, fingers extended. Head remains upright and fixed forward without tilt. Posture conveys acute reaction to external stimuli coupled with underlying sense of vulnerability or public scrutiny typical of moments involving sudden alarm or social embarrassment."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 8",
+      "description": "Standing, weight evenly distributed on both feet. Arms lifted symmetrically to shoulder height with palms facing upward, fingers fully extended. Shoulders remain aligned horizontally without tilt. Head faces directly forward with no lateral deviation. Posture combines signs of surprise and embarrassment through elevated hands, fixed gaze direction, and rigid body alignment."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 9",
+      "description": "standing, feet shoulder-width apart with balanced weight distribution. Both hands raised to mid-upper chest, fingers gently curved and resting on skin surface; right hand positioned slightly higher than left. Upper body taut with minor muscular engagement, suggesting subconscious protective response. Head maintained vertical alignment without tilt, yet subtle micro-expressions imply abrupt mental shift toward heightened sensitivity or social discomfort characteristic of unanticipated public exposure."
+    },
+    {
+      "name": "Surprise/Shame/Etc. 10",
+      "description": "Stationary pose featuring feet shoulder-width apart, balanced and grounded. Right hand raised vertically to forehead with fingers fully extended horizontally, palms facing outward; left hand relaxed at side. Head maintained facing forward but subtly tilted downward, gaze directed away from direct engagement. Stance conveys cautious reserve blended with hints of surprise and vulnerability indicative of encountering an unexpected situation causing personal unease."
+    }
+  ]
+}

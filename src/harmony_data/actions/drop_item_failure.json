@@ -1,0 +1,14 @@
+{
+  "name": "drop_item_failure",
+  "description": "drop item currently in hands to the ground failed",
+  "category": "object_interaction",
+  "duration": 1.0,
+  "examples": [
+    "{{character}} can't get rif of {{object}}",
+    "{{object}} bounces off and finds itself back in {{character}}'s hands",
+    "{{object}} keeps sticking to {{character}}"
+  ],
+  "trigger_conditions": [
+    "drop_item"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "take_hand",
+  "description": "take hand of the other chara, depending on position, and interlock",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} reaches out to take {{other_character}}'s hand",
+    "{{character}} extends a hand towards {{other_character}}",
+    "{{character}} offers a handshake to {{other_character}}",
+    "{{character}} grasps {{other_character}}'s hand",
+    "{{character}} interlocks fingers with {{other_character}}",
+    "{{character}} holds hands with {{other_character}}",
+    "{{character}} takes {{other_character}}'s hand in their own",
+    "{{character}} gently clasps {{other_character}}'s hand",
+    "{{character}} links arms with {{other_character}}",
+    "{{character}} grabs {{other_character}}'s hand",
+    "{{character}} seizes {{other_character}}'s hand",
+    "{{character}} clutches {{other_character}}'s hand"
+  ]
+}

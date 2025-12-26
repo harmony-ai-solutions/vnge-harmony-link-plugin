@@ -1,0 +1,96 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 65,
+  "category_name": "Vacation",
+  "animation_items": [
+    {
+      "name": "Basic 1",
+      "description": ""
+    },
+    {
+      "name": "Basic 2",
+      "description": ""
+    },
+    {
+      "name": "Basic 3",
+      "description": ""
+    },
+    {
+      "name": "Basic 4",
+      "description": ""
+    },
+    {
+      "name": "Basic 5",
+      "description": ""
+    },
+    {
+      "name": "Basic 6",
+      "description": ""
+    },
+    {
+      "name": "Basic 7",
+      "description": ""
+    },
+    {
+      "name": "Basic 8",
+      "description": ""
+    },
+    {
+      "name": "Basic 9",
+      "description": ""
+    },
+    {
+      "name": "Basic 10",
+      "description": ""
+    },
+    {
+      "name": "Basic 11",
+      "description": ""
+    },
+    {
+      "name": "Basic 12",
+      "description": ""
+    },
+    {
+      "name": "Basic 13",
+      "description": ""
+    },
+    {
+      "name": "Sitting 1",
+      "description": ""
+    },
+    {
+      "name": "Sitting 2",
+      "description": ""
+    },
+    {
+      "name": "Sitting 3",
+      "description": ""
+    },
+    {
+      "name": "Sitting 4",
+      "description": ""
+    },
+    {
+      "name": "Sitting 5",
+      "description": ""
+    },
+    {
+      "name": "Sitting 6",
+      "description": ""
+    },
+    {
+      "name": "Sitting 7",
+      "description": ""
+    },
+    {
+      "name": "Swinging Bat",
+      "description": ""
+    },
+    {
+      "name": "orz",
+      "description": ""
+    }
+  ]
+}

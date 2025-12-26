@@ -1,0 +1,32 @@
+{
+  "group_id": 0,
+  "group_name": "Character",
+  "category_id": 3,
+  "category_name": "Walking & Running",
+  "animation_items": [
+    {
+      "name": "Walking 1",
+      "description": "walking steadily, left and right feet alternating in a smooth stride. Hands hang freely alongside the body with fingers relaxed and uncurling. Head remains upright and directed straight ahead without any lateral tilt or turn. Overall posture demonstrates controlled balance and continuous forward momentum."
+    },
+    {
+      "name": "Walking 2",
+      "description": "walking, arms swinging naturally at sides with fingers loosely curled and relaxed. Feet alternate stepping forward in rhythm, displaying steady gait. Head remains upright and oriented forward without tilt or turning. Motion conveys calm, purposeful progression through space."
+    },
+    {
+      "name": "Running 1",
+      "description": "walking, arms swinging symmetrically at sides with palms facing inward, fingers loose and relaxed. Legs propel forward alternately, lifting opposite knee high with toes pointed upward during lift phase. Left leg raises higher in left-angle view compared to right-angle counterpart. Right leg trails slightly lower in frontal position before striking ground. Head maintains stable horizontal alignment, eyes focused forward without tilt. Upper body stays balanced over moving legs. Movement demonstrates energetic pace with smooth transition between strides. Expression conveys joyful engagement in physical exertion. No objects or additional figures referenced in scene context."
+    },
+    {
+      "name": "Running 2",
+      "description": "running, alternating strides with left and right legs sequentially elevated and lowered. Arms swing smoothly in synchronization with leg movements, palms facing inward with fingers relaxed. Head maintained upright, gaze directed forward without tilt. Motion exhibits balanced limb articulation consistent with steady-paced locomotion."
+    },
+    {
+      "name": "Running 3",
+      "description": "running, legs alternating in a strided motion with one foot forward and the other grounded, demonstrating cyclic propulsion. Both hands cover the face, palms flat against cheeks and foreheads with fingers gently pressing into the skin. The torso remains upright yet slightly lean forward to balance momentum. Head is tilted downward, directing attention toward the ground. Movements emphasize rhythmic footfall and controlled upper-body stability despite obscured facial expression."
+    },
+    {
+      "name": "Running 4",
+      "description": "running, legs cycling through elevated and grounded phases in a fluid motion. Arms move synchronously with limbs, hands clenched into tight fists positioned near the lower abdomen. One foot propels forward while the other lifts high, creating a repeating stride pattern. Head remains steadily aligned with the direction of travel, avoiding tilt or turns. Movements reflect a steady jogging pace with minimal upper-body sway, conveying neutral physical exertion without evident emotional cues."
+    }
+  ]
+}

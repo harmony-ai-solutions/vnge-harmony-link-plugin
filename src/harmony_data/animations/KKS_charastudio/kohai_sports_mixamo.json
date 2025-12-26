@@ -1,0 +1,220 @@
+{
+  "group_id": 1011,
+  "group_name": "Kohai",
+  "category_id": 12,
+  "category_name": "Sports (Mixamo)",
+  "animation_items": [
+    {
+      "name": "Baseball Pitching",
+      "description": ""
+    },
+    {
+      "name": "Baseball Step In",
+      "description": ""
+    },
+    {
+      "name": "Baseball Step Out",
+      "description": ""
+    },
+    {
+      "name": "Baseball Step Up To Bat",
+      "description": ""
+    },
+    {
+      "name": "Baseball Walk In",
+      "description": ""
+    },
+    {
+      "name": "Baseball Walk Out",
+      "description": ""
+    },
+    {
+      "name": "Batter On Deck",
+      "description": ""
+    },
+    {
+      "name": "Football Catch 1",
+      "description": ""
+    },
+    {
+      "name": "Football Catch 2",
+      "description": ""
+    },
+    {
+      "name": "Football Hike",
+      "description": ""
+    },
+    {
+      "name": "Golf Bad Shot 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Bad Shot 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Bad Shot 3",
+      "description": ""
+    },
+    {
+      "name": "Golf Chip 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Chip 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Chip 3",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive 3",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive 4",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive 5",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive Setup 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Drive Setup 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Post Shot 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Post Shot 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Post Swing",
+      "description": ""
+    },
+    {
+      "name": "Golf Pre-Putt 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Pre-Putt 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Putt 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Putt Failure",
+      "description": ""
+    },
+    {
+      "name": "Golf Putt Victory 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Putt Victory 2",
+      "description": ""
+    },
+    {
+      "name": "Golf Putt Victory 3",
+      "description": ""
+    },
+    {
+      "name": "Golf Tee Up 1",
+      "description": ""
+    },
+    {
+      "name": "Golf Tee Up 2",
+      "description": ""
+    },
+    {
+      "name": "Quarterback Pass",
+      "description": ""
+    },
+    {
+      "name": "Receiver Catch",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 1",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 2",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 3",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 4",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 5 In Place",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 6 In Place",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 7 In Place",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 8 In Place",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 9 In Place",
+      "description": ""
+    },
+    {
+      "name": "Skateboarding 10 In Place",
+      "description": ""
+    },
+    {
+      "name": "Baseball Bunt",
+      "description": ""
+    },
+    {
+      "name": "Baseball Catcher",
+      "description": ""
+    },
+    {
+      "name": "Baseball Hit 1",
+      "description": ""
+    },
+    {
+      "name": "Baseball Hit 2",
+      "description": ""
+    },
+    {
+      "name": "Baseball Idle",
+      "description": ""
+    },
+    {
+      "name": "Baseball Milling Idle",
+      "description": ""
+    }
+  ]
+}

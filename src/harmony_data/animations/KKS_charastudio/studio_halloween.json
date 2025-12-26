@@ -1,0 +1,24 @@
+{
+  "group_id": 7,
+  "group_name": "Studio",
+  "category_id": 68,
+  "category_name": "Halloween",
+  "animation_items": [
+    {
+      "name": "Pose 1",
+      "description": ""
+    },
+    {
+      "name": "Pose 2",
+      "description": ""
+    },
+    {
+      "name": "Pose 3",
+      "description": ""
+    },
+    {
+      "name": "Animations",
+      "description": ""
+    }
+  ]
+}

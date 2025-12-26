@@ -1,0 +1,17 @@
+{
+  "name": "take_hand_accept",
+  "description": "take hand of the other chara, depending on position, and interlock",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} reciprocates the gesture",
+    "{{character}} tightens their grip",
+    "{{character}} squeezes {{character}}'s hand back",
+    "{{character}} smiles and holds on",
+    "{{character}} returns the handshake firmly",
+    "{{character}} interlocks fingers with {{character}}"
+  ],
+  "trigger_conditions": [
+    "take_hand"
+  ]
+}

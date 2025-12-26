@@ -1,0 +1,16 @@
+{
+  "name": "take_hand_decline",
+  "description": "take hand of the other chara failed",
+  "category": "character_interaction",
+  "duration": 2.0,
+  "examples": [
+    "{{character}} pulls their hand away",
+    "{{character}} shakes their head and steps back",
+    "{{character}} recoils at the touch",
+    "{{character}} looks uncomfortable and avoids eye contact",
+    "{{character}} ignores the gesture"
+  ],
+  "trigger_conditions": [
+    "take_hand"
+  ]
+}

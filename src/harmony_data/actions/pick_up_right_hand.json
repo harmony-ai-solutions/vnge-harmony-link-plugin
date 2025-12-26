@@ -1,0 +1,19 @@
+{
+  "name": "pick_up_right_hand",
+  "description": "pick up an object with right hand",
+  "category": "object_interaction",
+  "duration": 1.5,
+  "examples": [
+    "{{character}} picks up {{object}} with their right hand",
+    "{{character}} uses their right hand to lift {{object}}",
+    "{{character}} grabs {{object}} with their right hand",
+    "{{character}} lifts {{object}} using their right hand",
+    "{{character}} picks up {{object}} from the ground with their right hand",
+    "{{character}} retrieves {{object}} with their right hand",
+    "{{character}} collects {{object}} with their right hand",
+    "{{character}} acquires {{object}} with their right hand",
+    "{{character}} secures {{object}} with their right hand",
+    "{{character}} obtains {{object}} with their right hand",
+    "{{character}} grasps {{object}} with their right hand"
+  ]
+}
